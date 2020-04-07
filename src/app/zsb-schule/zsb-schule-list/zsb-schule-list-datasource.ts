@@ -3,8 +3,8 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {map} from 'rxjs/operators';
 import {merge, Observable, of as observableOf} from 'rxjs';
-import {Schule} from '../zsb-schule/schule';
-import {DatabaseService} from '../database.service';
+import {Schule} from '../schule';
+import {DatabaseService} from '../../database.service';
 import {ZsbSchuleListComponent} from './zsb-schule-list.component';
 
 // tslint:disable-next-line:no-empty-interface

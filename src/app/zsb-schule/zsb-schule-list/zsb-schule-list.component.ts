@@ -3,10 +3,10 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTable} from '@angular/material/table';
 import {DataTableItem, ZsbSchuleListDatasource} from './zsb-schule-list-datasource';
-import {DatabaseService} from '../database.service';
+import {DatabaseService} from '../../database.service';
 
 @Component({
-  selector: 'app-data-table',
+  selector: 'app-zsb-schule-list',
   templateUrl: './zsb-schule-list.component.html',
   styleUrls: ['./zsb-schule-list.component.css']
 })

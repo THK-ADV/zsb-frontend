@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
-import {RouterModule} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatSliderModule} from '@angular/material/slider';
@@ -18,8 +18,15 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import {MatDialogModule} from '@angular/material/dialog';
-import {ZsbSchuleListComponent} from './zsb-schule-list/zsb-schule-list.component';
+import {ZsbSchuleListComponent} from './zsb-schule/zsb-schule-list/zsb-schule-list.component';
+import {ZsbSchuleDetailComponent} from './zsb-schule/zsb-schule-detail/zsb-schule-detail.component';
 
+
+const appRoutes: Routes = [
+  {path: '', component: ZsbSchuleComponent},
+  {path: 'schulen/:schuleId', component: ZsbSchuleDetailComponent},
+  {path: 'schulen', component: ZsbSchuleDetailComponent}
+];
 
 @NgModule({
   declarations: [
