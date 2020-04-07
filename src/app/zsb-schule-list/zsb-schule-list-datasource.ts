@@ -11,40 +11,6 @@ import {ZsbSchuleListComponent} from './zsb-schule-list.component';
 export interface DataTableItem extends Schule {
 }
 
-// TODO: replace this with real data from your application
-const EXAMPLE_DATA: DataTableItem[] = [
-  {
-    schule_id: 1,
-    name: 'TU Wien',
-    schulform: 'Hochschule',
-    schwerpunkt: 'Studenten',
-    kooperationsvertrag: false,
-    adress_id: 1,
-    adresse: undefined,
-    schulleitung_mail: '2minutes@tu-wien.de',
-    stubo_mail: 'info@tu-wien.de',
-    schueleranzahl: 20,
-    kaoa_hochschule: false,
-    talenscouting: true,
-    ort: undefined
-  },
-  {
-    schule_id: 5,
-    name: 'RWTH Achen',
-    schulform: 'Hochschule',
-    schwerpunkt: 'Studenten',
-    kooperationsvertrag: false,
-    adress_id: 5,
-    adresse: undefined,
-    schulleitung_mail: 'boss@tu-wien.de',
-    stubo_mail: 'info@tu-wien.de',
-    schueleranzahl: 20000,
-    kaoa_hochschule: true,
-    talenscouting: true,
-    ort: undefined
-  }
-];
-
 /**
  * Data source for the DataTable view. This class should
  * encapsulate all logic for fetching and manipulating the displayed data

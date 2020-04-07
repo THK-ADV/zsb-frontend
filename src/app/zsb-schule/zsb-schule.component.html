@@ -1,0 +1,15 @@
+<h1>Schulen</h1>
+
+
+<!-- Filter options -->
+<div class="filter-options">
+  <!-- TODO open close filter section or activate deactivate filter -->
+  <button mat-raised-button (click)="filterList()">Filter</button>
+  <!-- TODO could be floating btn over the table -->
+  <button mat-raised-button (click)="addSchule()" color="primary">Hinzufügen</button>
+</div>
+
+<br>
+
+<app-data-table></app-data-table>
+
