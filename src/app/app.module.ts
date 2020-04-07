@@ -33,12 +33,16 @@ const appRoutes: Routes = [
     AppComponent,
     ZsbOrteComponent,
     ZsbSchuleComponent,
-    ZsbSchuleListComponent
+    ZsbSchuleListComponent,
+    ZsbSchuleDetailComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    RouterModule,
+    RouterModule.forRoot(
+      appRoutes,
+      {enableTracing: true}
+    ),
     BrowserAnimationsModule,
     MatButtonModule,
     MatToolbarModule,
