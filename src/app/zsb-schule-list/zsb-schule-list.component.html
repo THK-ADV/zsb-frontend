@@ -1,0 +1,107 @@
+<div class="mat-elevation-z8 data-table">
+  <table mat-table class="full-width-table" matSort aria-label="Elements">
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+      <td mat-cell *matCellDef="let row">{{row.name}}</td>
+    </ng-container>
+
+    <!-- schulform Column -->
+    <ng-container matColumnDef="schulform">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Schulform</th>
+      <td mat-cell *matCellDef="let row">{{row.schulform}}</td>
+    </ng-container>
+
+
+    <!-- schwerpunkt column -->
+    <ng-container matColumnDef="schwerpunkt">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>schwerpunkt</th>
+      <td mat-cell *matCellDef="let row">{{row.schwerpunkt}}</td>
+    </ng-container>
+
+
+    <!-- adresse column -->
+    <ng-container matColumnDef="adresse">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Adresse</th>
+      <td mat-cell *matCellDef="let row"> TBD </td>
+    </ng-container>
+
+    <!-- ort column column -->
+    <ng-container matColumnDef="ort">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Ort</th>
+      <td mat-cell *matCellDef="let row"> TBD </td>
+    </ng-container>
+
+
+    <!-- schulleitung_mail column -->
+    <ng-container matColumnDef="schulleitung_mail">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Schulleitung (Mail)</th>
+      <td mat-cell *matCellDef="let row">{{row.schulleitung_mail}}</td>
+    </ng-container>
+
+    <!-- stubo_mail v -->
+    <ng-container matColumnDef="stubo_mail">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>StuBo (Mail)</th>
+      <td mat-cell *matCellDef="let row">{{row.stubo_mail}}</td>
+    </ng-container>
+
+    <!-- schueleranzahl column -->
+    <ng-container matColumnDef="schueleranzahl">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Schühleranzahl</th>
+      <td mat-cell *matCellDef="let row">{{row.schueleranzahl}}</td>
+    </ng-container>
+
+    <!-- kooperationsvertrag column -->
+    <ng-container matColumnDef="kooperationsvertrag">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Kooperationsvertrag</th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox [disabled]="true" [checked]="row.kooperationsvertrag"></mat-checkbox>
+      </td>
+    </ng-container>
+
+    <!-- kaoa_hochschule Column -->
+    <ng-container matColumnDef="kaoa_hochschule">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>kaoa Hochschule</th>
+      <td mat-cell *matCellDef="let row">
+    <mat-checkbox [disabled]="true" [checked]="row.talenscouting"></mat-checkbox>
+    </td>
+    </ng-container>
+
+    <!-- Talent scouting Column -->
+    <ng-container matColumnDef="talent">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Talentscouting</th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox [disabled]="true" [checked]="row.talenscouting"></mat-checkbox>
+      </td>
+    </ng-container>
+
+
+    <!-- edit Column -->
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let row">
+        <mat-icon (click)="(row.schule_id)">edit</mat-icon>
+<!--        <mat-icon (click)="editSchule(row.schule_id)">edit</mat-icon>-->
+      </td>
+    </ng-container>
+
+    <!-- delete Column -->
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+      <td mat-cell *matCellDef="let row">
+        <mat-icon (click)="(row.schule_id)">delete</mat-icon>
+        <!--    <mat-icon (click)="deleteSchule(schule.schule_id)">delete</mat-icon>-->
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator #paginator
+                 [length]="dataSource?.data.length"
+                 [pageIndex]="0"
+                 [pageSize]="50"
+                 [pageSizeOptions]="[25, 50, 100, 250]">
+  </mat-paginator>
+</div>
