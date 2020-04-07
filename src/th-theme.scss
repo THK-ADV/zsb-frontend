@@ -1,0 +1,122 @@
+@import "~@angular/material/theming";
+
+@include mat-core();
+
+/* For use in src/lib/core/theming/_palette.scss */
+$th-red: (
+  50 : #f9e3e4,
+  100 : #f1babc,
+  200 : #e78c90,
+  300 : #dd5d63,
+  400 : #d63b41,
+  500 : #cf1820,
+  600 : #ca151c,
+  700 : #c31118,
+  800 : #bd0e13,
+  900 : #b2080b,
+  A100 : #ffdddd,
+  A200 : #ffaaab,
+  A400 : #ff7779,
+  A700 : #ff5d5f,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+$th-orange: (
+  50 : #fdede5,
+  100 : #f9d1be,
+  200 : #f6b292,
+  300 : #f29366,
+  400 : #ef7c46,
+  500 : #ec6525,
+  600 : #ea5d21,
+  700 : #e7531b,
+  800 : #e44916,
+  900 : #df370d,
+  A100 : #ffffff,
+  A200 : #ffded7,
+  A400 : #ffb3a4,
+  A700 : #ff9e8b,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #000000,
+    600 : #000000,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+$th-purple: (
+  50 : #f5e7f1,
+  100 : #e7c3dd,
+  200 : #d79bc6,
+  300 : #c772af,
+  400 : #bb549d,
+  500 : #af368c,
+  600 : #a83084,
+  700 : #9f2979,
+  800 : #96226f,
+  900 : #86165c,
+  A100 : #ffbce4,
+  A200 : #ff89cf,
+  A400 : #ff56bb,
+  A700 : #ff3cb0,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$th-primary: mat-palette($th-red);
+$th-accent:  mat-palette($th-orange);
+
+// The warn palette is optional (defaults to red).
+$th-warn:    mat-palette($th-purple);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$th-theme: mat-light-theme($th-primary, $th-accent, $th-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($th-theme);
