@@ -8,7 +8,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatSliderModule} from '@angular/material/slider';
 import {HttpClientModule} from '@angular/common/http';
 import {ZsbOrteComponent} from './zsb-orte/zsb-orte.component';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ZsbSchuleComponent} from './zsb-schule/zsb-schule.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {MatButtonModule} from '@angular/material/button';
@@ -20,6 +20,9 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatDialogModule} from '@angular/material/dialog';
 import {ZsbSchuleListComponent} from './zsb-schule/zsb-schule-list/zsb-schule-list.component';
 import {ZsbSchuleDetailComponent} from './zsb-schule/zsb-schule-detail/zsb-schule-detail.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
 
 
 const appRoutes: Routes = [
@@ -41,7 +44,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     RouterModule.forRoot(
       appRoutes,
-      {enableTracing: true}
+      // {enableTracing: true} // debugging
     ),
     BrowserAnimationsModule,
     MatButtonModule,
@@ -54,7 +57,11 @@ const appRoutes: Routes = [
     MatIconModule,
     MatPaginatorModule,
     MatSortModule,
-    MatDialogModule
+    MatDialogModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

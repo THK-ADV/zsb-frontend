@@ -12,7 +12,7 @@ export interface Schule {
   stubo_mail: string;
   schueleranzahl: number;
   kaoa_hochschule: boolean;
-  talenscouting: boolean;
+  talentscouting: boolean;
   adresse: Adresse;
   ort: Ort;
 }

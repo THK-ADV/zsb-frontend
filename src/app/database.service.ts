@@ -63,23 +63,18 @@ export class DatabaseService {
       );
   }
 
-  getAdresseById(adressen: Adresse[], id: number) {
-    adressen.forEach(adresse => {
-      if (adresse.adress_id === id) {
-        return adresse;
-      }
-    });
-    return undefined;
+  getSchuleById(id: number) {
+    return this.httpClient.get<Schule>(this.DB_URL + '/schulen/' + id);
   }
 
-  getOrtById(orte: Ort[], id: number) {
-    orte.forEach(ort => {
-      if (ort.ort_id === id) {
-        return ort;
+  getAdresseById(adressen: Adresse[], id: number): Adresse {
+    let result = null;
+    adressen.forEach(it => {
+      if (it.adress_id === id) {
+        result = it;
       }
     });
-
-    return undefined;
+    return result;
   }
 
   handleError(error) {

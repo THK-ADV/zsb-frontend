@@ -23,13 +23,13 @@
     <!-- adresse column -->
     <ng-container matColumnDef="adresse">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Adresse</th>
-      <td mat-cell *matCellDef="let row"> TBD </td>
+      <td mat-cell *matCellDef="let row">{{row.adresse.strasse}}, {{row.adresse.hausnummer}}</td>
     </ng-container>
 
     <!-- ort column column -->
     <ng-container matColumnDef="ort">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Ort</th>
-      <td mat-cell *matCellDef="let row"> TBD </td>
+      <td mat-cell *matCellDef="let row">{{row.ort.plz}}, {{row.ort.bezeichnung}}</td>
     </ng-container>
 
 
