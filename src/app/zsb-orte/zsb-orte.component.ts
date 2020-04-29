@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {DatabaseService} from '../database.service';
+import {DatabaseService} from '../shared/database.service';
 import {Observable} from 'rxjs';
 import {Ort} from './ort';
 

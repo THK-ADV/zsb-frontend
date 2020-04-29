@@ -1,10 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Schule} from '../schule';
-import {DatabaseService} from '../../database.service';
+import {DatabaseService} from '../../shared/database.service';
 import {Observable} from 'rxjs';
 import {Ort} from '../../zsb-orte/ort';
 import {Adresse} from '../../zsb-orte/adresse';
+import {SchuleService} from '../../shared/schule.service';
+import {NotificationService} from '../../shared/notification.service';
 
 @Component({
   selector: 'app-zsb-schule-detail',

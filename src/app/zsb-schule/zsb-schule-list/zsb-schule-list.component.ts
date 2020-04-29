@@ -3,7 +3,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTable} from '@angular/material/table';
 import {DataTableItem, ZsbSchuleListDatasource} from './zsb-schule-list-datasource';
-import {DatabaseService} from '../../database.service';
+import {DatabaseService} from '../../shared/database.service';
 
 @Component({
   selector: 'app-zsb-schule-list',
