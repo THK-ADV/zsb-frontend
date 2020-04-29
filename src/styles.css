@@ -11,6 +11,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   margin: 5px;
 }
 
+.hide {
+  display: none;
+}
 
 /* notifications */
 snack-bar-container.success {
@@ -26,4 +29,13 @@ snack-bar-container.failure {
 snack-bar-container.notification simple-snack-bar {
   font-size: 18px !important;
   font-weight: bold;
+}
+
+mat-cell > mat-icon {
+  margin-right: 5px;
+}
+
+mat-footer-row mat-footer-cell {
+  justify-content: center;
+  font-style: italic;
 }

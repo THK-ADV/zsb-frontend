@@ -1,8 +1,7 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
-import {MatTable} from '@angular/material/table';
-import {DataTableItem, ZsbSchuleListDatasource} from './zsb-schule-list-datasource';
+import {MatTableDataSource} from '@angular/material/table';
 import {DatabaseService} from '../../shared/database.service';
 
 @Component({
@@ -13,8 +12,8 @@ import {DatabaseService} from '../../shared/database.service';
 export class ZsbSchuleListComponent implements AfterViewInit, OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatTable) table: MatTable<DataTableItem>;
-  dataSource: ZsbSchuleListDatasource;
+
+  listData: MatTableDataSource<any>;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = [
@@ -29,20 +28,31 @@ export class ZsbSchuleListComponent implements AfterViewInit, OnInit {
     // 'kooperationsvertrag',
     // 'kaoa_hochschule',
     // 'talent',
-    'edit',
-    'delete'
+    'actions',
   ];
 
   constructor(private service: DatabaseService) {
   }
 
   ngOnInit() {
-    this.dataSource = new ZsbSchuleListDatasource(this.service, this);
+    // this.dataSource = new ZsbSchuleListDatasource(this.service, this);
+
+    this.service.getSchulenComplete().subscribe(
+      list => {
+        const array = list.map(item => {
+          return {
+            ...item
+          };
+        });
+        this.listData = new MatTableDataSource(array);
+        this.listData.sort = this.sort;
+        this.listData.paginator = this.paginator;
+      });
   }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.table.dataSource = this.dataSource;
+    // this.dataSource.sort = this.sort;
+    // this.dataSource.paginator = this.paginator;
+    // this.table.dataSource = this.dataSource;
   }
 }

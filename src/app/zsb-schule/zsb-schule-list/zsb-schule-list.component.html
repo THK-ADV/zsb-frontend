@@ -1,108 +1,130 @@
 <div class="mat-elevation-z8 data-table">
-  <table mat-table class="full-width-table" matSort aria-label="Elements">
-    <!-- Name Column -->
+  <mat-table [dataSource]="listData" matSort>
+
+    <!-- schulname Column -->
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-      <td mat-cell *matCellDef="let row">{{row.name}}</td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.name}}</mat-cell>
     </ng-container>
 
     <!-- schulform Column -->
     <ng-container matColumnDef="schulform">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Schulform</th>
-      <td mat-cell *matCellDef="let row">{{row.schulform}}</td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Schulform</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.schulform}}</mat-cell>
     </ng-container>
-
 
     <!-- schwerpunkt column -->
     <ng-container matColumnDef="schwerpunkt">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>schwerpunkt</th>
-      <td mat-cell *matCellDef="let row">{{row.schwerpunkt}}</td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>schwerpunkt</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.schwerpunkt}}</mat-cell>
     </ng-container>
-
 
     <!-- adresse column -->
     <ng-container matColumnDef="adresse">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Adresse</th>
-      <td mat-cell *matCellDef="let row">{{row.adresse.strasse}}, {{row.adresse.hausnummer}}</td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Adresse</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.adresse.strasse}}, {{row.adresse.hausnummer}}</mat-cell>
     </ng-container>
 
     <!-- ort column column -->
     <ng-container matColumnDef="ort">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Ort</th>
-      <td mat-cell *matCellDef="let row">{{row.ort.plz}}, {{row.ort.bezeichnung}}</td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Ort</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.ort.plz}}, {{row.ort.bezeichnung}}</mat-cell>
     </ng-container>
-
 
     <!-- schulleitung_mail column -->
     <ng-container matColumnDef="schulleitung_mail">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Schulleitung (Mail)</th>
-      <td mat-cell *matCellDef="let row">{{row.schulleitung_mail}}</td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Schulleitung (Mail)</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.schulleitung_mail}}</mat-cell>
     </ng-container>
 
     <!-- stubo_mail v -->
     <ng-container matColumnDef="stubo_mail">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>StuBo (Mail)</th>
-      <td mat-cell *matCellDef="let row">{{row.stubo_mail}}</td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>StuBo (Mail)</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.stubo_mail}}</mat-cell>
     </ng-container>
 
     <!-- schueleranzahl column -->
     <ng-container matColumnDef="schueleranzahl">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Schühleranzahl</th>
-      <td mat-cell *matCellDef="let row">{{row.schueleranzahl}}</td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Schühleranzahl</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.schueleranzahl}}</mat-cell>
     </ng-container>
 
     <!-- kooperationsvertrag column -->
     <ng-container matColumnDef="kooperationsvertrag">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Kooperationsvertrag</th>
-      <td mat-cell *matCellDef="let row">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Kooperationsvertrag</mat-header-cell>
+      <mat-cell *matCellDef="let row">
         <mat-checkbox [disabled]="true" [checked]="row.kooperationsvertrag"></mat-checkbox>
-      </td>
+      </mat-cell>
     </ng-container>
 
     <!-- kaoa_hochschule Column -->
     <ng-container matColumnDef="kaoa_hochschule">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>kaoa Hochschule</th>
-      <td mat-cell *matCellDef="let row">
-    <mat-checkbox [disabled]="true" [checked]="row.talenscouting"></mat-checkbox>
-    </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>kaoa Hochschule</mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <mat-checkbox [disabled]="true" [checked]="row.talenscouting"></mat-checkbox>
+      </mat-cell>
     </ng-container>
 
     <!-- Talent scouting Column -->
     <ng-container matColumnDef="talent">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Talentscouting</th>
-      <td mat-cell *matCellDef="let row">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Talentscouting</mat-header-cell>
+      <mat-cell *matCellDef="let row">
         <mat-checkbox [disabled]="true" [checked]="row.talenscouting"></mat-checkbox>
-      </td>
+      </mat-cell>
     </ng-container>
 
+    <!-- edit and delete Column -->
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <button mat-icon-button><mat-icon>launch</mat-icon></button> <!-- use launch or edit -->
+        <button mat-icon-button color="warn"><mat-icon>delete_outline</mat-icon></button>
 
-    <!-- edit Column -->
-    <ng-container matColumnDef="edit">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-      <td mat-cell *matCellDef="let row">
-        <a [routerLink]="['/schulen', row.schule_id]">
-          <mat-icon>edit</mat-icon>
-        </a>
-      </td>
+<!--        <div class="table-icon">-->
+<!--          <a [routerLink]="['/schulen', row.schule_id]">-->
+<!--            <mat-icon>edit</mat-icon>-->
+<!--          </a>-->
+<!--          <mat-icon (click)="(row.schule_id)">delete</mat-icon>-->
+<!--        </div>-->
+      </mat-cell>
     </ng-container>
 
-    <!-- delete Column -->
-    <ng-container matColumnDef="delete">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-      <td mat-cell *matCellDef="let row">
-        <mat-icon (click)="(row.schule_id)">delete</mat-icon>
-        <!--    <mat-icon (click)="deleteSchule(schule.schule_id)">delete</mat-icon>-->
-      </td>
+    <ng-container matColumnDef="loading">
+      <mat-footer-cell *matFooterCellDef aria-colspan="6">Daten werden geladen...</mat-footer-cell>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+    <ng-container matColumnDef="noData">
+      <mat-footer-cell *matFooterCellDef aria-colspan="6">Es sind keine Daten vorhanden.</mat-footer-cell>
+    </ng-container>
 
-  <mat-paginator #paginator
-                 [length]="dataSource?.data.length"
-                 [pageIndex]="0"
-                 [pageSize]="50"
-                 [pageSizeOptions]="[25, 50, 100, 250]">
-  </mat-paginator>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':listData!=null}"></mat-footer-row>
+    <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!(listData!=null && listData.data.length==0)}"></mat-footer-row>
+
+  </mat-table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" showFirstLastButtons></mat-paginator>
 </div>
+
+
+<!-- THE END ! -->
+
+<!--  <table mat-table class="full-width-table" matSort aria-label="Elements">-->
+<!--    &lt;!&ndash; Name Column &ndash;&gt;-->
+<!--    <ng-container matColumnDef="name">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>-->
+<!--      <td mat-cell *matCellDef="let row">{{row.name}}</td>-->
+<!--    </ng-container>-->
+
+
+<!--    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>-->
+<!--    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>-->
+<!--  </table>-->
+
+<!--  <mat-paginator #paginator-->
+<!--                 [length]="dataSource?.data.length"-->
+<!--                 [pageIndex]="0"-->
+<!--                 [pageSize]="50"-->
+<!--                 [pageSizeOptions]="[25, 50, 100, 250]">-->
+<!--  </mat-paginator>-->
+<!--</div>-->
