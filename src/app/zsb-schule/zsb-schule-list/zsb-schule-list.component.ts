@@ -12,11 +12,12 @@ import {DatabaseService} from '../../shared/database.service';
 export class ZsbSchuleListComponent implements AfterViewInit, OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  searchKey: string;
 
   listData: MatTableDataSource<any>;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = [
+  displayedColumns: Array<string> = [
     'name',
     'schulform',
     'schwerpunkt',
@@ -54,5 +55,14 @@ export class ZsbSchuleListComponent implements AfterViewInit, OnInit {
     // this.dataSource.sort = this.sort;
     // this.dataSource.paginator = this.paginator;
     // this.table.dataSource = this.dataSource;
+  }
+
+  onSearchClear() {
+    this.searchKey = '';
+    this.applyFilter();
+  }
+
+  applyFilter() {
+    this.listData.filter = this.searchKey.trim().toLowerCase();
   }
 }
