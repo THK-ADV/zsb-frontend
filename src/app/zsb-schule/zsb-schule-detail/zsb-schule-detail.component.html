@@ -1,134 +1,295 @@
-<!-- Header -->
-<div *ngIf="schule === undefined; then showHeaderAdd; else showHeaderEdit"></div>
-<ng-template #showHeaderEdit><h2>Schule bearbeiten</h2></ng-template>
-<ng-template #showHeaderAdd><h2>Schule hinzufügen</h2></ng-template>
+<form [formGroup]="service.form" class="normal-form" (submit)="onSubmit()">
 
-<!-- Form-Content -->
-<div class="example-container">
-  <form (ngSubmit)="onSubmit()">
+  <span class="hidden-color"> <!-- TODO find solution for scaling problem -->
+    ###############################
+    ###############################
+    ###############################
+    ###############################
+  </span>
+
+  <mat-grid-list cols="2" rowHeight="300px">
+    <mat-grid-tile>
+      <div class="controls-container">
+        <input type="hidden" formControlName="$key">
+
+        <mat-form-field>
+          <label>
+            <input formControlName="name" matInput placeholder="Name*">
+          </label>
+          <mat-error>Ihre Eingabe wird benötigt.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <label>
+            <input formControlName="schulform" matInput placeholder="Schulform">
+          </label>
+        </mat-form-field>
+
+        <mat-form-field>
+          <label>
+            <input formControlName="schwerpunkt" matInput placeholder="Schwerpunkt">
+          </label>
+        </mat-form-field>
+
+        <mat-form-field>
+          <label>
+            <input formControlName="schulleitung_mail" matInput placeholder="Schulleitung (Mail)">
+          </label>
+          <mat-error>Die E-Mail ist nicht valide.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <label>
+            <input formControlName="stubo_mail" matInput placeholder="Stubo (Mail)">
+          </label>
+        </mat-form-field>
 
 
-    <mat-form-field appearance="fill">
-      <mat-label>Name</mat-label>
-      <label>
-        <input matInput value="{{ (schule | async)?.name }}">
-      </label>
-    </mat-form-field>
-    <br>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="controls-container">
+        <mat-form-field>
+          <mat-select formControlName="adresse" placeholder="Adresse*">
+            <mat-option>Keine</mat-option>
+            <ng-container *ngFor="let adresse of adressen | async">
+              <mat-option value="{{adresse.adress_id}}">
+                {{adresse.strasse}} {{adresse.hausnummer}} <br>
+              </mat-option>
+            </ng-container>
+          </mat-select>
+          <mat-error>Bitte wählen Sie eine Adresse</mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Schulform</mat-label>
-      <label>
-        <input matInput value="{{ (schule | async)?.schulform }}">
-      </label>
-    </mat-form-field>
-    <br>
+        <mat-form-field>
+          <mat-select formControlName="ort" placeholder="Ort*">
+            <mat-option>Keine</mat-option>
+            <ng-container *ngFor="let ort of orte | async">
+              <mat-option value="{{ort.ort_id}}">
+                {{ort.plz}} {{ort.bezeichnung}} <br>
+              </mat-option>
+            </ng-container>
+          </mat-select>
+          <mat-error>Bitte wählen Sie einen Ort</mat-error>
+        </mat-form-field>
 
-
-    <mat-form-field appearance="fill">
-      <mat-label>Schwerpunkt</mat-label>
-      <label>
-        <input matInput value="{{ (schule | async)?.schwerpunkt }}">
-      </label>
-    </mat-form-field>
-    <br>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Adresse</mat-label>
-
-      <mat-select value="{{(schule | async)?.adress_id}}">
-        <div *ngFor="let adresse of adressen | async">
-          <mat-option value="{{ adresse.adress_id }}">{{ adresse.strasse }}, {{ adresse.hausnummer }}</mat-option>
+        <div class="add-bottom-padding">
+          <mat-checkbox formControlName="kooperationsvertrag">Kooperationsvertrag</mat-checkbox>
+        </div>
+        <div class="add-bottom-padding">
+          <mat-checkbox formControlName="kaoa_hochschule">kaoa Hochschule</mat-checkbox>
+        </div>
+        <div class="add-bottom-padding">
+          <mat-checkbox formControlName="talentscouting">Talentscouting</mat-checkbox>
         </div>
 
-        <!-- TODO link to add popup -->
-        <a href="">
-          <mat-option value="add">Hinzufügen</mat-option>
-        </a>
-      </mat-select>
-    </mat-form-field>
-    <br>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Ort</mat-label>
-      <mat-select value="{{ortId}}">
-        <div *ngFor="let ort of orte | async">
-          <mat-option value="{{ ort.ort_id }}">{{ ort.plz }}, {{ ort.bezeichnung }}</mat-option>
+        <div class="btn-row">
+          <button mat-raised-button color="primary" type="submit" [disabled]="service.form.invalid">Speichern</button>
+          <button mat-raised-button color="warn" (click)="onClear()">Zurücksetzen</button>
         </div>
 
-        <!-- TODO link to add popup -->
-        <a href="">
-          <mat-option value="option, optiop">Hinzufügen</mat-option>
-        </a>
-      </mat-select>
-    </mat-form-field>
-    <br>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Schulleitung (Mail)</mat-label>
-      <label>
-        <input matInput value="{{(schule | async)?.schulleitung_mail}}">
-      </label>
-    </mat-form-field>
-    <br>
+  <!--  <mat-grid-list cols="2" rowHeight="300px">-->
+  <!--    <div class="controls-container">-->
+  <!--      <input type="hidden" formControlName="$key">-->
 
+  <!--        <mat-form-field>-->
+  <!--          <label>-->
+  <!--            <input formControlName="name" matInput placeholder="Name">-->
+  <!--          </label>-->
+  <!--        </mat-form-field>-->
 
-    <mat-form-field appearance="fill">
-      <mat-label>StuBo (Mail)</mat-label>
-      <label>
-        <input matInput value="{{(schule | async)?.stubo_mail}}">
-      </label>
-    </mat-form-field>
-    <br>
+  <!--        <mat-form-field>-->
+  <!--          <label>-->
+  <!--            <input formControlName="schulform" matInput placeholder="Schulform">-->
+  <!--          </label>-->
+  <!--        </mat-form-field>-->
 
-    <mat-form-field appearance="fill">
-      <mat-label>Schueleranzahl</mat-label>
-      <label>
-        <input matInput value="{{(schule | async)?.schueleranzahl}}">
-      </label>
-    </mat-form-field>
-    <br>
+  <!--        <mat-form-field>-->
+  <!--          <label>-->
+  <!--            <input formControlName="schwerpunkt" matInput placeholder="Schwerpunkt">-->
+  <!--          </label>-->
+  <!--        </mat-form-field>-->
 
-    <label>
-      <mat-checkbox [checked]="(schule | async)?.kooperationsvertrag"></mat-checkbox>
-      Kooperationsvertrag
-    </label>
-    <br><br>
+  <!--        <mat-form-field>-->
+  <!--          <label>-->
+  <!--            <input formControlName="schulleitung_mail" matInput placeholder="Schulleitung (Mail)">-->
+  <!--          </label>-->
+  <!--        </mat-form-field>-->
 
-    <label>
-      <mat-checkbox [checked]="(schule | async)?.talentscouting"></mat-checkbox>
-      Talentscouting
-    </label>
-    <br><br>
-
-    <label>
-      <mat-checkbox [checked]="(schule | async)?.kaoa_hochschule"></mat-checkbox>
-      Kaoa Hochschule
-    </label>
-    <br><br>
+  <!--        <mat-form-field>-->
+  <!--          <label>-->
+  <!--            <input formControlName="stubo_mail" matInput placeholder="Stubo (Mail)">-->
+  <!--          </label>-->
+  <!--        </mat-form-field>-->
 
 
-    <br>
-    <mat-form-field appearance="fill">
-      <mat-label>Kommentar</mat-label>
-      <label>
-        <textarea disabled matInput></textarea>
-      </label>
-    </mat-form-field>
+  <!--      <mat-grid-tile>-->
+  <!--        <span>TEST</span>-->
+  <!--      </mat-grid-tile>-->
 
-    <br>
-    <br>
+  <!--      &lt;!&ndash;      <mat-grid-tile>&ndash;&gt;-->
+  <!--      &lt;!&ndash;        <div class="controls-container">&ndash;&gt;-->
+  <!--      &lt;!&ndash;          <mat-form-field>&ndash;&gt;-->
+  <!--      &lt;!&ndash;            <mat-select formControlName="adresse" placeholder="Adresse">&ndash;&gt;-->
+  <!--      &lt;!&ndash;              <mat-option>Keine</mat-option>&ndash;&gt;-->
+  <!--      &lt;!&ndash;              <ng-container *ngFor="let adresse of adressen | async">&ndash;&gt;-->
+  <!--      &lt;!&ndash;                <mat-option value="{{adresse.adress_id}}">&ndash;&gt;-->
+  <!--      &lt;!&ndash;                  {{adresse.strasse}} {{adresse.hausnummer}} <br>&ndash;&gt;-->
+  <!--      &lt;!&ndash;                </mat-option>&ndash;&gt;-->
+  <!--      &lt;!&ndash;              </ng-container>&ndash;&gt;-->
+  <!--      &lt;!&ndash;            </mat-select>&ndash;&gt;-->
+  <!--      &lt;!&ndash;          </mat-form-field>&ndash;&gt;-->
 
-    <!-- Safe, exit btn -->
-    <button mat-flat-button routerLink="/">Zurück</button>
 
-    <div *ngIf="schule === undefined; then showBtnAdd; else showBtnSave"></div>
-    <ng-template #showBtnSave>
-      <button type="submit" mat-flat-button color="primary">Änderung speichern</button>
+  <!--      &lt;!&ndash;        </div>&ndash;&gt;-->
+  <!--      &lt;!&ndash;        &lt;!&ndash; TODO adresse &ndash;&gt;&ndash;&gt;-->
+  <!--      &lt;!&ndash;        &lt;!&ndash; TODO ort &ndash;&gt;&ndash;&gt;-->
+  <!--      &lt;!&ndash;      </mat-grid-tile>&ndash;&gt;-->
 
-    </ng-template>
-    <ng-template #showBtnAdd>
-      <button mat-flat-button color="primary">Schule hinzufügen</button>
-    </ng-template>
-  </form>
-</div>
+
+  <!--    </div>-->
+  <!--  </mat-grid-list>-->
+
+
+</form>
+
+
+<!--&lt;!&ndash; Header &ndash;&gt;-->
+<!--<div *ngIf="schule === undefined; then showHeaderAdd; else showHeaderEdit"></div>-->
+<!--<ng-template #showHeaderEdit><h2>Schule bearbeiten</h2></ng-template>-->
+<!--<ng-template #showHeaderAdd><h2>Schule hinzufügen</h2></ng-template>-->
+
+<!--&lt;!&ndash; Form-Content &ndash;&gt;-->
+<!--<div class="example-container">-->
+<!--  <form (ngSubmit)="onSubmit()">-->
+
+
+<!--    <mat-form-field appearance="fill">-->
+<!--      <mat-label>Name</mat-label>-->
+<!--      <label>-->
+<!--        <input matInput value="{{ (schule | async)?.name }}">-->
+<!--      </label>-->
+<!--    </mat-form-field>-->
+<!--    <br>-->
+
+<!--    <mat-form-field appearance="fill">-->
+<!--      <mat-label>Schulform</mat-label>-->
+<!--      <label>-->
+<!--        <input matInput value="{{ (schule | async)?.schulform }}">-->
+<!--      </label>-->
+<!--    </mat-form-field>-->
+<!--    <br>-->
+
+
+<!--    <mat-form-field appearance="fill">-->
+<!--      <mat-label>Schwerpunkt</mat-label>-->
+<!--      <label>-->
+<!--        <input matInput value="{{ (schule | async)?.schwerpunkt }}">-->
+<!--      </label>-->
+<!--    </mat-form-field>-->
+<!--    <br>-->
+
+<!--    <mat-form-field appearance="fill">-->
+<!--      <mat-label>Adresse</mat-label>-->
+
+<!--      <mat-select value="{{(schule | async)?.adress_id}}">-->
+<!--        <div *ngFor="let adresse of adressen | async">-->
+<!--          <mat-option value="{{ adresse.adress_id }}">{{ adresse.strasse }}, {{ adresse.hausnummer }}</mat-option>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; TODO link to add popup &ndash;&gt;-->
+<!--        <a href="">-->
+<!--          <mat-option value="add">Hinzufügen</mat-option>-->
+<!--        </a>-->
+<!--      </mat-select>-->
+<!--    </mat-form-field>-->
+<!--    <br>-->
+
+<!--    <mat-form-field appearance="fill">-->
+<!--      <mat-label>Ort</mat-label>-->
+<!--      <mat-select value="{{ortId}}">-->
+<!--        <div *ngFor="let ort of orte | async">-->
+<!--          <mat-option value="{{ ort.ort_id }}">{{ ort.plz }}, {{ ort.bezeichnung }}</mat-option>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; TODO link to add popup &ndash;&gt;-->
+<!--        <a href="">-->
+<!--          <mat-option value="option, optiop">Hinzufügen</mat-option>-->
+<!--        </a>-->
+<!--      </mat-select>-->
+<!--    </mat-form-field>-->
+<!--    <br>-->
+
+<!--    <mat-form-field appearance="fill">-->
+<!--      <mat-label>Schulleitung (Mail)</mat-label>-->
+<!--      <label>-->
+<!--        <input matInput value="{{(schule | async)?.schulleitung_mail}}">-->
+<!--      </label>-->
+<!--    </mat-form-field>-->
+<!--    <br>-->
+
+
+<!--    <mat-form-field appearance="fill">-->
+<!--      <mat-label>StuBo (Mail)</mat-label>-->
+<!--      <label>-->
+<!--        <input matInput value="{{(schule | async)?.stubo_mail}}">-->
+<!--      </label>-->
+<!--    </mat-form-field>-->
+<!--    <br>-->
+
+<!--    <mat-form-field appearance="fill">-->
+<!--      <mat-label>Schueleranzahl</mat-label>-->
+<!--      <label>-->
+<!--        <input matInput value="{{(schule | async)?.schueleranzahl}}">-->
+<!--      </label>-->
+<!--    </mat-form-field>-->
+<!--    <br>-->
+
+<!--    <label>-->
+<!--      <mat-checkbox [checked]="(schule | async)?.kooperationsvertrag"></mat-checkbox>-->
+<!--      Kooperationsvertrag-->
+<!--    </label>-->
+<!--    <br><br>-->
+
+<!--    <label>-->
+<!--      <mat-checkbox [checked]="(schule | async)?.talentscouting"></mat-checkbox>-->
+<!--      Talentscouting-->
+<!--    </label>-->
+<!--    <br><br>-->
+
+<!--    <label>-->
+<!--      <mat-checkbox [checked]="(schule | async)?.kaoa_hochschule"></mat-checkbox>-->
+<!--      Kaoa Hochschule-->
+<!--    </label>-->
+<!--    <br><br>-->
+
+
+<!--    <br>-->
+<!--    <mat-form-field appearance="fill">-->
+<!--      <mat-label>Kommentar</mat-label>-->
+<!--      <label>-->
+<!--        <textarea disabled matInput></textarea>-->
+<!--      </label>-->
+<!--    </mat-form-field>-->
+
+<!--    <br>-->
+<!--    <br>-->
+
+<!--    &lt;!&ndash; Safe, exit btn &ndash;&gt;-->
+<!--    <button mat-flat-button routerLink="/">Zurück</button>-->
+
+<!--    <div *ngIf="schule === undefined; then showBtnAdd; else showBtnSave"></div>-->
+<!--    <ng-template #showBtnSave>-->
+<!--      <button type="submit" mat-flat-button color="primary">Änderung speichern</button>-->
+
+<!--    </ng-template>-->
+<!--    <ng-template #showBtnAdd>-->
+<!--      <button mat-flat-button color="primary">Schule hinzufügen</button>-->
+<!--    </ng-template>-->
+<!--  </form>-->
+<!--</div>-->

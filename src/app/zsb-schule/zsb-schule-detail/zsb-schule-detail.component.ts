@@ -22,24 +22,28 @@ export class ZsbSchuleDetailComponent implements OnInit {
   adresseId: number;
   ortId: number;
 
-  constructor(private route: ActivatedRoute, private service: DatabaseService) {
+  constructor(
+    private route: ActivatedRoute,
+    private dbService: DatabaseService,
+    public service: SchuleService,
+    private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
-    this.orte = this.service.getOrte();
-    this.adressen = this.service.getAdressen();
+    this.orte = this.dbService.getOrte();
+    this.adressen = this.dbService.getAdressen();
 
     this.route.paramMap.subscribe(params => {
       this.schuleId = params.get('schuleId');
 
       if (this.schuleId != null) {
-        this.schule = this.service.getSchuleById(this.schuleId);
+        this.schule = this.dbService.getSchuleById(this.schuleId);
         this.schule.subscribe(s => {
           this.adresseId = s.adress_id;
         });
 
         this.adressen.subscribe(it => {
-          const adresse = this.service.getAdresseById(it, this.adresseId);
+          const adresse = this.dbService.getAdresseById(it, this.adresseId);
           this.ortId = adresse.ort_id;
         });
       } else {
@@ -50,5 +54,20 @@ export class ZsbSchuleDetailComponent implements OnInit {
 
   onSubmit() {
     console.log('SUB');
+    if (this.service.form.valid) {
+      this.service.insertSchule(this.service.form.value);
+      this.service.form.reset();
+      this.service.initializeFormGroup();
+
+      this.notificationService.success(':: Schule erflogreich gesichert.');
+    } else {
+      this.notificationService.failure('Schule konnte nicht gesichert werden.');
+    }
+  }
+
+  onClear() {
+    this.service.form.reset();
+    this.service.initializeFormGroup();
+    this.notificationService.success(':: Schule erflogreich gesichert.');
   }
 }

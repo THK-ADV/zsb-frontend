@@ -1,0 +1,16 @@
+form.normal-form {
+  margin: 10px;
+}
+
+.controls-container {
+  width: 100%;
+  padding: 5%;
+}
+
+.controls-container > * {
+  width: 100%;
+}
+
+.add-bottom-padding {
+  padding-bottom: 10px;
+}
