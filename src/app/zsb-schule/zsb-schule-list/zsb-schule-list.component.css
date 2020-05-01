@@ -26,3 +26,12 @@
   height: 32px;
   width: 32px;
 }
+
+mat-cell > mat-icon {
+  margin-right: 5px;
+}
+
+mat-footer-row mat-footer-cell {
+  justify-content: center;
+  font-style: italic;
+}
