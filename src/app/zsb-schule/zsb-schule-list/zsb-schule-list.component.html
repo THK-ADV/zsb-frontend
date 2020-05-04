@@ -1,5 +1,5 @@
 <div class="search-div">
-  <button mat-raised-button>
+  <button mat-raised-button [routerLink]="['/schulen']" color="primary">
     <mat-icon>add</mat-icon>
     Hinzufügen
   </button>
@@ -92,19 +92,15 @@
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let row">
-        <button mat-icon-button>
+        <button mat-icon-button [routerLink]="['/schulen', row.schule_id]">
           <mat-icon>launch</mat-icon> <!-- use launch or edit -->
         </button>
         <button mat-icon-button color="warn">
           <mat-icon>delete_outline</mat-icon>
         </button>
 
-        <!--        <div class="table-icon">-->
-        <!--          <a [routerLink]="['/schulen', row.schule_id]">-->
-        <!--            <mat-icon>edit</mat-icon>-->
-        <!--          </a>-->
-        <!--          <mat-icon (click)="(row.schule_id)">delete</mat-icon>-->
-        <!--        </div>-->
+        <!-- TODO make delete work: -->
+        <!-- <mat-icon (click)="(row.schule_id)">delete</mat-icon>-->
       </mat-cell>
     </ng-container>
 

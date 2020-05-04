@@ -1,4 +1,4 @@
-<form [formGroup]="service.form" class="normal-form" (submit)="onSubmit()">
+<form [formGroup]="service.formGroup" class="normal-form" (submit)="onSubmit()">
 
   <span class="hidden-color"> <!-- TODO find solution for scaling problem -->
     ###############################
@@ -51,9 +51,9 @@
       <div class="controls-container">
         <mat-form-field>
           <mat-select formControlName="adresse" placeholder="Adresse*">
-            <mat-option>Keine</mat-option>
-            <ng-container *ngFor="let adresse of adressen | async">
-              <mat-option value="{{adresse.adress_id}}">
+            <mat-option value="-1">Keine</mat-option>
+            <ng-container *ngFor="let adresse of adressenObservable | async">
+              <mat-option [value]="adresse.adress_id">
                 {{adresse.strasse}} {{adresse.hausnummer}} <br>
               </mat-option>
             </ng-container>
@@ -63,9 +63,9 @@
 
         <mat-form-field>
           <mat-select formControlName="ort" placeholder="Ort*">
-            <mat-option>Keine</mat-option>
-            <ng-container *ngFor="let ort of orte | async">
-              <mat-option value="{{ort.ort_id}}">
+            <mat-option value="-1">Keine</mat-option>
+            <ng-container *ngFor="let ort of orteObservable | async">
+              <mat-option [value]="ort.ort_id">
                 {{ort.plz}} {{ort.bezeichnung}} <br>
               </mat-option>
             </ng-container>
@@ -85,7 +85,7 @@
 
 
         <div class="btn-row">
-          <button mat-raised-button color="primary" type="submit" [disabled]="service.form.invalid">Speichern</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="service.formGroup.invalid">Speichern</button>
           <button mat-raised-button color="warn" (click)="onClear()">Zurücksetzen</button>
         </div>
 

@@ -16,7 +16,7 @@ export class ZsbSchuleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.schulen = this.databaseService.getSchulenComplete();
+    this.schulen = this.databaseService.getSchulenAtomic();
   }
 
   filterList() {

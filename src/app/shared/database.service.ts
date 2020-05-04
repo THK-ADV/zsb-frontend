@@ -47,7 +47,7 @@ export class DatabaseService {
     return this.httpClient.post<Ort>(this.DB_URL + '/orte', data);
   }
 
-  getSchulenComplete() {
+  getSchulenAtomic() {
     return this.httpClient.get<Schule[]>(this.DB_URL + '/schulen?resolve_ids=true')
       .pipe(
         retry(1),
@@ -65,6 +65,10 @@ export class DatabaseService {
 
   getSchuleById(id: number) {
     return this.httpClient.get<Schule>(this.DB_URL + '/schulen/' + id);
+  }
+
+  getSchuleByIdAtomic(id: number) {
+    return this.httpClient.get<Schule>(this.DB_URL + '/schulen/' + id + '?resolve_ids=true');
   }
 
   getAdresseById(adressen: Adresse[], id: number): Adresse {

@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {DatabaseService} from './database.service';
 import {Schule} from '../zsb-schule/schule';
 
 @Injectable({
@@ -8,10 +7,7 @@ import {Schule} from '../zsb-schule/schule';
 })
 export class SchuleService {
 
-  constructor(dbService: DatabaseService) {
-  }
-
-  form: FormGroup = new FormGroup({
+  formGroup: FormGroup = new FormGroup({
     $key: new FormControl(null),
     name: new FormControl('', Validators.required),
     schulform: new FormControl(''),
@@ -27,19 +23,36 @@ export class SchuleService {
   });
 
   initializeFormGroup() {
-    this.form.setValue({
+    this.formGroup.setValue({
       $key: null,
       name: '',
       schulform: '',
       schwerpunkt: '',
-      adresse: 0,
-      ort: 0,
+      adresse: null,
+      ort: null,
       schulleitung_mail: '',
       stubo_mail: '',
       kooperationsvertrag: false,
       schueleranzahl: '',
       kaoa_hochschule: false,
       talentscouting: false
+    });
+  }
+
+  loadFormData(schule: Schule) {
+    this.formGroup.setValue({
+      $key: schule.schule_id,
+      name: schule.name,
+      schulform: schule.schulform,
+      schwerpunkt: schule.schwerpunkt,
+      adresse: schule.adress_id,
+      ort: schule.ort.ort_id,
+      schulleitung_mail: schule.schulleitung_mail,
+      stubo_mail: schule.stubo_mail,
+      kooperationsvertrag: schule.kooperationsvertrag,
+      schueleranzahl: schule.schueleranzahl,
+      kaoa_hochschule: schule.kaoa_hochschule,
+      talentscouting: schule.talentscouting
     });
   }
 

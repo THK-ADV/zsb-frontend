@@ -36,7 +36,7 @@ export class ZsbSchuleListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.service.getSchulenComplete().subscribe(
+    this.service.getSchulenAtomic().subscribe(
       list => {
         const array = list.map(item => {
           return {

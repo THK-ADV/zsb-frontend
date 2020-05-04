@@ -15,9 +15,9 @@ import {NotificationService} from '../../shared/notification.service';
 })
 export class ZsbSchuleDetailComponent implements OnInit {
   schuleId;
-  schule: Observable<Schule>;
-  orte: Observable<Ort[]>;
-  adressen: Observable<Adresse[]>;
+  schuleObservable: Observable<Schule>;
+  orteObservable: Observable<Ort[]>;
+  adressenObservable: Observable<Adresse[]>;
 
   adresseId: number;
   ortId: number;
@@ -30,33 +30,34 @@ export class ZsbSchuleDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.orte = this.dbService.getOrte();
-    this.adressen = this.dbService.getAdressen();
+    this.orteObservable = this.dbService.getOrte();
+    this.adressenObservable = this.dbService.getAdressen();
 
     this.route.paramMap.subscribe(params => {
       this.schuleId = params.get('schuleId');
 
       if (this.schuleId != null) {
-        this.schule = this.dbService.getSchuleById(this.schuleId);
-        this.schule.subscribe(s => {
-          this.adresseId = s.adress_id;
-        });
-
-        this.adressen.subscribe(it => {
-          const adresse = this.dbService.getAdresseById(it, this.adresseId);
-          this.ortId = adresse.ort_id;
+        this.schuleObservable = this.dbService.getSchuleByIdAtomic(this.schuleId);
+        this.schuleObservable.subscribe(schule => {
+          this.service.loadFormData(schule);
+          this.adresseId = schule.adress_id;
+          this.adressenObservable.subscribe(it => {
+            const adresse = this.dbService.getAdresseById(it, this.adresseId);
+            this.ortId = adresse.ort_id;
+          });
         });
       } else {
-        this.schule = undefined;
+        this.schuleObservable = undefined;
       }
     });
+
   }
 
   onSubmit() {
     console.log('SUB');
-    if (this.service.form.valid) {
-      this.service.insertSchule(this.service.form.value);
-      this.service.form.reset();
+    if (this.service.formGroup.valid) {
+      this.service.insertSchule(this.service.formGroup.value);
+      this.service.formGroup.reset();
       this.service.initializeFormGroup();
 
       this.notificationService.success(':: Schule erflogreich gesichert.');
@@ -66,8 +67,9 @@ export class ZsbSchuleDetailComponent implements OnInit {
   }
 
   onClear() {
-    this.service.form.reset();
+    console.log('CLEAR');
+    this.service.formGroup.reset();
     this.service.initializeFormGroup();
-    this.notificationService.success(':: Schule erflogreich gesichert.');
+    this.notificationService.success(':: Formular zurückgesetzt.');
   }
 }
