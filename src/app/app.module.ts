@@ -30,7 +30,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 const appRoutes: Routes = [
   {path: '', component: ZsbSchuleComponent},
   {path: 'schulen/:schuleId', component: ZsbSchuleDetailComponent},
-  {path: 'schulen', component: ZsbSchuleDetailComponent}
+  {path: 'schulen', component: ZsbSchuleDetailComponent},
+  {path: 'ort', component: ZsbOrteComponent}
 ];
 
 @NgModule({

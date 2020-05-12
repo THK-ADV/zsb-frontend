@@ -10,7 +10,7 @@
   <mat-grid-list cols="2" rowHeight="300px">
     <mat-grid-tile>
       <div class="controls-container">
-        <input type="hidden" formControlName="$key">
+        <input type="hidden" formControlName="schule_id">
 
         <mat-form-field>
           <label>
@@ -92,5 +92,7 @@
       </div>
     </mat-grid-tile>
   </mat-grid-list>
+
+  <p>Result: {{ service.newSchule | async | json }}</p>
 
 </form>

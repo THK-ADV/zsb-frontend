@@ -44,7 +44,13 @@ export class DatabaseService {
       bezeichnung: 'Berlin'
     };
 
+    console.log('REQUEST: CREATE ORT');
     return this.httpClient.post<Ort>(this.DB_URL + '/orte', data);
+  }
+
+  createSchule(schule: Schule) {
+    console.log('REQUEST: CREATE SCHULE');
+    return this.httpClient.post<Schule>(this.DB_URL + '/schulen', schule);
   }
 
   getSchulenAtomic() {
