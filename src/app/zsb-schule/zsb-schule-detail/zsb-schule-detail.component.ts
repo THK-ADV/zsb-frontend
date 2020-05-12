@@ -7,6 +7,7 @@ import {Ort} from '../../zsb-orte/ort';
 import {Adresse} from '../../zsb-orte/adresse';
 import {SchuleService} from '../../shared/schule.service';
 import {NotificationService} from '../../shared/notification.service';
+import {Schulform} from '../schulform';
 
 @Component({
   selector: 'app-zsb-schule-detail',
@@ -18,6 +19,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
   schuleObservable: Observable<Schule>;
   orteObservable: Observable<Ort[]>;
   adressenObservable: Observable<Adresse[]>;
+  schulformen: Observable<Schulform[]>;
 
   adresseId: number;
   ortId: number;
@@ -32,6 +34,12 @@ export class ZsbSchuleDetailComponent implements OnInit {
   ngOnInit(): void {
     this.orteObservable = this.dbService.getOrte();
     this.adressenObservable = this.dbService.getAdressen();
+
+
+    this.schulformen = this.dbService.getSchulform();
+    // this.dbService.getSchulform().subscribe(schulformen => {
+    //   this.schulformen = schulformen;
+    // });
 
     this.route.paramMap.subscribe(params => {
       this.schuleId = params.get('schuleId');
@@ -56,7 +64,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
   onSubmit() {
     console.log('SUB');
     if (this.service.formGroup.valid) {
-      this.service.insertSchule(this.service.formGroup.value);
+      this.service.insertOrUpdateSchule(this.service.formGroup.value);
       this.service.formGroup.reset();
       this.service.initializeFormGroup();
 

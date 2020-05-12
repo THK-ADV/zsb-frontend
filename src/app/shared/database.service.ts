@@ -5,6 +5,7 @@ import {Schule} from '../zsb-schule/schule';
 import {Adresse} from '../zsb-orte/adresse';
 import {catchError, retry} from 'rxjs/operators';
 import {throwError} from 'rxjs';
+import {Schulform} from '../zsb-schule/schulform';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,11 @@ export class DatabaseService {
     return this.httpClient.post<Schule>(this.DB_URL + '/schulen', schule);
   }
 
+  updateSchule(schule: Schule) {
+    console.log('REQUEST: UPDATE SCHULE');
+    return this.httpClient.put<Schule>(this.DB_URL + '/schulen', schule);
+  }
+
   getSchulenAtomic() {
     return this.httpClient.get<Schule[]>(this.DB_URL + '/schulen?resolve_ids=true')
       .pipe(
@@ -75,6 +81,10 @@ export class DatabaseService {
 
   getSchuleByIdAtomic(id: number) {
     return this.httpClient.get<Schule>(this.DB_URL + '/schulen/' + id + '?resolve_ids=true');
+  }
+
+  getSchulform() {
+    return this.httpClient.get<Schulform[]>(this.DB_URL + '/schulen/schulformen');
   }
 
   getAdresseById(adressen: Adresse[], id: number): Adresse {

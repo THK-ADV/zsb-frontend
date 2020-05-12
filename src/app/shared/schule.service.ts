@@ -47,8 +47,6 @@ export class SchuleService {
   }
 
   loadFormData(schule: Schule) {
-    console.log(schule);
-    console.log('Test: ' + schule.adress_id);
     this.formGroup.setValue({
       schule_id: schule.schule_id,
       name: schule.name,
@@ -63,15 +61,16 @@ export class SchuleService {
       kaoa_hochschule: schule.kaoa_hochschule,
       talentscouting: schule.talentscouting
     });
-    console.log('Test B');
   }
 
-  insertSchule(schule: Schule) {
-    console.log(schule);
+  updateSchule(schule: Schule) {
+  }
+
+  insertOrUpdateSchule(schule: Schule) {
     const newSchule: Schule = {
       schule_id: schule.schule_id,
       name: schule.name,
-      schulform: 1, // schule.schulform, // TODO namen auflösen, muss eine Zahl sein!
+      schulform: schule.schulform,
       schwerpunkt: schule.schwerpunkt,
       adress_id: +schule.adresse, // cast to number via + operator
       ort_id: schule.ort.ort_id,
@@ -84,12 +83,14 @@ export class SchuleService {
       adresse: null,
       ort: null
     };
+    console.log('Send Create/Update to server:');
     console.log(newSchule);
 
-    this.newSchule = this.dbService.createSchule(newSchule);
-  }
-
-  updateSchule(schule: Schule) {
+    if (newSchule.schule_id == null) {
+      this.newSchule = this.dbService.createSchule(newSchule);
+    } else {
+      this.newSchule = this.dbService.updateSchule(newSchule);
+    }
   }
 
   deleteSchule(schule: Schule) {

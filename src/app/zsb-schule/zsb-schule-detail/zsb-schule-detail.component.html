@@ -20,9 +20,15 @@
         </mat-form-field>
 
         <mat-form-field>
-          <label>
-            <input formControlName="schulform" matInput placeholder="Schulform">
-          </label>
+          <mat-select formControlName="schulform" placeholder="Schulform*">
+            <mat-option value="-1">Keine</mat-option>
+            <ng-container *ngFor="let schulform of schulformen | async">
+              <mat-option [value]="schulform.id">
+                {{schulform.desc}} <br>
+              </mat-option>
+            </ng-container>
+          </mat-select>
+          <mat-error>Bitte wählen Sie die passende Schulform aus</mat-error>
         </mat-form-field>
 
         <mat-form-field>
