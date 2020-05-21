@@ -25,11 +25,13 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {ZsbAdresseComponent} from './zsb-adresse/zsb-adresse.component';
 
 
 const appRoutes: Routes = [
   {path: '', component: ZsbSchuleComponent},
   {path: 'schulen/:schuleId', component: ZsbSchuleDetailComponent},
+  {path: 'schulen/:schuleId/adresse/:adresseId', component: ZsbAdresseComponent},
   {path: 'schulen', component: ZsbSchuleDetailComponent},
   {path: 'ort', component: ZsbOrteComponent}
 ];
@@ -40,7 +42,8 @@ const appRoutes: Routes = [
     ZsbOrteComponent,
     ZsbSchuleComponent,
     ZsbSchuleListComponent,
-    ZsbSchuleDetailComponent
+    ZsbSchuleDetailComponent,
+    ZsbAdresseComponent
   ],
   imports: [
     BrowserModule,

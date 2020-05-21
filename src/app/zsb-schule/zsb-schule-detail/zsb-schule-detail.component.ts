@@ -24,6 +24,8 @@ export class ZsbSchuleDetailComponent implements OnInit {
   adresseId: number;
   ortId: number;
 
+  enableAdress = false;
+
   constructor(
     private route: ActivatedRoute,
     private dbService: DatabaseService,

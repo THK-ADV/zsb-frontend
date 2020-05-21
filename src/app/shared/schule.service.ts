@@ -19,7 +19,7 @@ export class SchuleService {
     name: new FormControl('', Validators.required),
     schulform: new FormControl(''),
     schwerpunkt: new FormControl(null),
-    adresse: new FormControl(0, Validators.required),
+    adresse: new FormControl({value: '', disabled: true}),
     ort: new FormControl(0, Validators.required),
     schulleitung_mail: new FormControl('', Validators.email),
     stubo_mail: new FormControl('', Validators.email),
