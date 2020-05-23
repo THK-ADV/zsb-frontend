@@ -52,7 +52,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
           this.service.loadFormData(schule);
           this.adresseId = schule.adress_id;
           this.adressenObservable.subscribe(it => {
-            const adresse = this.dbService.getAdresseById(it, this.adresseId);
+            const adresse = this.dbService.getAdresseFromArrayByAdressId(it, this.adresseId);
             this.ortId = adresse.ort_id;
           });
         });

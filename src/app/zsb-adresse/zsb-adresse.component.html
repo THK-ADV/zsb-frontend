@@ -1,1 +1,56 @@
-<p>zsb-adresse works!</p>
+<!--<p>zsb-adresse works!</p>-->
+<h1>Adresse verwalten</h1>
+<form [formGroup]="service.formGroup" class="normal-form example-form" (submit)="onSubmit()">
+
+  <div class="controls-container">
+    <input type="hidden" formControlName="adresseId">
+
+
+    <mat-form-field class="example-full-width">
+      <input
+        name="plz"
+        type="text"
+        placeholder="PLZ"
+        aria-label="Number"
+        matInput
+        formControlName="plz"
+        [matAutocomplete]="autoPlz">
+      <mat-autocomplete autoActiveFirstOption #autoPlz="matAutocomplete">
+        <mat-option *ngFor="let option of filteredPlzOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <br>
+    <mat-form-field class="example-full-width">
+      <input
+        type="text"
+        placeholder="Ort"
+        aria-label="Text"
+        matInput
+        formControlName="bezeichnung"
+        [matAutocomplete]="autoOrt">
+      <mat-autocomplete autoActiveFirstOption #autoOrt="matAutocomplete" >
+        <mat-option *ngFor="let option of filteredOrtOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <label>
+        <input formControlName="strasse" matInput placeholder="Straße">
+      </label>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <label>
+        <input formControlName="hausnummer" matInput placeholder="Hausnr.">
+      </label>
+    </mat-form-field>
+
+  </div>
+
+
+</form>
+

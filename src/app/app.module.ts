@@ -26,6 +26,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {ZsbAdresseComponent} from './zsb-adresse/zsb-adresse.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 
 const appRoutes: Routes = [
@@ -69,7 +70,8 @@ const appRoutes: Routes = [
     MatInputModule,
     ReactiveFormsModule,
     MatGridListModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatAutocompleteModule
   ],
   providers: [],
   bootstrap: [AppComponent]

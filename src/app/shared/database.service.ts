@@ -29,6 +29,14 @@ export class DatabaseService {
       );
   }
 
+  getAdressenAtomic() {
+    return this.httpClient.get<Adresse[]>(this.DB_URL + '/adressen?resolve_ids=true')
+      .pipe(
+        retry(1),
+        catchError(this.handleError)
+      );
+  }
+
   getOrte() {
     return this.httpClient.get<Ort[]>(this.DB_URL + '/orte')
       .pipe(
@@ -87,7 +95,7 @@ export class DatabaseService {
     return this.httpClient.get<Schulform[]>(this.DB_URL + '/schulen/schulformen');
   }
 
-  getAdresseById(adressen: Adresse[], id: number): Adresse {
+  getAdresseFromArrayByAdressId(adressen: Adresse[], id: number): Adresse {
     let result = null;
     adressen.forEach(it => {
       if (it.adress_id === id) {

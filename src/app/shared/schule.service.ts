@@ -63,9 +63,6 @@ export class SchuleService {
     });
   }
 
-  updateSchule(schule: Schule) {
-  }
-
   insertOrUpdateSchule(schule: Schule) {
     const newSchule: Schule = {
       schule_id: schule.schule_id,
