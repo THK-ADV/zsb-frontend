@@ -25,12 +25,7 @@ export class ZsbAdresseComponent implements OnInit {
   orteObservable: Observable<Ort[]>;
   orte: Ort[];
   adressenObservable: Observable<Adresse[]>;
-
-  // selected values, used for autocomplete and filtering
-  selectedPlz;
-  selectedBeschreibung;
-  selectedStrasse;
-  selectedHausnummer;
+  adressen: Adresse[];
 
   schuleId: number;
   adresseId: number;
@@ -38,22 +33,30 @@ export class ZsbAdresseComponent implements OnInit {
 
   plzOptionsComplete: string[] = [];
   plzOptions: string[] = [];
+  filteredPlzOptions: Observable<string[]>;
+
   bezeichnungOptionsComplete: string[] = [];
   bezeichnungOptions: string[] = [];
-  filteredPlzOptions: Observable<string[]>;
-  filteredOrtOptions: Observable<string[]>;
+  filteredBezeichnungOptions: Observable<string[]>;
+
+  strasseOptionsComplete: string[] = [];
+  strasseOptions: string[] = [];
   filteredStrasseOptions: Observable<string[]>;
+
+  hausnummerOptionsComplete: string[] = [];
+  hausnummerOptions: string[] = [];
   filteredHausnummerOptions: Observable<string[]>;
 
 
   ngOnInit(): void {
     this.service.initializeFormGroup();
     this.service.formGroup.valueChanges.subscribe(() => this.updateValidOptions());
-
+    this.service.formGroup.controls.plz.valueChanges.subscribe(it => this.removeInvalidFormDataByPlz(it));
 
     this.orteObservable = this.dbService.getOrte();
     this.orteObservable.subscribe(orte => this.orte = orte);
     this.adressenObservable = this.dbService.getAdressenAtomic();
+    this.adressenObservable.subscribe(adressen => this.adressen = adressen);
 
     this.route.paramMap.subscribe(params => {
       this.schuleId = +params.get('schuleId');
@@ -67,19 +70,14 @@ export class ZsbAdresseComponent implements OnInit {
             this.adresseId = schule.adress_id;
           }
 
-          this.selectedPlz = schule.ort.plz;
-          this.selectedBeschreibung = schule.ort.bezeichnung;
-          this.selectedStrasse = schule.adresse.strasse;
-          this.selectedHausnummer = schule.adresse.hausnummer;
-
           this.adressenObservable.subscribe(it => {
-            const plzArray = it.map(value => value.ort.plz.toString());
-            const ortArray = it.map(value => value.ort.bezeichnung);
-            const adresse = this.dbService.getAdresseFromArrayByAdressId(it, this.adresseId);
-            this.ortId = adresse.ort_id;
+            this.ortId = this.dbService.getAdresseFromArrayByAdressId(it, this.adresseId).ort_id;
 
-            this.plzOptionsComplete = plzArray;
-            this.bezeichnungOptionsComplete = ortArray;
+            this.plzOptionsComplete = it.map(value => value.ort.plz.toString());
+            this.bezeichnungOptionsComplete = it.map(value => value.ort.bezeichnung);
+            this.strasseOptionsComplete = it.map(value => value.strasse);
+            this.hausnummerOptionsComplete = it.map(value => value.hausnummer);
+
             this.service.loadSchule(schule);
             this.updateAutocomplete();
           });
@@ -102,21 +100,50 @@ export class ZsbAdresseComponent implements OnInit {
       map(value => this._filter(value, this.plzOptionsComplete))
     );
 
-    this.filteredOrtOptions = this.service.formGroup.controls.bezeichnung.valueChanges.pipe(
+    this.filteredBezeichnungOptions = this.service.formGroup.controls.bezeichnung.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, this.bezeichnungOptions))
     );
+
+    this.filteredStrasseOptions = this.service.formGroup.controls.strasse.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, this.strasseOptions))
+    );
+
+    this.filteredHausnummerOptions = this.service.formGroup.controls.hausnummer.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value, this.hausnummerOptions))
+    );
+  }
+
+  private removeInvalidFormDataByPlz(newPlz: number) {
+    let newBezeichnung = this.service.formGroup.value.bezeichnung;
+    if (this.bezeichnungOptions.find(it => it === newBezeichnung) === undefined) {
+      newBezeichnung = '';
+    }
+
+    this.service.formGroup.patchValue({
+      bezeichnung: newBezeichnung,
+    });
+    console.log('Set to: \'' + newBezeichnung + '\'.');
   }
 
   private updateValidOptions() {
+    const selectedPlz = this.service.formGroup.value.plz;
     this.bezeichnungOptions = this.bezeichnungOptionsComplete.filter(
       bezeichnung => this.orte
-        .find(ort => ort.bezeichnung === bezeichnung && ort.plz === +this.service.formGroup.value.plz) !== undefined
+        .find(ort => ort.bezeichnung === bezeichnung && ort.plz === +selectedPlz) !== undefined || selectedPlz === ''
     );
 
-    // TODO
-    //  update strasse
-    //  update hausnr.
+    const selectedBezeichnung = this.service.formGroup.value.bezeichnung;
+    this.strasseOptions = this.strasseOptionsComplete.filter(
+      strasse => this.adressen.some(it => it.strasse === strasse && it.ort.bezeichnung === selectedBezeichnung)
+    );
+
+    const selectedStrasse = this.service.formGroup.value.strasse;
+    this.hausnummerOptions = this.hausnummerOptionsComplete.filter(
+      hausnummer => this.adressen.some(it => it.hausnummer === hausnummer && it.strasse === selectedStrasse)
+    );
   }
 
   private _filter(value: string, options: string[]): string[] {

@@ -13,7 +13,7 @@ export class AdresseService {
   public formGroup: FormGroup = new FormGroup({
     adresseId: new FormControl(null),
     plz: new FormControl(''),
-    bezeichnung: new FormControl('Tets', Validators.required),
+    bezeichnung: new FormControl('', Validators.required),
     strasse: new FormControl(''),
     hausnummer: new FormControl('')
   });

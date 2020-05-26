@@ -31,26 +31,41 @@
         formControlName="bezeichnung"
         [matAutocomplete]="autoOrt">
       <mat-autocomplete autoActiveFirstOption #autoOrt="matAutocomplete" >
-        <mat-option *ngFor="let option of filteredOrtOptions | async" [value]="option">
+        <mat-option *ngFor="let option of filteredBezeichnungOptions | async" [value]="option">
           {{option}}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
     <br>
-    <mat-form-field>
-      <label>
-        <input formControlName="strasse" matInput placeholder="Straße">
-      </label>
+    <mat-form-field class="example-full-width">
+      <input
+        type="text"
+        placeholder="Strasse"
+        aria-label="Text"
+        matInput
+        formControlName="strasse"
+        [matAutocomplete]="autoStrasse">
+      <mat-autocomplete autoActiveFirstOption #autoStrasse="matAutocomplete" >
+        <mat-option *ngFor="let option of filteredStrasseOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
     <br>
-    <mat-form-field>
-      <label>
-        <input formControlName="hausnummer" matInput placeholder="Hausnr.">
-      </label>
+    <mat-form-field class="example-full-width">
+      <input
+        type="text"
+        placeholder="Strasse"
+        aria-label="Text"
+        matInput
+        formControlName="hausnummer"
+        [matAutocomplete]="autoHausnummer">
+      <mat-autocomplete autoActiveFirstOption #autoHausnummer="matAutocomplete" >
+        <mat-option *ngFor="let option of filteredHausnummerOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
-
   </div>
-
-
 </form>
 
