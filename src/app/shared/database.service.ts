@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Ort} from '../zsb-orte/ort';
 import {Schule} from '../zsb-schule/schule';
-import {Adresse} from '../zsb-orte/adresse';
+import {Adresse} from '../zsb-adresse/adresse';
 import {catchError, retry} from 'rxjs/operators';
 import {throwError} from 'rxjs';
 import {Schulform} from '../zsb-schule/schulform';

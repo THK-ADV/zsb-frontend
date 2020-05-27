@@ -2,11 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Schule} from '../zsb-schule/schule';
 import {Ort} from '../zsb-orte/ort';
-import {Adresse} from '../zsb-orte/adresse';
+import {Adresse} from './adresse';
 import {DatabaseService} from '../shared/database.service';
 import {ActivatedRoute} from '@angular/router';
 import {AdresseService} from '../shared/adresse.service';
 import {map, startWith} from 'rxjs/operators';
+import {MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-zsb-adresse',
@@ -18,7 +19,8 @@ export class ZsbAdresseComponent implements OnInit {
   constructor(
     public service: AdresseService,
     private dbService: DatabaseService,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    public dialogRef: MatDialogRef<ZsbAdresseComponent>) {
   }
 
   schuleObservable: Observable<Schule>;
@@ -53,40 +55,59 @@ export class ZsbAdresseComponent implements OnInit {
     this.initializeInteractiveForm();
     this.loadDataFromDB();
 
-    this.route.paramMap.subscribe(params => {
-      this.schuleId = +params.get('schuleId');
-      this.adresseId = +params.get('adresseId');
+    this.schuleId = this.service.currentSchuleId;
+    this.adresseId = this.service.currentAdresseId;
 
-      if (this.schuleId != null && this.adresseId != null) {
-        this.schuleObservable = this.dbService.getSchuleByIdAtomic(this.schuleId);
-        this.schuleObservable.subscribe(schule => {
-          if (this.adresseId !== schule.adress_id) {
-            console.log('given adresseId does not match with schule.adress_id; using schule.adress_id');
-            this.adresseId = schule.adress_id;
-          }
+    if (this.schuleId != null && this.adresseId != null) {
+      this.schuleObservable = this.dbService.getSchuleByIdAtomic(this.schuleId);
+      this.schuleObservable.subscribe(schule => {
+        console.log(schule);
+        console.log('Given should be equal to requested: ' + this.adresseId + ' === ' + schule.adress_id);
+        if (+this.adresseId !== +schule.adress_id) {
+          console.log('given adresseId does not match with schule.adress_id; using schule.adress_id');
+          this.adresseId = schule.adress_id;
+        }
 
-          this.adressenObservable.subscribe(it => {
-            this.ortId = this.dbService.getAdresseFromArrayByAdressId(it, this.adresseId).ort_id;
+        this.adressenObservable.subscribe(it => {
+          this.ortId = this.dbService.getAdresseFromArrayByAdressId(it, this.adresseId).ort_id;
 
-            this.plzOptionsComplete = it.map(value => value.ort.plz.toString());
-            this.bezeichnungOptionsComplete = it.map(value => value.ort.bezeichnung);
-            this.strasseOptionsComplete = it.map(value => value.strasse);
-            this.hausnummerOptionsComplete = it.map(value => value.hausnummer);
+          this.plzOptionsComplete = it.map(value => value.ort.plz.toString());
+          this.bezeichnungOptionsComplete = it.map(value => value.ort.bezeichnung);
+          this.strasseOptionsComplete = it.map(value => value.strasse);
+          this.hausnummerOptionsComplete = it.map(value => value.hausnummer);
 
-            this.service.loadSchule(schule);
-            this.updateAutocomplete();
-          });
+          this.service.loadSchule(schule);
+          this.updateAutocomplete();
         });
-      } else {
-        this.schuleObservable = undefined;
-        this.adressenObservable = undefined;
-      }
-    });
-
+      });
+    } else {
+      this.schuleObservable = undefined;
+      this.adressenObservable = undefined;
+    }
   }
 
   onSubmit() {
+    const newOrt: Ort = {
+      bezeichnung: this.service.formGroup.value.bezeichnung,
+      plz: this.service.formGroup.value.plz,
+      ort_id: undefined
+    };
+
+    this.service.currentAdresse = {
+      adress_id: undefined,
+      strasse: this.service.formGroup.value.strasse,
+      hausnummer: this.service.formGroup.value.hausnummer,
+      ort_id: undefined,
+      ort: newOrt
+    };
+
     console.log('submit adressen changes');
+    console.log(this.service.currentAdresse);
+    this.onClose();
+  }
+
+  onClose() {
+    this.dialogRef.close();
   }
 
   private initializeInteractiveForm() {

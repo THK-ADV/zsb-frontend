@@ -1,5 +1,5 @@
 import {Ort} from '../zsb-orte/ort';
-import {Adresse} from '../zsb-orte/adresse';
+import {Adresse} from '../zsb-adresse/adresse';
 
 export interface Schule {
   schule_id: number;

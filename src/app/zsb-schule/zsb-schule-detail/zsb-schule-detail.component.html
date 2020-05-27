@@ -57,46 +57,36 @@
       <div class="controls-container">
         <!-- Adresse -->
         <mat-form-field>
-<!--            <input formControlName="adresse" placeholder="Adresse" matInput>-->
-            <mat-select formControlName="adresse" placeholder="Adresse*">
-              <mat-option value="-1">Keine</mat-option>
-              <ng-container *ngFor="let adresse of adressenObservable | async">
-                <ng-container *ngFor="let ort of orteObservable | async">
-                  <mat-option *ngIf="ort.ort_id === adresse.ort_id" [value]="adresse.adress_id">
-                    {{adresse.strasse}} {{adresse.hausnummer}}, {{ort.plz}} {{ort.bezeichnung}} <br>
-                  </mat-option>
-                </ng-container>
-              </ng-container>
-            </mat-select>
-
+          <label>
+            <input formControlName="adresse" matInput placeholder="Adresse">
+          </label>
         </mat-form-field>
-        <div class="single-btn-row">
-          <button mat-flat-button color="secondary" type="button" [routerLink]="['/schulen/'+schuleId+'/adresse/'+adresseId]">Adresse ändern</button>
-        </div>
+
 
 <!--        <mat-form-field>-->
 <!--          <mat-select formControlName="adresse" placeholder="Adresse*">-->
 <!--            <mat-option value="-1">Keine</mat-option>-->
 <!--            <ng-container *ngFor="let adresse of adressenObservable | async">-->
-<!--              <mat-option [value]="adresse.adress_id">-->
-<!--                {{adresse.strasse}} {{adresse.hausnummer}} <br>-->
-<!--              </mat-option>-->
+<!--              <ng-container *ngFor="let ort of orteObservable | async">-->
+<!--                <mat-option *ngIf="ort.ort_id === adresse.ort_id" [value]="adresse.adress_id">-->
+<!--                  {{adresse.strasse}} {{adresse.hausnummer}}, {{ort.plz}} {{ort.bezeichnung}} <br>-->
+<!--                </mat-option>-->
+<!--              </ng-container>-->
 <!--            </ng-container>-->
 <!--          </mat-select>-->
-<!--          <mat-error>Bitte wählen Sie eine Adresse</mat-error>-->
+
 <!--        </mat-form-field>-->
 
-<!--        <mat-form-field>-->
-<!--          <mat-select formControlName="ort" placeholder="Ort*">-->
-<!--            <mat-option value="-1">Keine</mat-option>-->
-<!--            <ng-container *ngFor="let ort of orteObservable | async">-->
-<!--              <mat-option [value]="ort.ort_id">-->
-<!--                {{ort.plz}} {{ort.bezeichnung}} <br>-->
-<!--              </mat-option>-->
-<!--            </ng-container>-->
-<!--          </mat-select>-->
-<!--          <mat-error>Bitte wählen Sie einen Ort</mat-error>-->
-<!--        </mat-form-field>-->
+
+<!--        <div class="single-btn-row">-->
+<!--          <button mat-flat-button color="secondary" type="button"-->
+<!--                  [routerLink]="['/schulen/'+schuleId+'/adresse/'+adresseId]">Adresse ändern-->
+<!--          </button>-->
+<!--        </div>-->
+        <div class="single-btn-row">
+          <button mat-flat-button color="secondary" type="button" (click)="changeAdresse()">Adresse ändern
+          </button>
+        </div>
 
         <div class="add-bottom-padding">
           <mat-checkbox formControlName="kooperationsvertrag">Kooperationsvertrag</mat-checkbox>
@@ -110,7 +100,8 @@
 
 
         <div class="btn-row">
-          <button mat-raised-button color="primary" type="submit" [disabled]="service.formGroup.invalid">Speichern</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="service.formGroup.invalid">Speichern
+          </button>
           <button mat-raised-button color="warn" (click)="onClear()">Zurücksetzen</button>
         </div>
 

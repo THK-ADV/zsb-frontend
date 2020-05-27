@@ -1,6 +1,6 @@
 <!--<p>zsb-adresse works!</p>-->
 <h1>Adresse verwalten</h1>
-<form [formGroup]="service.formGroup" class="normal-form example-form" (submit)="onSubmit()">
+<form [formGroup]="service.formGroup" class="normal-form example-form"> <!--  (submit)="onSubmit()" -->
 
   <div class="controls-container">
     <input type="hidden" formControlName="adresseId">
@@ -66,6 +66,13 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
+
+    <div class="btn-row">
+      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="service.formGroup.invalid"> <!-- type="submit" -->
+        Übernehmen
+      </button>
+      <button mat-raised-button color="warn" (click)="onClose()">Abbrechen</button>
+    </div>
   </div>
 </form>
 

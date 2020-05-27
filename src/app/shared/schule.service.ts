@@ -3,6 +3,8 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Schule} from '../zsb-schule/schule';
 import {DatabaseService} from './database.service';
 import {Observable} from 'rxjs';
+import {Adresse} from '../zsb-adresse/adresse';
+import {Ort} from '../zsb-orte/ort';
 
 @Injectable({
   providedIn: 'root'
@@ -52,7 +54,7 @@ export class SchuleService {
       name: schule.name,
       schulform: schule.schulform,
       schwerpunkt: schule.schwerpunkt,
-      adresse: schule.adress_id,
+      adresse: this.getReadableAdresse(schule.adresse, schule.ort),
       ort: schule.ort.ort_id,
       schulleitung_mail: schule.schulleitung_mail,
       stubo_mail: schule.stubo_mail,
@@ -91,5 +93,9 @@ export class SchuleService {
   }
 
   deleteSchule(schule: Schule) {
+  }
+
+  getReadableAdresse(adresse: Adresse, ort: Ort) {
+    return adresse.strasse + ' ' + adresse.hausnummer + ', ' + ort.plz + ' ' + ort.bezeichnung;
   }
 }

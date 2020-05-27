@@ -74,7 +74,8 @@ const appRoutes: Routes = [
     MatAutocompleteModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  // entryComponents: [ZsbSchuleDetailComponent]
 })
 export class AppModule {
 }

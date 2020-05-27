@@ -4,10 +4,13 @@ import {Schule} from '../schule';
 import {DatabaseService} from '../../shared/database.service';
 import {Observable} from 'rxjs';
 import {Ort} from '../../zsb-orte/ort';
-import {Adresse} from '../../zsb-orte/adresse';
+import {Adresse} from '../../zsb-adresse/adresse';
 import {SchuleService} from '../../shared/schule.service';
 import {NotificationService} from '../../shared/notification.service';
 import {Schulform} from '../schulform';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {ZsbAdresseComponent} from '../../zsb-adresse/zsb-adresse.component';
+import {AdresseService} from '../../shared/adresse.service';
 
 @Component({
   selector: 'app-zsb-schule-detail',
@@ -24,24 +27,21 @@ export class ZsbSchuleDetailComponent implements OnInit {
   adresseId: number;
   ortId: number;
 
-  enableAdress = false;
-
   constructor(
     private route: ActivatedRoute,
     private dbService: DatabaseService,
+    private adresseService: AdresseService,
     public service: SchuleService,
-    private notificationService: NotificationService) {
+    private notificationService: NotificationService,
+    private dialog: MatDialog
+  ) {
   }
 
   ngOnInit(): void {
     this.orteObservable = this.dbService.getOrte();
     this.adressenObservable = this.dbService.getAdressen();
 
-
     this.schulformen = this.dbService.getSchulform();
-    // this.dbService.getSchulform().subscribe(schulformen => {
-    //   this.schulformen = schulformen;
-    // });
 
     this.route.paramMap.subscribe(params => {
       this.schuleId = params.get('schuleId');
@@ -81,5 +81,22 @@ export class ZsbSchuleDetailComponent implements OnInit {
     this.service.formGroup.reset();
     this.service.initializeFormGroup();
     this.notificationService.success(':: Formular zurückgesetzt.');
+  }
+
+  changeAdresse() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.width = '40%';
+
+    console.log('Schule:' + this.schuleId + ' / Adresse:' + this.adresseId);
+    this.adresseService.currentAdresseId = +this.schuleId;
+    this.adresseService.currentSchuleId = +this.adresseId;
+    this.dialog.open(ZsbAdresseComponent, dialogConfig);
+
+    this.dialog.afterAllClosed.subscribe(it => {
+      console.log(it);
+      const adresse = this.adresseService.currentAdresse;
+      this.service.formGroup.patchValue({adresse: this.service.getReadableAdresse(adresse, adresse.ort)});
+    });
   }
 }

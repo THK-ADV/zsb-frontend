@@ -1,4 +1,4 @@
-import {Ort} from './ort';
+import {Ort} from '../zsb-orte/ort';
 
 export interface Adresse {
   adress_id: number;

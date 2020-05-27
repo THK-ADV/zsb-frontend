@@ -3,6 +3,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {DatabaseService} from '../../shared/database.service';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-zsb-schule-list',
@@ -32,7 +33,7 @@ export class ZsbSchuleListComponent implements OnInit {
     'actions',
   ];
 
-  constructor(private service: DatabaseService) {
+  constructor(private service: DatabaseService, private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -57,4 +58,11 @@ export class ZsbSchuleListComponent implements OnInit {
   applyFilter() {
     this.listData.filter = this.searchKey.trim().toLowerCase();
   }
+
+  // onCreate() {
+  //   const dialogConfig = new MatDialogConfig();
+  //   dialogConfig.disableClose = true;
+  //   dialogConfig.width = '60%';
+  //   this.dialog.open(ZsbSchuleDetailComponent);
+  // }
 }
