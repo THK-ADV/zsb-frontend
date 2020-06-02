@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Ort} from '../zsb-orte/ort';
 import {Schule} from '../zsb-schule/schule';
 import {Adresse} from '../zsb-adresse/adresse';
 import {catchError, retry} from 'rxjs/operators';
 import {throwError} from 'rxjs';
 import {Schulform} from '../zsb-schule/schulform';
+import {Ort} from '../zsb-adresse/ort';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +37,10 @@ export class DatabaseService {
       );
   }
 
+  updateOrCreateAdresse(adresse: Adresse) {
+    return this.httpClient.put<Adresse>(this.DB_URL + '/adressen', adresse);
+  }
+
   getOrte() {
     return this.httpClient.get<Ort[]>(this.DB_URL + '/orte')
       .pipe(
@@ -45,16 +49,8 @@ export class DatabaseService {
       );
   }
 
-  createOrt() {
-    // TODO read from form
-    const data: Ort = {
-      ort_id: null,
-      plz: 10115,
-      bezeichnung: 'Berlin'
-    };
-
-    console.log('REQUEST: CREATE ORT');
-    return this.httpClient.post<Ort>(this.DB_URL + '/orte', data);
+  updateOrCreateOrt(ort: Ort) {
+    return this.httpClient.put<Ort>(this.DB_URL + '/orte', ort);
   }
 
   createSchule(schule: Schule) {

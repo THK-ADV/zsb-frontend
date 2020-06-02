@@ -7,7 +7,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatSliderModule} from '@angular/material/slider';
 import {HttpClientModule} from '@angular/common/http';
-import {ZsbOrteComponent} from './zsb-orte/zsb-orte.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ZsbSchuleComponent} from './zsb-schule/zsb-schule.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -33,14 +32,12 @@ const appRoutes: Routes = [
   {path: '', component: ZsbSchuleComponent},
   {path: 'schulen/:schuleId', component: ZsbSchuleDetailComponent},
   {path: 'schulen/:schuleId/adresse/:adresseId', component: ZsbAdresseComponent},
-  {path: 'schulen', component: ZsbSchuleDetailComponent},
-  {path: 'ort', component: ZsbOrteComponent}
+  {path: 'schulen', component: ZsbSchuleDetailComponent}
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    ZsbOrteComponent,
     ZsbSchuleComponent,
     ZsbSchuleListComponent,
     ZsbSchuleDetailComponent,

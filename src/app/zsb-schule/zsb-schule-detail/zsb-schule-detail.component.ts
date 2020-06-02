@@ -3,7 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Schule} from '../schule';
 import {DatabaseService} from '../../shared/database.service';
 import {Observable} from 'rxjs';
-import {Ort} from '../../zsb-orte/ort';
+import {Ort} from '../../zsb-adresse/ort';
 import {Adresse} from '../../zsb-adresse/adresse';
 import {SchuleService} from '../../shared/schule.service';
 import {NotificationService} from '../../shared/notification.service';
@@ -65,14 +65,18 @@ export class ZsbSchuleDetailComponent implements OnInit {
 
   onSubmit() {
     console.log('SUB');
-    if (this.service.formGroup.valid) {
-      this.service.insertOrUpdateSchule(this.service.formGroup.value);
-      this.service.formGroup.reset();
-      this.service.initializeFormGroup();
 
-      this.notificationService.success(':: Schule erflogreich gesichert.');
+    const schule: Schule = this.service.formGroup.value;
+
+    if (this.adresseService.currentAdresse !== undefined) {
+      schule.ort = this.adresseService.currentAdresse.ort;
+      schule.adresse = this.adresseService.currentAdresse;
+      this.service.insertOrUpdateSchule(schule, this.notificationService);
     } else {
-      this.notificationService.failure('Schule konnte nicht gesichert werden.');
+      schule.adress_id = this.adresseId;
+      console.log('schule #');
+      console.log(schule);
+      this.service.updateSchuleWithoutNewAdresse(schule, this.notificationService);
     }
   }
 
@@ -89,14 +93,16 @@ export class ZsbSchuleDetailComponent implements OnInit {
     dialogConfig.width = '40%';
 
     console.log('Schule:' + this.schuleId + ' / Adresse:' + this.adresseId);
-    this.adresseService.currentAdresseId = +this.schuleId;
-    this.adresseService.currentSchuleId = +this.adresseId;
+    this.adresseService.currentAdresseId = +this.adresseId;
+    this.adresseService.currentSchuleId = +this.schuleId;
     this.dialog.open(ZsbAdresseComponent, dialogConfig);
 
     this.dialog.afterAllClosed.subscribe(it => {
       console.log(it);
       const adresse = this.adresseService.currentAdresse;
-      this.service.formGroup.patchValue({adresse: this.service.getReadableAdresse(adresse, adresse.ort)});
+      if (adresse !== undefined) {
+        this.service.formGroup.patchValue({adresse: this.service.getReadableAdresse(adresse, adresse.ort)});
+      }
     });
   }
 }

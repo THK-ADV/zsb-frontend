@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Schule} from '../zsb-schule/schule';
-import {Ort} from '../zsb-orte/ort';
+import {Ort} from './ort';
 import {Adresse} from './adresse';
 import {DatabaseService} from '../shared/database.service';
 import {ActivatedRoute} from '@angular/router';
@@ -33,8 +33,9 @@ export class ZsbAdresseComponent implements OnInit {
   adresseId: number;
   ortId: number;
 
+  initialAdresse: Adresse;
+
   plzOptionsComplete: string[] = [];
-  plzOptions: string[] = [];
   filteredPlzOptions: Observable<string[]>;
 
   bezeichnungOptionsComplete: string[] = [];
@@ -49,6 +50,12 @@ export class ZsbAdresseComponent implements OnInit {
   hausnummerOptions: string[] = [];
   filteredHausnummerOptions: Observable<string[]>;
 
+  private static equalsWithoutId(adresseA: Adresse, adresseB: Adresse): boolean {
+    return adresseA.strasse === adresseA.strasse
+      && adresseA.hausnummer === adresseB.hausnummer
+      && adresseA.ort.plz === adresseB.ort.plz
+      && adresseA.ort.bezeichnung === adresseB.ort.bezeichnung;
+  }
 
   ngOnInit(): void {
     this.service.initializeFormGroup();
@@ -61,15 +68,15 @@ export class ZsbAdresseComponent implements OnInit {
     if (this.schuleId != null && this.adresseId != null) {
       this.schuleObservable = this.dbService.getSchuleByIdAtomic(this.schuleId);
       this.schuleObservable.subscribe(schule => {
-        console.log(schule);
-        console.log('Given should be equal to requested: ' + this.adresseId + ' === ' + schule.adress_id);
         if (+this.adresseId !== +schule.adress_id) {
+          console.log('Given should be equal to requested: ' + this.adresseId + ' === ' + schule.adress_id);
           console.log('given adresseId does not match with schule.adress_id; using schule.adress_id');
           this.adresseId = schule.adress_id;
         }
 
         this.adressenObservable.subscribe(it => {
-          this.ortId = this.dbService.getAdresseFromArrayByAdressId(it, this.adresseId).ort_id;
+          this.initialAdresse = this.dbService.getAdresseFromArrayByAdressId(it, this.adresseId);
+          this.ortId = this.initialAdresse.ort_id;
 
           this.plzOptionsComplete = it.map(value => value.ort.plz.toString());
           this.bezeichnungOptionsComplete = it.map(value => value.ort.bezeichnung);
@@ -101,8 +108,11 @@ export class ZsbAdresseComponent implements OnInit {
       ort: newOrt
     };
 
-    console.log('submit adressen changes');
-    console.log(this.service.currentAdresse);
+    if (ZsbAdresseComponent.equalsWithoutId(this.service.currentAdresse, this.initialAdresse)) {
+      this.service.currentAdresse = undefined;
+      console.log('Nothing changed here.');
+    }
+
     this.onClose();
   }
 

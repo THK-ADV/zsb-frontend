@@ -1,4 +1,4 @@
-import {Ort} from '../zsb-orte/ort';
+import {Ort} from '../zsb-adresse/ort';
 import {Adresse} from '../zsb-adresse/adresse';
 
 export interface Schule {

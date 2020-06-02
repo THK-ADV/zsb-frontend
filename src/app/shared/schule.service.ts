@@ -4,7 +4,8 @@ import {Schule} from '../zsb-schule/schule';
 import {DatabaseService} from './database.service';
 import {Observable} from 'rxjs';
 import {Adresse} from '../zsb-adresse/adresse';
-import {Ort} from '../zsb-orte/ort';
+import {Ort} from '../zsb-adresse/ort';
+import {NotificationService} from './notification.service';
 
 @Injectable({
   providedIn: 'root'
@@ -65,37 +66,82 @@ export class SchuleService {
     });
   }
 
-  insertOrUpdateSchule(schule: Schule) {
-    const newSchule: Schule = {
+  updateSchuleWithoutNewAdresse(schule: Schule, notificationService: NotificationService): Observable<Schule> {
+    const newSchule = {
       schule_id: schule.schule_id,
       name: schule.name,
       schulform: schule.schulform,
       schwerpunkt: schule.schwerpunkt,
-      adress_id: +schule.adresse, // cast to number via + operator
-      ort_id: schule.ort.ort_id,
+      adress_id: schule.adress_id,
+      ort_id: undefined,
       schulleitung_mail: schule.schulleitung_mail,
       stubo_mail: schule.stubo_mail,
       kooperationsvertrag: schule.kooperationsvertrag,
       schueleranzahl: +schule.schueleranzahl,
       kaoa_hochschule: schule.kaoa_hochschule,
       talentscouting: schule.talentscouting,
-      adresse: null,
-      ort: null
+      adresse: undefined,
+      ort: undefined,
     };
-    console.log('Send Create/Update to server:');
-    console.log(newSchule);
 
     if (newSchule.schule_id == null) {
+      // TODO error not create!
       this.newSchule = this.dbService.createSchule(newSchule);
     } else {
       this.newSchule = this.dbService.updateSchule(newSchule);
     }
+
+    this.newSchule.subscribe(it => {
+      if (it.schule_id !== undefined) {
+        notificationService.success(':: Schule erfolgreich aktualisiert.');
+      } else {
+        notificationService.failure('-- Schule konnte nicht aktualisiert werden.');
+      }
+    });
+
+    return this.newSchule;
   }
 
   deleteSchule(schule: Schule) {
+    // implement? theoretically not really needed.
   }
 
   getReadableAdresse(adresse: Adresse, ort: Ort) {
     return adresse.strasse + ' ' + adresse.hausnummer + ', ' + ort.plz + ' ' + ort.bezeichnung;
+  }
+
+  insertOrUpdateSchule(schule: Schule, notificationService: NotificationService) {
+    const ortObservable = this.dbService.updateOrCreateOrt(schule.ort);
+    ortObservable.subscribe(newOrt => {
+      const adresse = {
+        adress_id: null,
+        ort_id: newOrt.ort_id,
+        strasse: schule.adresse.strasse,
+        hausnummer: schule.adresse.hausnummer,
+        ort: null
+      };
+      const adresseObservable = this.dbService.updateOrCreateAdresse(adresse);
+
+      adresseObservable.subscribe(newAdresse => {
+        schule.adress_id = newAdresse.adress_id;
+
+        console.log('schule mit oder ohne ID ?');
+        console.log(schule);
+        schule.adresse = null;
+
+        if (schule.schule_id === undefined) {
+          this.dbService.createSchule(schule);
+        } else {
+          const result = this.dbService.updateSchule(schule);
+          result.subscribe(it => {
+            if (it.schule_id !== undefined) {
+              notificationService.success(':: Schule erfolgreich aktualisiert.');
+            } else {
+              notificationService.failure('-- Schule konnte nicht aktualisiert werden.');
+            }
+          });
+        }
+      });
+    });
   }
 }
