@@ -74,14 +74,19 @@ export class ZsbAdresseComponent implements OnInit {
           this.adresseId = schule.adress_id;
         }
 
-        this.adressenObservable.subscribe(it => {
-          this.initialAdresse = this.dbService.getAdresseFromArrayByAdressId(it, this.adresseId);
+        this.adressenObservable.subscribe(adressen => {
+          this.initialAdresse = this.dbService.getAdresseFromArrayByAdressId(adressen, this.adresseId);
           this.ortId = this.initialAdresse.ort_id;
 
-          this.plzOptionsComplete = it.map(value => value.ort.plz.toString());
-          this.bezeichnungOptionsComplete = it.map(value => value.ort.bezeichnung);
-          this.strasseOptionsComplete = it.map(value => value.strasse);
-          this.hausnummerOptionsComplete = it.map(value => value.hausnummer);
+          // get all values and filter duplicates
+          const plzDoubles = adressen.map(value => value.ort.plz.toString());
+          this.plzOptionsComplete = plzDoubles.filter((it, index) => plzDoubles.indexOf(it) === index);
+          const bezDoubles = adressen.map(value => value.ort.bezeichnung);
+          this.bezeichnungOptionsComplete = bezDoubles.filter((it, index) => bezDoubles.indexOf(it) === index);
+          const strasseDoubles = adressen.map(value => value.strasse);
+          this.strasseOptionsComplete = strasseDoubles.filter((it, index) => strasseDoubles.indexOf(it) === index);
+          const hnrDoubles = adressen.map(value => value.hausnummer);
+          this.hausnummerOptionsComplete = hnrDoubles.filter((it, index) => hnrDoubles.indexOf(it) === index);
 
           this.service.loadSchule(schule);
           this.updateAutocomplete();
@@ -155,6 +160,9 @@ export class ZsbAdresseComponent implements OnInit {
       startWith(''),
       map(hausnummer => this._filter(hausnummer, this.hausnummerOptions))
     );
+
+    console.log(this.plzOptionsComplete);
+    console.log(this.filteredPlzOptions);
   }
 
   private updateValidOptions() {
