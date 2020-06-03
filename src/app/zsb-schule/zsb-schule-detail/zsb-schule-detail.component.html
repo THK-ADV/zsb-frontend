@@ -7,7 +7,7 @@
     ###############################
   </span>
 
-  <mat-grid-list cols="2" rowHeight="300px">
+  <mat-grid-list cols="2" rowHeight="400px">
     <mat-grid-tile>
       <div class="controls-container">
         <input type="hidden" formControlName="schule_id">
@@ -31,17 +31,39 @@
           <mat-error>Bitte wählen Sie die passende Schulform aus</mat-error>
         </mat-form-field>
 
-        <mat-form-field>
+<!--        <mat-form-field>-->
+<!--          <label>-->
+<!--            <input formControlName="schwerpunkt" matInput placeholder="Schwerpunkt">-->
+<!--          </label>-->
+<!--        </mat-form-field>-->
+
+
+        <mat-form-field>  <!-- TODO use correct data (source via formControlName) -->
           <label>
-            <input formControlName="schwerpunkt" matInput placeholder="Schwerpunkt">
+            <input formControlName="name" matInput placeholder="Kontakt*">
           </label>
+          <mat-error>Ihre Eingabe wird benötigt.</mat-error>
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field> <!-- TODO use correct data (source via formControlName) -->
           <label>
-            <input formControlName="schulleitung_mail" matInput placeholder="Schulleitung (Mail)">
+            <input formControlName="schulleitung_mail" matInput placeholder="Kontakt (Mail)">
           </label>
           <mat-error>Die E-Mail ist nicht valide.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field> <!-- TODO use correct data (source via formControlName) -->
+          <label>
+            <input formControlName="schulleitung_mail" matInput placeholder="Kontakt (Mail) #2">
+          </label>
+          <mat-error>Die E-Mail ist nicht valide.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>  <!-- TODO use correct data (source via formControlName) -->
+          <label>
+            <input formControlName="name" matInput placeholder="StuBo*">
+          </label>
+          <mat-error>Ihre Eingabe wird benötigt.</mat-error>
         </mat-form-field>
 
         <mat-form-field>
@@ -55,36 +77,27 @@
     </mat-grid-tile>
     <mat-grid-tile>
       <div class="controls-container">
+        <mat-form-field> <!-- TODO use correct data (source via formControlName) -->
+          <mat-select formControlName="name" placeholder="Anzahl SuS*">
+            <mat-option value="-1">Keine</mat-option>
+            <ng-container *ngFor="let schulform of schulformen | async">
+              <mat-option [value]="schulform.id">
+                {{schulform.desc}} <br>
+              </mat-option>
+            </ng-container>
+          </mat-select>
+          <mat-error>Bitte wählen Sie die passende Schulform aus</mat-error>
+        </mat-form-field>
+
         <!-- Adresse -->
         <mat-form-field>
           <label>
-            <input formControlName="adresse" matInput placeholder="Adresse">
+            <input formControlName="adresse" matInput placeholder="Standort">
           </label>
         </mat-form-field>
 
-
-<!--        <mat-form-field>-->
-<!--          <mat-select formControlName="adresse" placeholder="Adresse*">-->
-<!--            <mat-option value="-1">Keine</mat-option>-->
-<!--            <ng-container *ngFor="let adresse of adressenObservable | async">-->
-<!--              <ng-container *ngFor="let ort of orteObservable | async">-->
-<!--                <mat-option *ngIf="ort.ort_id === adresse.ort_id" [value]="adresse.adress_id">-->
-<!--                  {{adresse.strasse}} {{adresse.hausnummer}}, {{ort.plz}} {{ort.bezeichnung}} <br>-->
-<!--                </mat-option>-->
-<!--              </ng-container>-->
-<!--            </ng-container>-->
-<!--          </mat-select>-->
-
-<!--        </mat-form-field>-->
-
-
-<!--        <div class="single-btn-row">-->
-<!--          <button mat-flat-button color="secondary" type="button"-->
-<!--                  [routerLink]="['/schulen/'+schuleId+'/adresse/'+adresseId]">Adresse ändern-->
-<!--          </button>-->
-<!--        </div>-->
         <div class="single-btn-row">
-          <button mat-flat-button color="secondary" type="button" (click)="changeAdresse()">Adresse ändern
+          <button mat-flat-button color="secondary" type="button" (click)="changeAdresse()">Standort verwalten
           </button>
         </div>
 
@@ -109,6 +122,6 @@
     </mat-grid-tile>
   </mat-grid-list>
 
-  <p>Result: {{ service.newSchule | async | json }}</p>
+<!--  <p>Result: {{ service.newSchule | async | json }}</p>-->
 
 </form>

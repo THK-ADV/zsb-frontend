@@ -17,6 +17,8 @@ export class AdresseService {
 
   public formGroup: FormGroup = new FormGroup({
     adresseId: new FormControl(null),
+    regierungsbezirk: new FormControl(''),
+    kreis: new FormControl(''),
     plz: new FormControl('', Validators.required),
     bezeichnung: new FormControl('', Validators.required),
     strasse: new FormControl('', Validators.required),
@@ -26,6 +28,8 @@ export class AdresseService {
   initializeFormGroup() {
     this.formGroup.setValue({
       adresseId: null,
+      regierungsbezirk: '',
+      kreis: '',
       plz: '',
       bezeichnung: '',
       strasse: '',
@@ -36,18 +40,12 @@ export class AdresseService {
   loadSchule(schule: Schule) {
     this.formGroup.setValue({
       adresseId: schule.adress_id,
+      regierungsbezirk: schule.ort.regierungsbezirk,
+      kreis: schule.ort.kreis,
       plz: schule.ort.plz,
       bezeichnung: schule.ort.bezeichnung,
       strasse: schule.adresse.strasse,
       hausnummer: schule.adresse.hausnummer
     });
-  }
-
-  saveAdresse() {
-    console.log('call saveAdresse() -> Not implemented.');
-    // TODO
-    //  - check new Ort? -> save
-    //  - check new Adresse? -> save
-    //  - save adresseId to schule
   }
 }

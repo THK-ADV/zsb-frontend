@@ -5,6 +5,37 @@
   <div class="controls-container">
     <input type="hidden" formControlName="adresseId">
 
+    <mat-form-field class="example-full-width">
+      <input
+        name="plz"
+        type="text"
+        placeholder="Regierungsbezirk"
+        aria-label="Number"
+        matInput
+        formControlName="regierungsbezirk"
+        [matAutocomplete]="autoRegierung">
+      <mat-autocomplete autoActiveFirstOption #autoRegierung="matAutocomplete">
+        <mat-option *ngFor="let option of filteredRegierungsbezirkOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input
+        name="plz"
+        type="text"
+        placeholder="Kreis"
+        aria-label="Number"
+        matInput
+        formControlName="kreis"
+        [matAutocomplete]="autoKreis">
+      <mat-autocomplete autoActiveFirstOption #autoKreis="matAutocomplete">
+        <mat-option *ngFor="let option of filteredKreisOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
 
     <mat-form-field class="example-full-width">
       <input

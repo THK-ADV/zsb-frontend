@@ -4,7 +4,6 @@ import {Schule} from '../zsb-schule/schule';
 import {Ort} from './ort';
 import {Adresse} from './adresse';
 import {DatabaseService} from '../shared/database.service';
-import {ActivatedRoute} from '@angular/router';
 import {AdresseService} from '../shared/adresse.service';
 import {map, startWith} from 'rxjs/operators';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -19,7 +18,6 @@ export class ZsbAdresseComponent implements OnInit {
   constructor(
     public service: AdresseService,
     private dbService: DatabaseService,
-    private route: ActivatedRoute,
     public dialogRef: MatDialogRef<ZsbAdresseComponent>) {
   }
 
@@ -35,7 +33,16 @@ export class ZsbAdresseComponent implements OnInit {
 
   initialAdresse: Adresse;
 
+  regierungsbezirkOptionsComplete: string[] = [];
+  // regierungsbezirkOptions: string[] = [];
+  filteredRegierungsbezirkOptions: Observable<string[]>;
+
+  kreisOptionsComplete: string[] = [];
+  kreisOptions: string[] = [];
+  filteredKreisOptions: Observable<string[]>;
+
   plzOptionsComplete: string[] = [];
+  plzOptions: string[] = [];
   filteredPlzOptions: Observable<string[]>;
 
   bezeichnungOptionsComplete: string[] = [];
@@ -53,6 +60,8 @@ export class ZsbAdresseComponent implements OnInit {
   private static equalsWithoutId(adresseA: Adresse, adresseB: Adresse): boolean {
     return adresseA.strasse === adresseA.strasse
       && adresseA.hausnummer === adresseB.hausnummer
+      && adresseA.ort.regierungsbezirk === adresseB.ort.regierungsbezirk
+      && adresseA.ort.kreis === adresseB.ort.kreis
       && adresseA.ort.plz === adresseB.ort.plz
       && adresseA.ort.bezeichnung === adresseB.ort.bezeichnung;
   }
@@ -79,14 +88,12 @@ export class ZsbAdresseComponent implements OnInit {
           this.ortId = this.initialAdresse.ort_id;
 
           // get all values and filter duplicates
-          const plzDoubles = adressen.map(value => value.ort.plz.toString());
-          this.plzOptionsComplete = plzDoubles.filter((it, index) => plzDoubles.indexOf(it) === index);
-          const bezDoubles = adressen.map(value => value.ort.bezeichnung);
-          this.bezeichnungOptionsComplete = bezDoubles.filter((it, index) => bezDoubles.indexOf(it) === index);
-          const strasseDoubles = adressen.map(value => value.strasse);
-          this.strasseOptionsComplete = strasseDoubles.filter((it, index) => strasseDoubles.indexOf(it) === index);
-          const hnrDoubles = adressen.map(value => value.hausnummer);
-          this.hausnummerOptionsComplete = hnrDoubles.filter((it, index) => hnrDoubles.indexOf(it) === index);
+          this.regierungsbezirkOptionsComplete = this.filterDuplicates(adressen.map(it => it.ort.regierungsbezirk));
+          this.kreisOptionsComplete = this.filterDuplicates(adressen.map(it => it.ort.kreis));
+          this.plzOptionsComplete = this.filterDuplicates(adressen.map(it => it.ort.plz.toString()));
+          this.bezeichnungOptionsComplete = this.filterDuplicates(adressen.map(it => it.ort.bezeichnung));
+          this.strasseOptionsComplete = this.filterDuplicates(adressen.map(it => it.strasse));
+          this.hausnummerOptionsComplete = this.filterDuplicates(adressen.map(it => it.hausnummer));
 
           this.service.loadSchule(schule);
           this.updateAutocomplete();
@@ -98,8 +105,14 @@ export class ZsbAdresseComponent implements OnInit {
     }
   }
 
+  filterDuplicates(array) {
+    return array.filter((it, index) => array.indexOf(it) === index);
+  }
+
   onSubmit() {
     const newOrt: Ort = {
+      regierungsbezirk: this.service.formGroup.value.regierungsbezirk,
+      kreis: this.service.formGroup.value.kreis,
       bezeichnung: this.service.formGroup.value.bezeichnung,
       plz: this.service.formGroup.value.plz,
       ort_id: undefined
@@ -127,6 +140,8 @@ export class ZsbAdresseComponent implements OnInit {
 
   private initializeInteractiveForm() {
     this.service.formGroup.valueChanges.subscribe(() => this.updateValidOptions());
+    this.service.formGroup.controls.regierungsbezirk.valueChanges.subscribe(() => this.removeInvalidFormDataByBezirk());
+    this.service.formGroup.controls.kreis.valueChanges.subscribe(() => this.removeInvalidFormDataByKreis());
     this.service.formGroup.controls.plz.valueChanges.subscribe(() => this.removeInvalidFormDataByPlz());
     this.service.formGroup.controls.bezeichnung.valueChanges.subscribe(() => this.removeInvalidFormDataByBezeichnung());
     this.service.formGroup.controls.strasse.valueChanges.subscribe(() => this.removeInvalidFormDataByStrasse());
@@ -141,31 +156,32 @@ export class ZsbAdresseComponent implements OnInit {
 
   private updateAutocomplete() {
     const controls = this.service.formGroup.controls;
-    this.filteredPlzOptions = controls.plz.valueChanges.pipe(
-      startWith(''),
-      map(plz => this._filter(plz, this.plzOptionsComplete))
-    );
 
-    this.filteredBezeichnungOptions = controls.bezeichnung.valueChanges.pipe(
-      startWith(''),
-      map(bezeichnung => this._filter(bezeichnung, this.bezeichnungOptions))
-    );
-
-    this.filteredStrasseOptions = controls.strasse.valueChanges.pipe(
-      startWith(''),
-      map(strasse => this._filter(strasse, this.strasseOptions))
-    );
-
-    this.filteredHausnummerOptions = controls.hausnummer.valueChanges.pipe(
-      startWith(''),
-      map(hausnummer => this._filter(hausnummer, this.hausnummerOptions))
-    );
-
-    console.log(this.plzOptionsComplete);
-    console.log(this.filteredPlzOptions);
+    this.filteredRegierungsbezirkOptions = this.filterOptions(controls.regierungsbezirk, this.regierungsbezirkOptionsComplete);
+    this.filteredKreisOptions = this.filterOptions(controls.kreis, this.kreisOptions);
+    this.filteredPlzOptions = this.filterOptions(controls.plz, this.plzOptions);
+    this.filteredBezeichnungOptions = this.filterOptions(controls.plz, this.bezeichnungOptions);
+    this.filteredStrasseOptions = this.filterOptions(controls.strasse, this.strasseOptions);
+    this.filteredHausnummerOptions = this.filterOptions(controls.hausnummer, this.hausnummerOptions);
   }
 
+  filterOptions(control, options): Observable<string[]> {
+    return control.valueChanges.pipe(
+      startWith(''),
+      map(it => this._filter(it, options))
+    );
+  }
+
+  // update all valid options based on the current inputs
   private updateValidOptions() {
+    const selectedBezirk = this.service.formGroup.value.regierungsbezirk;
+    this.kreisOptions = this.kreisOptionsComplete
+      .filter(kreis => this.adressen.some(it => it.ort.kreis === kreis && it.ort.regierungsbezirk === selectedBezirk));
+
+    const selectedKreis = this.service.formGroup.value.kreis;
+    this.plzOptions = this.plzOptionsComplete
+      .filter(plz => this.adressen.some(it => it.ort.plz === +plz && it.ort.kreis === selectedKreis));
+
     const selectedPlz = this.service.formGroup.value.plz;
     this.bezeichnungOptions = this.bezeichnungOptionsComplete.filter(
       bezeichnung => this.orte
@@ -183,34 +199,44 @@ export class ZsbAdresseComponent implements OnInit {
     );
   }
 
+  private replaceValueIfNotInOptions(newValue: string, options: string[]): string {
+    if (!options.some(it => it === newValue)) {
+      return '';
+    }
+    return newValue;
+  }
+
+  private removeInvalidFormDataByBezirk() {
+    let newKreis = this.service.formGroup.value.kreis;
+    newKreis = this.replaceValueIfNotInOptions(newKreis, this.kreisOptions);
+    this.service.formGroup.patchValue({kreis: newKreis});
+  }
+
+  private removeInvalidFormDataByKreis() {
+    let newPlz = this.service.formGroup.value.plz;
+    newPlz = this.replaceValueIfNotInOptions(newPlz, this.plzOptions);
+    this.service.formGroup.patchValue({plz: newPlz});
+  }
+
   private removeInvalidFormDataByPlz() {
     let newBezeichnung = this.service.formGroup.value.bezeichnung;
-    if (this.bezeichnungOptions.find(it => it === newBezeichnung) === undefined) {
-      newBezeichnung = '';
-    }
-
+    newBezeichnung = this.replaceValueIfNotInOptions(newBezeichnung, this.bezeichnungOptions);
     this.service.formGroup.patchValue({bezeichnung: newBezeichnung});
   }
 
   private removeInvalidFormDataByBezeichnung() {
     let newStrasse = this.service.formGroup.value.strasse;
-    if (!this.strasseOptions.some(it => it === newStrasse)) {
-      newStrasse = '';
-    }
-
+    newStrasse = this.replaceValueIfNotInOptions(newStrasse, this.strasseOptions);
     this.service.formGroup.patchValue({strasse: newStrasse});
   }
 
   private removeInvalidFormDataByStrasse() {
     let newHausnummer = this.service.formGroup.value.hausnummer;
-    if (!this.hausnummerOptions.some(it => it === newHausnummer)) {
-      newHausnummer = '';
-    }
-
+    newHausnummer = this.replaceValueIfNotInOptions(newHausnummer, this.hausnummerOptions);
     this.service.formGroup.patchValue({hausnummer: newHausnummer});
   }
 
-  private _filter(value: string, options: string[]): string[] {
+  private _filter(value, options: string[]): string[] {
     const filterValue = value.toLowerCase();
 
     return options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
