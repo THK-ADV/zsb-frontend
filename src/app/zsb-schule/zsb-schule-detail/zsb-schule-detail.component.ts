@@ -11,6 +11,7 @@ import {Schulform} from '../schulform';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {ZsbAdresseComponent} from '../../zsb-adresse/zsb-adresse.component';
 import {AdresseService} from '../../shared/adresse.service';
+import {AnzahlSus} from '../anzahl-sus';
 
 @Component({
   selector: 'app-zsb-schule-detail',
@@ -23,6 +24,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
   orteObservable: Observable<Ort[]>;
   adressenObservable: Observable<Adresse[]>;
   schulformen: Observable<Schulform[]>;
+  anzahlSusRanges: Observable<AnzahlSus[]>;
 
   adresseId: number;
   ortId: number;
@@ -42,6 +44,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
     this.adressenObservable = this.dbService.getAdressen();
 
     this.schulformen = this.dbService.getSchulform();
+    this.anzahlSusRanges = this.dbService.getAnzahlSus();
 
     this.route.paramMap.subscribe(params => {
       this.schuleId = params.get('schuleId');
@@ -60,7 +63,6 @@ export class ZsbSchuleDetailComponent implements OnInit {
         this.schuleObservable = undefined;
       }
     });
-
   }
 
   onSubmit() {
@@ -74,8 +76,6 @@ export class ZsbSchuleDetailComponent implements OnInit {
       this.service.insertOrUpdateSchule(schule, this.notificationService);
     } else {
       schule.adress_id = this.adresseId;
-      console.log('schule #');
-      console.log(schule);
       this.service.updateSchuleWithoutNewAdresse(schule, this.notificationService);
     }
   }
@@ -92,7 +92,6 @@ export class ZsbSchuleDetailComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.width = '40%';
 
-    console.log('Schule:' + this.schuleId + ' / Adresse:' + this.adresseId);
     this.adresseService.currentAdresseId = +this.adresseId;
     this.adresseService.currentSchuleId = +this.schuleId;
     this.dialog.open(ZsbAdresseComponent, dialogConfig);

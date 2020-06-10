@@ -27,7 +27,7 @@ export class SchuleService {
     schulleitung_mail: new FormControl('', Validators.email),
     stubo_mail: new FormControl('', Validators.email),
     kooperationsvertrag: new FormControl(false),
-    schueleranzahl: new FormControl(''),
+    anzahl_sus: new FormControl(''),
     kaoa_hochschule: new FormControl(false),
     talentscouting: new FormControl(false)
   });
@@ -43,7 +43,7 @@ export class SchuleService {
       schulleitung_mail: '',
       stubo_mail: '',
       kooperationsvertrag: false,
-      schueleranzahl: '',
+      anzahl_sus: '',
       kaoa_hochschule: false,
       talentscouting: false
     });
@@ -60,7 +60,7 @@ export class SchuleService {
       schulleitung_mail: schule.schulleitung_mail,
       stubo_mail: schule.stubo_mail,
       kooperationsvertrag: schule.kooperationsvertrag,
-      schueleranzahl: schule.schueleranzahl,
+      anzahl_sus: +schule.anzahl_sus,
       kaoa_hochschule: schule.kaoa_hochschule,
       talentscouting: schule.talentscouting
     });
@@ -77,7 +77,7 @@ export class SchuleService {
       schulleitung_mail: schule.schulleitung_mail,
       stubo_mail: schule.stubo_mail,
       kooperationsvertrag: schule.kooperationsvertrag,
-      schueleranzahl: +schule.schueleranzahl,
+      anzahl_sus: +schule.anzahl_sus,
       kaoa_hochschule: schule.kaoa_hochschule,
       talentscouting: schule.talentscouting,
       adresse: undefined,

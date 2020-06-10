@@ -11,7 +11,7 @@ export interface Schule {
   ort_id: number;
   schulleitung_mail: string;
   stubo_mail: string;
-  schueleranzahl: number;
+  anzahl_sus: number;
   kaoa_hochschule: boolean;
   talentscouting: boolean;
   adresse: Adresse;

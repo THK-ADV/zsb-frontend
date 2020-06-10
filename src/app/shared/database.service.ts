@@ -6,6 +6,7 @@ import {catchError, retry} from 'rxjs/operators';
 import {throwError} from 'rxjs';
 import {Schulform} from '../zsb-schule/schulform';
 import {Ort} from '../zsb-adresse/ort';
+import {AnzahlSus} from '../zsb-schule/anzahl-sus';
 
 @Injectable({
   providedIn: 'root'
@@ -89,6 +90,10 @@ export class DatabaseService {
 
   getSchulform() {
     return this.httpClient.get<Schulform[]>(this.DB_URL + '/schulen/schulformen');
+  }
+
+  getAnzahlSus() {
+    return this.httpClient.get<AnzahlSus[]>(this.DB_URL + '/schulen/anzahl_sus');
   }
 
   getAdresseFromArrayByAdressId(adressen: Adresse[], id: number): Adresse {

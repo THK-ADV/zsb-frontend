@@ -77,12 +77,12 @@
     </mat-grid-tile>
     <mat-grid-tile>
       <div class="controls-container">
-        <mat-form-field> <!-- TODO use correct data (source via formControlName) -->
-          <mat-select formControlName="name" placeholder="Anzahl SuS*">
+        <mat-form-field>
+          <mat-select formControlName="anzahl_sus" placeholder="Anzahl SuS*">
             <mat-option value="-1">Keine</mat-option>
-            <ng-container *ngFor="let schulform of schulformen | async">
-              <mat-option [value]="schulform.id">
-                {{schulform.desc}} <br>
+            <ng-container *ngFor="let sus of anzahlSusRanges | async">
+              <mat-option [value]="sus.id">
+                {{sus.range}} <br>
               </mat-option>
             </ng-container>
           </mat-select>
