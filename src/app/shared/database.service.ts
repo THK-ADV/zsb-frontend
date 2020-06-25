@@ -3,10 +3,11 @@ import {HttpClient} from '@angular/common/http';
 import {Schule} from '../zsb-schule/schule';
 import {Adresse} from '../zsb-adresse/adresse';
 import {catchError, retry} from 'rxjs/operators';
-import {throwError} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {Schulform} from '../zsb-schule/schulform';
 import {Ort} from '../zsb-adresse/ort';
 import {AnzahlSus} from '../zsb-schule/anzahl-sus';
+import {Kontakt} from '../zsb-schule/Kontakt';
 
 @Injectable({
   providedIn: 'root'
@@ -54,12 +55,12 @@ export class DatabaseService {
     return this.httpClient.put<Ort>(this.DB_URL + '/orte', ort);
   }
 
-  createSchule(schule: Schule) {
+  createSchule(schule) {
     console.log('REQUEST: CREATE SCHULE');
     return this.httpClient.post<Schule>(this.DB_URL + '/schulen', schule);
   }
 
-  updateSchule(schule: Schule) {
+  updateSchule(schule) {
     console.log('REQUEST: UPDATE SCHULE');
     return this.httpClient.put<Schule>(this.DB_URL + '/schulen', schule);
   }
@@ -117,5 +118,9 @@ export class DatabaseService {
     }
     window.alert(errorMessage);
     return throwError(errorMessage);
+  }
+
+  updateOrCreateKontakt(kontakt: Kontakt): Observable<Kontakt> {
+    return this.httpClient.put<Kontakt>(this.DB_URL + '/kontakt', kontakt);
   }
 }

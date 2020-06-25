@@ -20,48 +20,36 @@
         </mat-form-field>
 
         <mat-form-field>
-          <mat-select formControlName="schulform" placeholder="Schulform*">
-            <mat-option value="-1">Keine</mat-option>
-            <ng-container *ngFor="let schulform of schulformen | async">
-              <mat-option [value]="schulform.id">
-                {{schulform.desc}} <br>
-              </mat-option>
-            </ng-container>
-          </mat-select>
-          <mat-error>Bitte wählen Sie die passende Schulform aus</mat-error>
-        </mat-form-field>
-
-<!--        <mat-form-field>-->
-<!--          <label>-->
-<!--            <input formControlName="schwerpunkt" matInput placeholder="Schwerpunkt">-->
-<!--          </label>-->
-<!--        </mat-form-field>-->
-
-
-        <mat-form-field>  <!-- TODO use correct data (source via formControlName) -->
           <label>
-            <input formControlName="name" matInput placeholder="Kontakt*">
+            <input formControlName="kontakt_a_name" matInput placeholder="Kontakt*">
           </label>
           <mat-error>Ihre Eingabe wird benötigt.</mat-error>
         </mat-form-field>
 
-        <mat-form-field> <!-- TODO use correct data (source via formControlName) -->
+        <mat-form-field>
           <label>
-            <input formControlName="schulleitung_mail" matInput placeholder="Kontakt (Mail)">
+            <input formControlName="kontakt_a_mail" matInput placeholder="Kontakt (Mail)">
           </label>
           <mat-error>Die E-Mail ist nicht valide.</mat-error>
         </mat-form-field>
 
-        <mat-form-field> <!-- TODO use correct data (source via formControlName) -->
+        <mat-form-field>
           <label>
-            <input formControlName="schulleitung_mail" matInput placeholder="Kontakt (Mail) #2">
+            <input formControlName="kontakt_b_name" matInput placeholder="Kontakt #2">
           </label>
           <mat-error>Die E-Mail ist nicht valide.</mat-error>
         </mat-form-field>
 
-        <mat-form-field>  <!-- TODO use correct data (source via formControlName) -->
+        <mat-form-field>
           <label>
-            <input formControlName="name" matInput placeholder="StuBo*">
+            <input formControlName="kontakt_b_mail" matInput placeholder="Kontakt (Mail) #2">
+          </label>
+          <mat-error>Die E-Mail ist nicht valide.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <label>
+            <input formControlName="stubo_name" matInput placeholder="StuBo*">
           </label>
           <mat-error>Ihre Eingabe wird benötigt.</mat-error>
         </mat-form-field>
@@ -77,6 +65,18 @@
     </mat-grid-tile>
     <mat-grid-tile>
       <div class="controls-container">
+        <mat-form-field>
+          <mat-select formControlName="schulform" placeholder="Schulform*">
+            <mat-option value="-1">Keine</mat-option>
+            <ng-container *ngFor="let schulform of schulformen | async">
+              <mat-option [value]="schulform.id">
+                {{schulform.desc}} <br>
+              </mat-option>
+            </ng-container>
+          </mat-select>
+          <mat-error>Bitte wählen Sie die passende Schulform aus</mat-error>
+        </mat-form-field>
+
         <mat-form-field>
           <mat-select formControlName="anzahl_sus" placeholder="Anzahl SuS*">
             <mat-option value="-1">Keine</mat-option>

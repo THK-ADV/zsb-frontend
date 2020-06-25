@@ -68,7 +68,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
   onSubmit() {
     console.log('SUB');
 
-    const schule: Schule = this.service.formGroup.value;
+    const schule = this.service.formGroup.value;
 
     if (this.adresseService.currentAdresse !== undefined) {
       schule.ort = this.adresseService.currentAdresse.ort;
