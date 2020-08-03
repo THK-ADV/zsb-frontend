@@ -1,9 +1,9 @@
 import {Ort} from './ort';
 
 export interface Adresse {
-  adress_id: number;
+  adress_id: string;
   strasse: string;
   hausnummer: string;
-  ort_id: number;
+  ort_id: string;
   ort: Ort;
 }

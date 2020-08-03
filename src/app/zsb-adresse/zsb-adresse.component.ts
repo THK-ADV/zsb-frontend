@@ -27,9 +27,9 @@ export class ZsbAdresseComponent implements OnInit {
   adressenObservable: Observable<Adresse[]>;
   adressen: Adresse[];
 
-  schuleId: number;
-  adresseId: number;
-  ortId: number;
+  schuleId: string;
+  adresseId: string;
+  ortId: string;
 
   initialAdresse: Adresse;
 

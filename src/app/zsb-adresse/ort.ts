@@ -1,5 +1,5 @@
 export interface Ort {
-  ort_id: number;
+  ort_id: string;
   plz: number;
   bezeichnung: string;
   kreis: string;

@@ -26,8 +26,8 @@ export class ZsbSchuleDetailComponent implements OnInit {
   schulformen: Observable<Schulform[]>;
   anzahlSusRanges: Observable<AnzahlSus[]>;
 
-  adresseId: number;
-  ortId: number;
+  adresseId: string;
+  ortId: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -92,8 +92,8 @@ export class ZsbSchuleDetailComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.width = '40%';
 
-    this.adresseService.currentAdresseId = +this.adresseId;
-    this.adresseService.currentSchuleId = +this.schuleId;
+    this.adresseService.currentAdresseId = this.adresseId;
+    this.adresseService.currentSchuleId = this.schuleId;
     this.dialog.open(ZsbAdresseComponent, dialogConfig);
 
     this.dialog.afterAllClosed.subscribe(it => {

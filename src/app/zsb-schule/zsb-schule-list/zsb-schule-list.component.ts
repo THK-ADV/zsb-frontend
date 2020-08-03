@@ -21,10 +21,10 @@ export class ZsbSchuleListComponent implements OnInit {
   displayedColumns: Array<string> = [
     'name',
     'schulform',
-    'schwerpunkt',
+    // 'schwerpunkt',
     'adresse',
     'ort',
-    'schulleitung_mail',
+    // 'schulleitung_mail',
     // 'stubo_mail',
     // 'schueleranzahl',
     // 'kooperationsvertrag',

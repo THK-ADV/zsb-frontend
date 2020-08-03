@@ -11,8 +11,8 @@ export class AdresseService {
   constructor() {
   }
 
-  public currentSchuleId: number = undefined;
-  public currentAdresseId: number = undefined;
+  public currentSchuleId: string = undefined;
+  public currentAdresseId: string = undefined;
   public currentAdresse: Adresse = undefined;
 
   public formGroup: FormGroup = new FormGroup({
