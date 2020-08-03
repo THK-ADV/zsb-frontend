@@ -4,6 +4,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {DatabaseService} from '../../shared/database.service';
 import {MatDialog} from '@angular/material/dialog';
+import {Schulform} from '../schulform';
 
 @Component({
   selector: 'app-zsb-schule-list',
@@ -16,6 +17,7 @@ export class ZsbSchuleListComponent implements OnInit {
   searchKey: string;
 
   listData: MatTableDataSource<any>;
+  schulformen: Schulform[];
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns: Array<string> = [
@@ -48,6 +50,8 @@ export class ZsbSchuleListComponent implements OnInit {
         this.listData.sort = this.sort;
         this.listData.paginator = this.paginator;
       });
+
+    this.service.getSchulform().subscribe(schulformen => this.schulformen = schulformen);
   }
 
   onSearchClear() {
@@ -57,6 +61,13 @@ export class ZsbSchuleListComponent implements OnInit {
 
   applyFilter() {
     this.listData.filter = this.searchKey.trim().toLowerCase();
+  }
+
+  getSchulformById(id: number) {
+    if (id === undefined || this.schulformen === undefined) {
+      return '';
+    }
+    return this.schulformen.find(it => it.id === id).desc;
   }
 
   // onCreate() {

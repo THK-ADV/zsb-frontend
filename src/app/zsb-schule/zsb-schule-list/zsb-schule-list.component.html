@@ -29,7 +29,7 @@
     <!-- schulform Column -->
     <ng-container matColumnDef="schulform">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Schulform</mat-header-cell>
-      <mat-cell *matCellDef="let row">{{row.schulform}}</mat-cell>
+      <mat-cell *matCellDef="let row">{{ getSchulformById(row.schulform) }}</mat-cell>
     </ng-container>
 
     <!-- schwerpunkt column -->
