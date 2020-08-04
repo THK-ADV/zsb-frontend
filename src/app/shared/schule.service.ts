@@ -158,6 +158,7 @@ export class SchuleService {
       adresseObservable.subscribe(newAdresse => {
         schule.adress_id = newAdresse.adress_id;
         schule.adresse = null;
+        schule.kontakt_ids = schule.kontakte.map(it => it.uuid);
 
         if (schule.schule_id === undefined) {
           this.dbService.createSchule(schule);

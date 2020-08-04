@@ -7,7 +7,7 @@ import {Observable, throwError} from 'rxjs';
 import {Schulform} from '../zsb-schule/schulform';
 import {Ort} from '../zsb-adresse/ort';
 import {AnzahlSus} from '../zsb-schule/anzahl-sus';
-import {Kontakt} from '../zsb-schule/kontakt';
+import {Kontakt, KontaktFunktion} from '../zsb-schule/kontakt';
 
 @Injectable({
   providedIn: 'root'
@@ -97,6 +97,10 @@ export class DatabaseService {
     return this.httpClient.get<AnzahlSus[]>(this.DB_URL + '/schulen/anzahl_sus');
   }
 
+  getKontaktFunktionen() {
+    return this.httpClient.get<KontaktFunktion[]>(this.DB_URL + '/kontakte/funktion');
+  }
+
   getAdresseFromArrayByAdressId(adressen: Adresse[], id: string): Adresse {
     let result = null;
     adressen.forEach(it => {
@@ -121,6 +125,6 @@ export class DatabaseService {
   }
 
   updateOrCreateKontakt(kontakt: Kontakt): Observable<Kontakt> {
-    return this.httpClient.put<Kontakt>(this.DB_URL + '/kontakt', kontakt);
+    return this.httpClient.put<Kontakt>(this.DB_URL + '/kontakte', kontakt);
   }
 }

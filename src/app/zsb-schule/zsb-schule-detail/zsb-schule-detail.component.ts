@@ -12,6 +12,7 @@ import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {ZsbAdresseComponent} from '../../zsb-adresse/zsb-adresse.component';
 import {AdresseService} from '../../shared/adresse.service';
 import {AnzahlSus} from '../anzahl-sus';
+import {KontaktFunktion} from '../kontakt';
 
 @Component({
   selector: 'app-zsb-schule-detail',
@@ -25,6 +26,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
   adressenObservable: Observable<Adresse[]>;
   schulformen: Observable<Schulform[]>;
   anzahlSusRanges: Observable<AnzahlSus[]>;
+  kontaktFunktionen: KontaktFunktion[];
 
   adresseId: string;
   ortId: string;
@@ -45,6 +47,11 @@ export class ZsbSchuleDetailComponent implements OnInit {
 
     this.schulformen = this.dbService.getSchulform();
     this.anzahlSusRanges = this.dbService.getAnzahlSus();
+
+    // fill kontakt funktionen
+    this.dbService.getKontaktFunktionen().subscribe(funktionen => {
+      this.kontaktFunktionen = funktionen;
+    });
 
     this.route.paramMap.subscribe(params => {
       this.schuleId = params.get('schuleId');
@@ -105,6 +112,20 @@ export class ZsbSchuleDetailComponent implements OnInit {
         this.service.formGroup.patchValue({adresse: this.service.getReadableAdresse(adresse, adresse.ort)});
       }
     });
+  }
+
+  getKontaktFunktionDescById(id: number) {
+    let desc = 'Unbekannt';
+
+    this.kontaktFunktionen.forEach(it => {
+      if (desc === 'Unbekannt') {
+        if (it.id === id) {
+          desc = it.desc;
+        }
+      }
+    });
+
+    return desc;
   }
 
   addKontakt() {

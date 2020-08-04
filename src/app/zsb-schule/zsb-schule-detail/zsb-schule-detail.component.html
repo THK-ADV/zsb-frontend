@@ -54,7 +54,7 @@
                 <label>
                   <input type="text" [formControlName]="i" hidden>
                   <ng-container *ngIf="kontakt != null && kontakt.value != null">
-                    {{kontakt.value.name}}
+                    {{kontakt.value.name}} (Funktion: {{getKontaktFunktionDescById(kontakt.value.funktion)}})
 
                     <!-- go to details for this kontakt-->
                     <button mat-icon-button [routerLink]="['/schulen/SCHULE_ID/kontakte/KONTAKT_ID', 4]" disabled>
