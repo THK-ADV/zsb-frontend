@@ -32,7 +32,7 @@ export class SchuleService {
     talentscouting: new FormControl(false)
   });
 
-  // test: direct access to kontakte as array
+  // direct access to kontakte as array
   get kontakte(): FormArray {
     return this.formGroup.get('kontakte') as FormArray;
   }
@@ -57,13 +57,6 @@ export class SchuleService {
     schule.kontakte.forEach(kontakt => {
       console.log('--> ' + kontakt.name + ' ' + kontakt.funktion);
     });
-
-    // let kontakteControlArray = [];
-    // if (schule.kontakte.length > 0) {
-    //   kontakteControlArray = schule.kontakte.map(it => {
-    //     return new FormControl(it);
-    //   });
-    // }
 
     this.formGroup.setValue({
       schule_id: schule.schule_id,
@@ -91,18 +84,24 @@ export class SchuleService {
 
 
   updateSchuleWithoutNewAdresse(schule: Schule, notificationService: NotificationService) {
+    console.log('Kontakte before update:');
+
+    schule.kontakte.forEach(it => {
+      console.log(it.uuid + ': ' + it.name + ' (' + it.funktion + ') - ' + it.email);
+    });
+
     const newSchule = {
       schule_id: schule.schule_id,
       name: schule.name,
       schulform: schule.schulform,
-      schwerpunkt: schule.schwerpunkt,
+      schwerpunkt: 'unbekannt',
       adress_id: schule.adress_id,
       ort_id: undefined,
       kooperationsvertrag: schule.kooperationsvertrag,
       anzahl_sus: +schule.anzahl_sus,
       kaoa_hochschule: schule.kaoa_hochschule,
       talentscouting: schule.talentscouting,
-      // TODO insert kontakte here
+      kontakte_ids: schule.kontakte.map(it => it.uuid),
       adresse: undefined,
       ort: undefined,
     };
