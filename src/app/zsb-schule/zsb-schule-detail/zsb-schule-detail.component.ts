@@ -63,6 +63,8 @@ export class ZsbSchuleDetailComponent implements OnInit {
         this.schuleObservable = undefined;
       }
     });
+
+    console.log('finished init (schule-detail-component)');
   }
 
   onSubmit() {
@@ -103,5 +105,9 @@ export class ZsbSchuleDetailComponent implements OnInit {
         this.service.formGroup.patchValue({adresse: this.service.getReadableAdresse(adresse, adresse.ort)});
       }
     });
+  }
+
+  addKontakt() {
+    console.log('Add kontakt');
   }
 }

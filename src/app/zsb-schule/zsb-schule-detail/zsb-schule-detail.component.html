@@ -20,52 +20,6 @@
         </mat-form-field>
 
         <mat-form-field>
-          <label>
-            <input formControlName="kontakt_a_name" matInput placeholder="Kontakt*">
-          </label>
-          <mat-error>Ihre Eingabe wird benötigt.</mat-error>
-        </mat-form-field>
-
-        <mat-form-field>
-          <label>
-            <input formControlName="kontakt_a_mail" matInput placeholder="Kontakt (Mail)">
-          </label>
-          <mat-error>Die E-Mail ist nicht valide.</mat-error>
-        </mat-form-field>
-
-        <mat-form-field>
-          <label>
-            <input formControlName="kontakt_b_name" matInput placeholder="Kontakt #2">
-          </label>
-          <mat-error>Die E-Mail ist nicht valide.</mat-error>
-        </mat-form-field>
-
-        <mat-form-field>
-          <label>
-            <input formControlName="kontakt_b_mail" matInput placeholder="Kontakt (Mail) #2">
-          </label>
-          <mat-error>Die E-Mail ist nicht valide.</mat-error>
-        </mat-form-field>
-
-        <mat-form-field>
-          <label>
-            <input formControlName="stubo_name" matInput placeholder="StuBo*">
-          </label>
-          <mat-error>Ihre Eingabe wird benötigt.</mat-error>
-        </mat-form-field>
-
-        <mat-form-field>
-          <label>
-            <input formControlName="stubo_mail" matInput placeholder="Stubo (Mail)">
-          </label>
-        </mat-form-field>
-
-
-      </div>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <div class="controls-container">
-        <mat-form-field>
           <mat-select formControlName="schulform" placeholder="Schulform*">
             <mat-option value="-1">Keine</mat-option>
             <ng-container *ngFor="let schulform of schulformen | async">
@@ -89,6 +43,45 @@
           <mat-error>Bitte wählen Sie die passende Schulform aus</mat-error>
         </mat-form-field>
 
+        <!-- Kontakte -->
+        <mat-list>
+          <div formArrayName="kontakte">
+            <h3>Kontakte</h3>
+
+
+            <div *ngFor="let kontakt of service.kontakte.controls; let i = index">
+              <mat-list-item role="listitem">
+                <label>
+                  <input type="text" [formControlName]="i" hidden>
+                  <ng-container *ngIf="kontakt != null && kontakt.value != null">
+                    {{kontakt.value.name}}
+
+                    <!-- go to details for this kontakt-->
+                    <button mat-icon-button [routerLink]="['/schulen/SCHULE_ID/kontakte/KONTAKT_ID', 4]" disabled>
+                      <mat-icon>launch</mat-icon>
+                    </button>
+                    <!-- delete icon TODO trigger delete connection between this kontakt and schule-->
+                    <button mat-icon-button color="warn" disabled>
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  </ng-container>
+                </label>
+              </mat-list-item>
+            </div>
+          </div>
+
+          <!-- ADD Kontakt (Button) -->
+          <mat-list-item role="listitem">
+            <button mat-flat-button (click)="addKontakt()">
+              <mat-icon>add</mat-icon>
+              Hinzufügen
+            </button>
+          </mat-list-item>
+        </mat-list>
+      </div> <!-- grid controls-container -->
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="controls-container">
         <!-- Adresse -->
         <mat-form-field>
           <label>
@@ -122,6 +115,6 @@
     </mat-grid-tile>
   </mat-grid-list>
 
-<!--  <p>Result: {{ service.newSchule | async | json }}</p>-->
+  <!--  <p>Result: {{ service.newSchule | async | json }}</p>-->
 
 </form>

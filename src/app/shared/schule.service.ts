@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Schule} from '../zsb-schule/schule';
 import {DatabaseService} from './database.service';
 import {Observable} from 'rxjs';
@@ -25,12 +25,17 @@ export class SchuleService {
     // schwerpunkt: new FormControl(null),
     adresse: new FormControl({value: '', disabled: true}),
     ort: new FormControl(0, Validators.required),
-    // TODO insert kontakte here
+    kontakte: new FormArray([new FormControl()]),
     kooperationsvertrag: new FormControl(false),
     anzahl_sus: new FormControl(''),
     kaoa_hochschule: new FormControl(false),
     talentscouting: new FormControl(false)
   });
+
+  // test: direct access to kontakte as array
+  get kontakte(): FormArray {
+    return this.formGroup.get('kontakte') as FormArray;
+  }
 
   initializeFormGroup() {
     this.formGroup.setValue({
@@ -40,7 +45,7 @@ export class SchuleService {
       // schwerpunkt: '',
       adresse: null,
       ort: null,
-      // TODO insert kontakte here
+      kontakte: [new FormControl()],
       kooperationsvertrag: false,
       anzahl_sus: '',
       kaoa_hochschule: false,
@@ -49,20 +54,41 @@ export class SchuleService {
   }
 
   loadFormData(schule: Schule) {
+    schule.kontakte.forEach(kontakt => {
+      console.log('--> ' + kontakt.name + ' ' + kontakt.funktion);
+    });
+
+    // let kontakteControlArray = [];
+    // if (schule.kontakte.length > 0) {
+    //   kontakteControlArray = schule.kontakte.map(it => {
+    //     return new FormControl(it);
+    //   });
+    // }
+
     this.formGroup.setValue({
       schule_id: schule.schule_id,
       name: schule.name,
-      schulform: schule.schulform, // TODO use enum values not int
+      schulform: schule.schulform,
       // schwerpunkt: schule.schwerpunkt,
       adresse: this.getReadableAdresse(schule.adresse, schule.ort),
       ort: schule.ort.ort_id,
-      // TODO insert kontakte here
+      kontakte: [new FormControl()],
       kooperationsvertrag: schule.kooperationsvertrag,
       anzahl_sus: +schule.anzahl_sus,
       kaoa_hochschule: schule.kaoa_hochschule,
       talentscouting: schule.talentscouting
     });
+
+    this.kontakte.clear();
+    schule.kontakte.forEach(it => {
+      this.addKontakt(it);
+    });
   }
+
+  addKontakt(it: Kontakt) {
+    this.kontakte.push(new FormControl(it));
+  }
+
 
   updateSchuleWithoutNewAdresse(schule: Schule, notificationService: NotificationService) {
     const newSchule = {
