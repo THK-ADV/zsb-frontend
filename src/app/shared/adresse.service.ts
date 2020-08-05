@@ -17,8 +17,8 @@ export class AdresseService {
 
   public formGroup: FormGroup = new FormGroup({
     adresseId: new FormControl(null),
-    regierungsbezirk: new FormControl(''),
-    kreis: new FormControl(''),
+    regierungsbezirk: new FormControl('', Validators.required),
+    kreis: new FormControl('', Validators.required),
     plz: new FormControl('', Validators.required),
     bezeichnung: new FormControl('', Validators.required),
     strasse: new FormControl('', Validators.required),
