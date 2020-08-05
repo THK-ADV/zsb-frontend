@@ -33,27 +33,17 @@ export class ZsbAdresseComponent implements OnInit {
 
   initialAdresse: Adresse;
 
-  regierungsbezirkOptionsComplete: string[] = [];
-  // regierungsbezirkOptions: string[] = [];
+  // options for all autocomplete inputs
+  regierungsbezirkOptions: string[] = [];
   filteredRegierungsbezirkOptions: Observable<string[]>;
-
-  kreisOptionsComplete: string[] = [];
   kreisOptions: string[] = [];
   filteredKreisOptions: Observable<string[]>;
-
-  plzOptionsComplete: string[] = [];
   plzOptions: string[] = [];
   filteredPlzOptions: Observable<string[]>;
-
-  bezeichnungOptionsComplete: string[] = [];
   bezeichnungOptions: string[] = [];
   filteredBezeichnungOptions: Observable<string[]>;
-
-  strasseOptionsComplete: string[] = [];
   strasseOptions: string[] = [];
   filteredStrasseOptions: Observable<string[]>;
-
-  hausnummerOptionsComplete: string[] = [];
   hausnummerOptions: string[] = [];
   filteredHausnummerOptions: Observable<string[]>;
 
@@ -68,7 +58,6 @@ export class ZsbAdresseComponent implements OnInit {
 
   ngOnInit(): void {
     this.service.initializeFormGroup();
-    this.initializeInteractiveForm();
     this.loadDataFromDB();
 
     this.schuleId = this.service.currentSchuleId;
@@ -141,15 +130,6 @@ export class ZsbAdresseComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  private initializeInteractiveForm() {
-    this.service.formGroup.valueChanges.subscribe(() => this.updateValidOptions());
-    this.service.formGroup.controls.regierungsbezirk.valueChanges.subscribe(() => this.removeInvalidFormDataByBezirk());
-    this.service.formGroup.controls.kreis.valueChanges.subscribe(() => this.removeInvalidFormDataByKreis());
-    this.service.formGroup.controls.plz.valueChanges.subscribe(() => this.removeInvalidFormDataByPlz());
-    this.service.formGroup.controls.bezeichnung.valueChanges.subscribe(() => this.removeInvalidFormDataByBezeichnung());
-    this.service.formGroup.controls.strasse.valueChanges.subscribe(() => this.removeInvalidFormDataByStrasse());
-  }
-
   private loadDataFromDB() {
     this.orteObservable = this.dbService.getOrte();
     this.orteObservable.subscribe(orte => this.orte = orte);
@@ -160,7 +140,7 @@ export class ZsbAdresseComponent implements OnInit {
   private updateAutocomplete() {
     const controls = this.service.formGroup.controls;
 
-    this.filteredRegierungsbezirkOptions = this.filterOptions(controls.regierungsbezirk, this.regierungsbezirkOptionsComplete);
+    this.filteredRegierungsbezirkOptions = this.filterOptions(controls.regierungsbezirk, this.regierungsbezirkOptions);
     this.filteredKreisOptions = this.filterOptions(controls.kreis, this.kreisOptions);
     this.filteredPlzOptions = this.filterOptions(controls.plz, this.plzOptions);
     this.filteredBezeichnungOptions = this.filterOptions(controls.bezeichnung, this.bezeichnungOptions);
@@ -173,70 +153,6 @@ export class ZsbAdresseComponent implements OnInit {
       startWith(''),
       map(it => this._filter(it, options))
     );
-  }
-
-  // update all valid options based on the current inputs
-  private updateValidOptions() {
-    const selectedBezirk = this.service.formGroup.value.regierungsbezirk;
-    this.kreisOptions = this.kreisOptionsComplete
-      .filter(kreis => this.adressen.some(it => it.ort.kreis === kreis && it.ort.regierungsbezirk === selectedBezirk));
-
-    const selectedKreis = this.service.formGroup.value.kreis;
-    this.plzOptions = this.plzOptionsComplete
-      .filter(plz => this.adressen.some(it => it.ort.plz === +plz && it.ort.kreis === selectedKreis));
-
-    const selectedPlz = this.service.formGroup.value.plz;
-    this.bezeichnungOptions = this.bezeichnungOptionsComplete.filter(
-      bezeichnung => this.orte
-        .find(ort => ort.bezeichnung === bezeichnung && ort.plz === +selectedPlz) !== undefined || selectedPlz === ''
-    );
-
-    const selectedBezeichnung = this.service.formGroup.value.bezeichnung;
-    this.strasseOptions = this.strasseOptionsComplete.filter(
-      strasse => this.adressen.some(it => it.strasse === strasse && it.ort.bezeichnung === selectedBezeichnung)
-    );
-
-    const selectedStrasse = this.service.formGroup.value.strasse;
-    this.hausnummerOptions = this.hausnummerOptionsComplete.filter(
-      hausnummer => this.adressen.some(it => it.hausnummer === hausnummer && it.strasse === selectedStrasse)
-    );
-  }
-
-  private replaceValueIfNotInOptions(newValue: string, options: string[]): string {
-    if (!options.some(it => it === newValue)) {
-      return '';
-    }
-    return newValue;
-  }
-
-  private removeInvalidFormDataByBezirk() {
-    let newKreis = this.service.formGroup.value.kreis;
-    newKreis = this.replaceValueIfNotInOptions(newKreis, this.kreisOptions);
-    this.service.formGroup.patchValue({kreis: newKreis});
-  }
-
-  private removeInvalidFormDataByKreis() {
-    let newPlz = this.service.formGroup.value.plz;
-    newPlz = this.replaceValueIfNotInOptions(newPlz, this.plzOptions);
-    this.service.formGroup.patchValue({plz: newPlz});
-  }
-
-  private removeInvalidFormDataByPlz() {
-    let newBezeichnung = this.service.formGroup.value.bezeichnung;
-    newBezeichnung = this.replaceValueIfNotInOptions(newBezeichnung, this.bezeichnungOptions);
-    this.service.formGroup.patchValue({bezeichnung: newBezeichnung});
-  }
-
-  private removeInvalidFormDataByBezeichnung() {
-    let newStrasse = this.service.formGroup.value.strasse;
-    newStrasse = this.replaceValueIfNotInOptions(newStrasse, this.strasseOptions);
-    this.service.formGroup.patchValue({strasse: newStrasse});
-  }
-
-  private removeInvalidFormDataByStrasse() {
-    let newHausnummer = this.service.formGroup.value.hausnummer;
-    newHausnummer = this.replaceValueIfNotInOptions(newHausnummer, this.hausnummerOptions);
-    this.service.formGroup.patchValue({hausnummer: newHausnummer});
   }
 
   private _filter(value, options: string[]): string[] {
