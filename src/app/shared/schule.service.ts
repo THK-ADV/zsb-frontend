@@ -6,7 +6,7 @@ import {Observable} from 'rxjs';
 import {Adresse} from '../zsb-adresse/adresse';
 import {Ort} from '../zsb-adresse/ort';
 import {NotificationService} from './notification.service';
-import {Kontakt} from '../zsb-schule/kontakt';
+import {Kontakt} from '../zsb-kontakt/kontakt';
 
 @Injectable({
   providedIn: 'root'
@@ -99,7 +99,6 @@ export class SchuleService {
     this.addKontakte(formKontakte);
 
     // update form
-    // this.formGroup.patchValue({kontakte: this.kontakte});
     console.log('removed kontakt ' + uuid + ' from this schule');
   }
 

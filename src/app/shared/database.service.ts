@@ -7,7 +7,7 @@ import {Observable, throwError} from 'rxjs';
 import {Schulform} from '../zsb-schule/schulform';
 import {Ort} from '../zsb-adresse/ort';
 import {AnzahlSus} from '../zsb-schule/anzahl-sus';
-import {Kontakt, KontaktFunktion} from '../zsb-schule/kontakt';
+import {Kontakt, KontaktFunktion} from '../zsb-kontakt/kontakt';
 
 @Injectable({
   providedIn: 'root'

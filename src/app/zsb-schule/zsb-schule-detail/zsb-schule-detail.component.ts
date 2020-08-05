@@ -12,7 +12,7 @@ import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {ZsbAdresseComponent} from '../../zsb-adresse/zsb-adresse.component';
 import {AdresseService} from '../../shared/adresse.service';
 import {AnzahlSus} from '../anzahl-sus';
-import {KontaktFunktion} from '../kontakt';
+import {KontaktFunktion} from '../../zsb-kontakt/kontakt';
 
 @Component({
   selector: 'app-zsb-schule-detail',

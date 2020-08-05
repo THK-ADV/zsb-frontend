@@ -1,6 +1,6 @@
 import {Ort} from '../zsb-adresse/ort';
 import {Adresse} from '../zsb-adresse/adresse';
-import {Kontakt} from './kontakt';
+import {Kontakt} from '../zsb-kontakt/kontakt';
 
 export interface Schule {
   schule_id: string;
