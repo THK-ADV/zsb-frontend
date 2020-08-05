@@ -126,7 +126,7 @@ export class ZsbAdresseComponent implements OnInit {
       ort: newOrt
     };
 
-    if (ZsbAdresseComponent.equalsWithoutId(this.service.currentAdresse, this.initialAdresse)) {
+    if (this.initialAdresse !== undefined && ZsbAdresseComponent.equalsWithoutId(this.service.currentAdresse, this.initialAdresse)) {
       this.service.currentAdresse = undefined;
       console.log('Nothing changed here.');
     }

@@ -107,9 +107,8 @@ export class SchuleService {
     };
 
     if (newSchule.schule_id == null) {
-      // TODO error not create!
-      notificationService.failure('-- Should not happen -> Create schule within update [schule.service:updateSchuleWithoutNewAdresse].');
-      this.newSchule = this.dbService.createSchule(newSchule);
+      notificationService.failure('-- Can\'t update "schule" without id. Please contact your administrator');
+      return;
     } else {
       this.newSchule = this.dbService.updateSchule(newSchule);
     }
@@ -121,7 +120,6 @@ export class SchuleService {
         notificationService.failure('-- Schule konnte nicht aktualisiert werden.');
       }
     });
-
   }
 
   deleteSchule(schule: Schule) {
@@ -159,9 +157,16 @@ export class SchuleService {
         schule.adress_id = newAdresse.adress_id;
         schule.adresse = null;
         schule.kontakt_ids = schule.kontakte.map(it => it.uuid);
+        schule.schwerpunkt = 'unbekannt';
 
-        if (schule.schule_id === undefined) {
-          this.dbService.createSchule(schule);
+        if (schule.schule_id === undefined || schule.schule_id === null) {
+          this.dbService.createSchule(schule).subscribe(it => {
+            if (it.schule_id !== undefined) {
+              notificationService.success(':: Schule erfolgreich aktualisiert.');
+            } else {
+              notificationService.failure('-- Schule konnte nicht aktualisiert werden.');
+            }
+          });
         } else {
           const result = this.dbService.updateSchule(schule);
           result.subscribe(it => {

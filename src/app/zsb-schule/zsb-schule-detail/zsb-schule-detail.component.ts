@@ -79,6 +79,15 @@ export class ZsbSchuleDetailComponent implements OnInit {
 
     const schule = this.service.formGroup.value;
 
+    // remove nulls from kontakte-array
+    const cleanedKontakte = [];
+    schule.kontakte.forEach(it => {
+      if (it != null) {
+        cleanedKontakte.push(it);
+      }
+    });
+    schule.kontakte = cleanedKontakte;
+
     if (this.adresseService.currentAdresse !== undefined) {
       schule.ort = this.adresseService.currentAdresse.ort;
       schule.adresse = this.adresseService.currentAdresse;
