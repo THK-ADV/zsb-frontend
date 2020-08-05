@@ -1,4 +1,4 @@
-<form [formGroup]="service.formGroup" class="normal-form" (submit)="onSubmit()">
+<form [formGroup]="service.formGroup" class="normal-form"> <!-- (submit)="onSubmit()" -->
 
   <span class="hidden-color"> <!-- TODO find solution for scaling problem -->
     ###############################
@@ -61,7 +61,7 @@
                       <mat-icon>launch</mat-icon>
                     </button>
                     <!-- delete icon TODO trigger delete connection between this kontakt and schule-->
-                    <button mat-icon-button color="warn" disabled>
+                    <button mat-icon-button color="warn" (click)="service.removeKontakt(kontakt.value.uuid)">
                       <mat-icon>delete_outline</mat-icon>
                     </button>
                   </ng-container>
@@ -72,7 +72,7 @@
 
           <!-- ADD Kontakt (Button) -->
           <mat-list-item role="listitem">
-            <button mat-flat-button (click)="addKontakt()">
+            <button mat-flat-button (click)="addKontakt()" disabled>
               <mat-icon>add</mat-icon>
               Hinzufügen
             </button>
@@ -106,7 +106,7 @@
 
 
         <div class="btn-row">
-          <button mat-raised-button color="primary" type="submit" [disabled]="service.formGroup.invalid">Speichern
+          <button mat-raised-button color="primary" type="submit" (click)="onSubmit()" [disabled]="service.formGroup.invalid">Speichern
           </button>
           <button mat-raised-button color="warn" (click)="onClear()">Zurücksetzen</button>
         </div>

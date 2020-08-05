@@ -54,10 +54,6 @@ export class SchuleService {
   }
 
   loadFormData(schule: Schule) {
-    schule.kontakte.forEach(kontakt => {
-      console.log('--> ' + kontakt.name + ' ' + kontakt.funktion);
-    });
-
     this.formGroup.setValue({
       schule_id: schule.schule_id,
       name: schule.name,
@@ -73,13 +69,38 @@ export class SchuleService {
     });
 
     this.kontakte.clear();
-    schule.kontakte.forEach(it => {
-      this.addKontakt(it);
-    });
+    this.addKontakte(schule.kontakte);
   }
 
   addKontakt(it: Kontakt) {
     this.kontakte.push(new FormControl(it));
+  }
+
+  addKontakte(kontakte: Kontakt[]) {
+    kontakte.forEach(it => {
+      this.addKontakt(it);
+    });
+  }
+
+  removeKontakt(uuid: string) {
+    // get all kontakte from form
+    const schule = this.formGroup.value as Schule;
+    const formKontakte = schule.kontakte;
+
+    // find kontakt to be removed
+    const wantedKontakt = formKontakte.find(it => it.uuid === uuid);
+    const wantedIndex = formKontakte.indexOf(wantedKontakt);
+
+    // remove contact
+    formKontakte.splice(wantedIndex);
+
+    // update form-array
+    this.kontakte.clear();
+    this.addKontakte(formKontakte);
+
+    // update form
+    // this.formGroup.patchValue({kontakte: this.kontakte});
+    console.log('removed kontakt ' + uuid + ' from this schule');
   }
 
 

@@ -126,13 +126,15 @@ export class ZsbSchuleDetailComponent implements OnInit {
   getKontaktFunktionDescById(id: number) {
     let desc = 'Unbekannt';
 
-    this.kontaktFunktionen.forEach(it => {
-      if (desc === 'Unbekannt') {
-        if (it.id === id) {
-          desc = it.desc;
+    if (this.kontaktFunktionen !== undefined && this.kontaktFunktionen !== null) {
+      this.kontaktFunktionen.forEach(it => {
+        if (desc === 'Unbekannt') {
+          if (it.id === id) {
+            desc = it.desc;
+          }
         }
-      }
-    });
+      });
+    }
 
     return desc;
   }
