@@ -102,6 +102,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
     console.log('CLEAR');
     this.service.formGroup.reset();
     this.service.initializeFormGroup();
+    this.ngOnInit();
     this.notificationService.success(':: Formular zurückgesetzt.');
   }
 
