@@ -37,7 +37,7 @@ export class AdresseService {
     });
   }
 
-  loadSchule(schule: Schule) {
+  loadAdresseFromSchule(schule: Schule) {
     this.formGroup.setValue({
       adresseId: schule.adress_id,
       regierungsbezirk: schule.ort.regierungsbezirk,
