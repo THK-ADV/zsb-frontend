@@ -92,7 +92,7 @@ export class SchuleService {
     const wantedIndex = formKontakte.indexOf(wantedKontakt);
 
     // remove contact
-    formKontakte.splice(wantedIndex);
+    formKontakte.splice(wantedIndex, 1);
 
     // update form-array
     this.kontakte.clear();
