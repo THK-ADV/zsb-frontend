@@ -27,7 +27,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {ZsbAdresseComponent} from './zsb-adresse/zsb-adresse.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatListModule} from '@angular/material/list';
-import { ZsbKontaktComponent } from './zsb-kontakt/zsb-kontakt.component';
+import {ZsbKontaktComponent} from './zsb-kontakt/zsb-kontakt.component';
 
 
 const appRoutes: Routes = [
@@ -46,34 +46,34 @@ const appRoutes: Routes = [
     ZsbAdresseComponent,
     ZsbKontaktComponent
   ],
-    imports: [
-        BrowserModule,
-        HttpClientModule,
-        RouterModule.forRoot(
-            appRoutes,
-            // {enableTracing: true} // debugging
-        ),
-        BrowserAnimationsModule,
-        MatButtonModule,
-        MatToolbarModule,
-        MatSliderModule,
-        FormsModule,
-        NgbModule,
-        MatTableModule,
-        MatCheckboxModule,
-        MatIconModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatDialogModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        MatGridListModule,
-        MatSnackBarModule,
-        MatAutocompleteModule,
-        MatListModule
-    ],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    RouterModule.forRoot(
+      appRoutes,
+      // {enableTracing: true} // debugging
+    ),
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatSliderModule,
+    FormsModule,
+    NgbModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatGridListModule,
+    MatSnackBarModule,
+    MatAutocompleteModule,
+    MatListModule
+  ],
   providers: [],
   bootstrap: [AppComponent],
   // entryComponents: [ZsbSchuleDetailComponent]

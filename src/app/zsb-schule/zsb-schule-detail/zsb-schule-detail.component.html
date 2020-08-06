@@ -57,7 +57,7 @@
                     {{kontakt.value.name}} (Funktion: {{getKontaktFunktionDescById(kontakt.value.funktion)}})
 
                     <!-- go to details for this kontakt-->
-                    <button mat-icon-button [routerLink]="['/schulen/SCHULE_ID/kontakte/KONTAKT_ID', 4]" disabled>
+                    <button mat-icon-button (click)="showKontaktDetail(kontakt.value.uuid)">
                       <mat-icon>launch</mat-icon>
                     </button>
                     <!-- delete icon TODO trigger delete connection between this kontakt and schule-->

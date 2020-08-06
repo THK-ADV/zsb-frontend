@@ -13,6 +13,7 @@ import {ZsbAdresseComponent} from '../../zsb-adresse/zsb-adresse.component';
 import {AdresseService} from '../../shared/adresse.service';
 import {AnzahlSus} from '../anzahl-sus';
 import {KontaktFunktion} from '../../zsb-kontakt/kontakt';
+import {ZsbKontaktComponent} from '../../zsb-kontakt/zsb-kontakt.component';
 
 @Component({
   selector: 'app-zsb-schule-detail',
@@ -121,6 +122,21 @@ export class ZsbSchuleDetailComponent implements OnInit {
       if (adresse !== undefined) {
         this.service.formGroup.patchValue({adresse: this.service.getReadableAdresse(adresse, adresse.ort)});
       }
+    });
+  }
+
+  showKontaktDetail(kontaktId: string) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false; // TODO set true, when form is complete
+    dialogConfig.width = '40%';
+    this.dialog.open(ZsbKontaktComponent, dialogConfig);
+
+
+    this.dialog.afterAllClosed.subscribe(it => {
+      console.log(it);
+
+      // TODO reload form, if kontakt has changed...
+      // this.service.formGroup.patchValue({kontakte: });
     });
   }
 
