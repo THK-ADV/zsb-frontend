@@ -1,20 +1,20 @@
 import {Component, OnInit} from '@angular/core';
-import {DatabaseService} from '../shared/database.service';
-import {Kontakt, KontaktFunktion} from './kontakt';
+import {DatabaseService} from '../../shared/database.service';
+import {Kontakt, KontaktFunktion} from '../kontakt';
 import {Observable} from 'rxjs';
-import {KontakteService} from '../shared/kontakte.service';
+import {KontakteService} from '../../shared/kontakte.service';
 import {MatDialogRef} from '@angular/material/dialog';
-import {NotificationService} from '../shared/notification.service';
+import {NotificationService} from '../../shared/notification.service';
 
 @Component({
   selector: 'app-zsb-kontakt',
-  templateUrl: './zsb-kontakt.component.html',
-  styleUrls: ['./zsb-kontakt.component.css']
+  templateUrl: './zsb-kontakt-detail.component.html',
+  styleUrls: ['./zsb-kontakt-detail.component.css']
 })
-export class ZsbKontaktComponent implements OnInit {
+export class ZsbKontaktDetailComponent implements OnInit {
 
   constructor(
-    private dialogRef: MatDialogRef<ZsbKontaktComponent>,
+    private dialogRef: MatDialogRef<ZsbKontaktDetailComponent>,
     private notificationService: NotificationService,
     private dbService: DatabaseService,
     public service: KontakteService) {

@@ -27,7 +27,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {ZsbAdresseComponent} from './zsb-adresse/zsb-adresse.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatListModule} from '@angular/material/list';
-import {ZsbKontaktComponent} from './zsb-kontakt/zsb-kontakt.component';
+import {ZsbKontaktDetailComponent} from './zsb-kontakt/zsb-kontakt-detail/zsb-kontakt-detail.component';
 
 
 const appRoutes: Routes = [
@@ -44,7 +44,7 @@ const appRoutes: Routes = [
     ZsbSchuleListComponent,
     ZsbSchuleDetailComponent,
     ZsbAdresseComponent,
-    ZsbKontaktComponent
+    ZsbKontaktDetailComponent
   ],
   imports: [
     BrowserModule,
