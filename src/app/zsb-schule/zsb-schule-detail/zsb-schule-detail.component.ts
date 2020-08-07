@@ -129,14 +129,18 @@ export class ZsbSchuleDetailComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.width = '30%';
-    const dialogRef = this.dialog.open(ZsbKontaktComponent, dialogConfig);
+    const dialogRef = this.dialog.open(ZsbKontaktDetailComponent, dialogConfig);
     dialogRef.componentInstance.uuid = kontaktId;
 
-    this.dialog.afterAllClosed.subscribe(it => {
-      console.log(it);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === undefined) {
+        return;
+      }
 
-      // TODO reload form, if kontakt has changed...
-      // this.service.formGroup.patchValue({kontakte: });
+      const kontakt = result as Kontakt;
+      console.log('new name: ' + kontakt?.name);
+
+      this.service.updateKontakt(kontakt);
     });
   }
 

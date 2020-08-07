@@ -72,11 +72,11 @@ export class SchuleService {
     this.addKontakte(schule.kontakte);
   }
 
-  addKontakt(it: Kontakt) {
+  private addKontakt(it: Kontakt) {
     this.kontakte.push(new FormControl(it));
   }
 
-  addKontakte(kontakte: Kontakt[]) {
+  private addKontakte(kontakte: Kontakt[]) {
     kontakte.forEach(it => {
       this.addKontakt(it);
     });
@@ -84,8 +84,7 @@ export class SchuleService {
 
   removeKontakt(uuid: string) {
     // get all kontakte from form
-    const schule = this.formGroup.value as Schule;
-    const formKontakte = schule.kontakte;
+    const formKontakte = this.getKontakteFromForm();
 
     // find kontakt to be removed
     const wantedKontakt = formKontakte.find(it => it.uuid === uuid);
@@ -95,11 +94,35 @@ export class SchuleService {
     formKontakte.splice(wantedIndex, 1);
 
     // update form-array
-    this.kontakte.clear();
-    this.addKontakte(formKontakte);
+    this.refillFormArray(formKontakte);
 
     // update form
     console.log('removed kontakt ' + uuid + ' from this schule');
+  }
+
+  updateKontakt(updated: Kontakt) {
+    const formKontakte = this.getKontakteFromForm();
+
+    // get index of old kontakt
+    const oldKontakt = formKontakte.find(it => it.uuid === updated.uuid);
+    const index = formKontakte.indexOf(oldKontakt);
+
+    // update kontakt
+    formKontakte[index] = updated;
+
+    // update form-array
+    this.refillFormArray(formKontakte);
+  }
+
+  /** get all kontakte from form */
+  private getKontakteFromForm(): Kontakt[] {
+    const schule = this.formGroup.value as Schule;
+    return schule.kontakte;
+  }
+
+  private refillFormArray(kontakte: Kontakt[]) {
+    this.kontakte.clear();
+    this.addKontakte(kontakte);
   }
 
 
@@ -199,6 +222,5 @@ export class SchuleService {
         }
       });
     });
-
   }
 }
