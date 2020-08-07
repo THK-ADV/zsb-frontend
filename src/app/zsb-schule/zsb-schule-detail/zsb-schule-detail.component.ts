@@ -117,7 +117,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
     this.dialog.open(ZsbAdresseComponent, dialogConfig);
 
     this.dialog.afterAllClosed.subscribe(it => {
-      console.log(it);
+      console.log('modal what? ' + it);
       const adresse = this.adresseService.currentAdresse;
       if (adresse !== undefined) {
         this.service.formGroup.patchValue({adresse: this.service.getReadableAdresse(adresse, adresse.ort)});
@@ -127,10 +127,10 @@ export class ZsbSchuleDetailComponent implements OnInit {
 
   showKontaktDetail(kontaktId: string) {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false; // TODO set true, when form is complete
-    dialogConfig.width = '40%';
-    this.dialog.open(ZsbKontaktComponent, dialogConfig);
-
+    dialogConfig.disableClose = true;
+    dialogConfig.width = '30%';
+    const dialogRef = this.dialog.open(ZsbKontaktComponent, dialogConfig);
+    dialogRef.componentInstance.uuid = kontaktId;
 
     this.dialog.afterAllClosed.subscribe(it => {
       console.log(it);

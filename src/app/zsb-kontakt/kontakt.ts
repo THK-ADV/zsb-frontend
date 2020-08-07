@@ -1,4 +1,3 @@
-
 export interface Kontakt {
   uuid: string;
   name: string;

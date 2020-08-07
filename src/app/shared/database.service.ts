@@ -127,4 +127,8 @@ export class DatabaseService {
   updateOrCreateKontakt(kontakt: Kontakt): Observable<Kontakt> {
     return this.httpClient.put<Kontakt>(this.DB_URL + '/kontakte', kontakt);
   }
+
+  getKontaktById(uuid: string) {
+    return this.httpClient.get<Kontakt>(this.DB_URL + '/kontakte/' + uuid);
+  }
 }
