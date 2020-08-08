@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {DatabaseService} from '../../shared/database.service';
-import {Kontakt, KontaktFunktion} from '../kontakt';
-import {Observable} from 'rxjs';
+import {Kontakt} from '../kontakt';
 import {KontakteService} from '../../shared/kontakte.service';
 import {MatDialogRef} from '@angular/material/dialog';
 import {NotificationService} from '../../shared/notification.service';
@@ -22,12 +21,8 @@ export class ZsbKontaktDetailComponent implements OnInit {
 
   uuid: string = undefined;
   kontakt: Kontakt = undefined;
-  kontaktFunktionen: Observable<KontaktFunktion[]>;
 
   ngOnInit(): void {
-    // load Kontakt Funktionen
-    this.kontaktFunktionen = this.dbService.getKontaktFunktionen();
-
     // initialize form
     this.service.initializeKontaktForm();
 

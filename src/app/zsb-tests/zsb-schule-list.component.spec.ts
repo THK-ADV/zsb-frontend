@@ -4,7 +4,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTableModule} from '@angular/material/table';
 
-import {ZsbSchuleListComponent} from './zsb-schule-list.component';
+import {ZsbSchuleListComponent} from '../zsb-schule/zsb-schule-list/zsb-schule-list.component';
 
 describe('DataTableComponent', () => {
   let component: ZsbSchuleListComponent;

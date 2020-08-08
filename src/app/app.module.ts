@@ -28,6 +28,9 @@ import {ZsbAdresseComponent} from './zsb-adresse/zsb-adresse.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatListModule} from '@angular/material/list';
 import {ZsbKontaktDetailComponent} from './zsb-kontakt/zsb-kontakt-detail/zsb-kontakt-detail.component';
+import {ZsbKontaktSearchComponent} from './zsb-kontakt/zsb-kontakt-search/zsb-kontakt-search.component';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 const appRoutes: Routes = [
@@ -44,7 +47,8 @@ const appRoutes: Routes = [
     ZsbSchuleListComponent,
     ZsbSchuleDetailComponent,
     ZsbAdresseComponent,
-    ZsbKontaktDetailComponent
+    ZsbKontaktDetailComponent,
+    ZsbKontaktSearchComponent
   ],
   imports: [
     BrowserModule,
@@ -72,7 +76,9 @@ const appRoutes: Routes = [
     MatGridListModule,
     MatSnackBarModule,
     MatAutocompleteModule,
-    MatListModule
+    MatListModule,
+    MatButtonToggleModule,
+    MatSlideToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent],

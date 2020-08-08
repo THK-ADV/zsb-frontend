@@ -1,13 +1,18 @@
 import {Injectable} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Kontakt} from '../zsb-kontakt/kontakt';
+import {Kontakt, KontaktFunktion} from '../zsb-kontakt/kontakt';
+import {Observable} from 'rxjs';
+import {DatabaseService} from './database.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class KontakteService {
 
-  constructor() {
+  kontaktFunktionen: Observable<KontaktFunktion[]>;
+
+  constructor(private dbService: DatabaseService) {
+    this.kontaktFunktionen = this.dbService.getKontaktFunktionen();
   }
 
   public kontaktForm: FormGroup = new FormGroup({

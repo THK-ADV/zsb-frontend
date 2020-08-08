@@ -8,12 +8,13 @@ import {Adresse} from '../../zsb-adresse/adresse';
 import {SchuleService} from '../../shared/schule.service';
 import {NotificationService} from '../../shared/notification.service';
 import {Schulform} from '../schulform';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 import {ZsbAdresseComponent} from '../../zsb-adresse/zsb-adresse.component';
 import {AdresseService} from '../../shared/adresse.service';
 import {AnzahlSus} from '../anzahl-sus';
 import {Kontakt, KontaktFunktion} from '../../zsb-kontakt/kontakt';
 import {ZsbKontaktDetailComponent} from '../../zsb-kontakt/zsb-kontakt-detail/zsb-kontakt-detail.component';
+import {ZsbKontaktSearchComponent} from '../../zsb-kontakt/zsb-kontakt-search/zsb-kontakt-search.component';
 
 @Component({
   selector: 'app-zsb-schule-detail',
@@ -160,7 +161,26 @@ export class ZsbSchuleDetailComponent implements OnInit {
     return desc;
   }
 
+  private createDialog(component, width: number = 30): MatDialogRef<any> {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.width = '${width}%';
+
+    return this.dialog.open(component, dialogConfig);
+  }
+
   addKontakt() {
+    const dialogRef = this.createDialog(ZsbKontaktSearchComponent);
+    dialogRef.afterClosed().subscribe(it => {
+      // do nothing, if nothing got added
+      if (it === undefined) {
+        return;
+      }
+
+      const newKontakt = it as Kontakt;
+      this.service.addKontakt(newKontakt);
+    });
+
     console.log('Add kontakt');
   }
 }

@@ -72,7 +72,7 @@ export class SchuleService {
     this.addKontakte(schule.kontakte);
   }
 
-  private addKontakt(it: Kontakt) {
+  addKontakt(it: Kontakt) {
     this.kontakte.push(new FormControl(it));
   }
 
@@ -167,17 +167,6 @@ export class SchuleService {
 
   deleteSchule(schule: Schule) {
     // implement? theoretically not really needed.
-  }
-
-  // receive kontakt from db
-  ensureKontaktId(kontakt: Kontakt, action: (kontaktId: string) => void) {
-    if (kontakt === undefined || kontakt === null || kontakt.name === undefined || kontakt.email === undefined) {
-      action(null);
-    } else {
-      this.dbService.updateOrCreateKontakt(kontakt).subscribe(it => {
-        action(it.uuid);
-      });
-    }
   }
 
   getReadableAdresse(adresse: Adresse, ort: Ort) {

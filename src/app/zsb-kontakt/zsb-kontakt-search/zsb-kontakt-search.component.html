@@ -1,5 +1,29 @@
-<h1>Kontakt Verwaltung</h1>
+<h1>Kontakt hinzufügen</h1>
+
+<form>
+  <div class="controls-container">
+    <!-- Search existing Kontakte -->
+    <mat-form-field class="full-width">
+      <label>
+        <input matInput name="name" type="text" placeholder="Suche">
+      </label>
+    </mat-form-field>
+    <br>
+
+    <!-- checkbox -> create new -->
+    <!-- TODO triggers disable of search or others -->
+    <mat-slide-toggle name="addToggle" [(ngModel)]="enableEdit">
+      Neuen Kontakt hinzufügen?
+    </mat-slide-toggle>
+    <button mat-button color="warn" disabled="{{enableEdit}}">Test</button>
+  </div>
+</form>
+
+<br>
+
 <form [formGroup]="service.kontaktForm" class="normal-form example-form">
+  <button mat-button color="warn" disabled="{{enableEdit}}">Test</button>
+  <input matInput name="name" type="text" placeholder="Name2" disabled="{{enableEdit}}">
   <div class="controls-container">
     <!-- UUID -->
     <input type="hidden" formControlName="uuid">
@@ -7,7 +31,7 @@
     <!-- NAME -->
     <mat-form-field class="full-width">
       <label>
-        <input matInput name="name" type="text" placeholder="Name" formControlName="name">
+        <input matInput name="name" type="text" placeholder="Name" formControlName="name" disabled="{{enableEdit}}">
       </label>
       <mat-error>Ihre Eingabe wird benötigt.</mat-error>
     </mat-form-field>
@@ -38,7 +62,8 @@
 
     <!-- BUTTONS -->
     <div class="btn-row">
-      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="service.kontaktForm.invalid"> <!-- type="submit" -->
+      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="service.kontaktForm.invalid">
+        <!-- type="submit" -->
         Übernehmen
       </button>
       <button mat-raised-button color="warn" (click)="onClose()">Abbrechen</button>
