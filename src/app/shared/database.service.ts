@@ -131,4 +131,8 @@ export class DatabaseService {
   getKontaktById(uuid: string) {
     return this.httpClient.get<Kontakt>(this.DB_URL + '/kontakte/' + uuid);
   }
+
+  getKontakte(): Observable<Kontakt[]> {
+    return this.httpClient.get<Kontakt[]>(this.DB_URL + '/kontakte');
+  }
 }

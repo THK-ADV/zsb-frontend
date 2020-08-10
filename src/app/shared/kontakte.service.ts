@@ -22,6 +22,11 @@ export class KontakteService {
     funktion: new FormControl('', Validators.required),
   });
 
+  public searchForm: FormGroup = new FormGroup({
+    searchKey: new FormControl(''),
+    enableEdit: new FormControl(false)
+  });
+
   initializeKontaktForm() {
     this.kontaktForm.setValue({
       uuid: null,
@@ -45,5 +50,9 @@ export class KontakteService {
    */
   getKontakt(): Kontakt {
     return this.kontaktForm.value;
+  }
+
+  clearSearch() {
+    this.searchForm.patchValue({searchKey: ''});
   }
 }

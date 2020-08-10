@@ -5,8 +5,8 @@ import {Ort} from './ort';
 import {Adresse} from './adresse';
 import {DatabaseService} from '../shared/database.service';
 import {AdresseService} from '../shared/adresse.service';
-import {map, startWith} from 'rxjs/operators';
 import {MatDialogRef} from '@angular/material/dialog';
+import {filterDuplicates, filterOptions} from '../shared/functions';
 
 @Component({
   selector: 'app-zsb-adresse',
@@ -66,12 +66,12 @@ export class ZsbAdresseComponent implements OnInit {
     // init autocomplete
     this.adressenObservable.subscribe(adressen => {
       // get all values and filter duplicates
-      this.regierungsbezirkOptions = this.filterDuplicates(adressen.map(it => it.ort.regierungsbezirk.trim()));
-      this.kreisOptions = this.filterDuplicates(adressen.map(it => it.ort.kreis.trim()));
-      this.plzOptions = this.filterDuplicates(adressen.map(it => it.ort.plz.toString().trim()));
-      this.bezeichnungOptions = this.filterDuplicates(adressen.map(it => it.ort.bezeichnung.trim()));
-      this.strasseOptions = this.filterDuplicates(adressen.map(it => it.strasse.trim()));
-      this.hausnummerOptions = this.filterDuplicates(adressen.map(it => it.hausnummer.trim()));
+      this.regierungsbezirkOptions = filterDuplicates(adressen.map(it => it.ort.regierungsbezirk.trim()));
+      this.kreisOptions = filterDuplicates(adressen.map(it => it.ort.kreis.trim()));
+      this.plzOptions = filterDuplicates(adressen.map(it => it.ort.plz.toString().trim()));
+      this.bezeichnungOptions = filterDuplicates(adressen.map(it => it.ort.bezeichnung.trim()));
+      this.strasseOptions = filterDuplicates(adressen.map(it => it.strasse.trim()));
+      this.hausnummerOptions = filterDuplicates(adressen.map(it => it.hausnummer.trim()));
 
       this.updateAutocomplete();
 
@@ -97,9 +97,7 @@ export class ZsbAdresseComponent implements OnInit {
     });
   }
 
-  filterDuplicates(array) {
-    return array.filter((it, index) => array.indexOf(it) === index);
-  }
+
 
   onSubmit() {
     const newOrt: Ort = {
@@ -140,25 +138,13 @@ export class ZsbAdresseComponent implements OnInit {
   private updateAutocomplete() {
     const controls = this.service.formGroup.controls;
 
-    this.filteredRegierungsbezirkOptions = this.filterOptions(controls.regierungsbezirk, this.regierungsbezirkOptions);
-    this.filteredKreisOptions = this.filterOptions(controls.kreis, this.kreisOptions);
-    this.filteredPlzOptions = this.filterOptions(controls.plz, this.plzOptions);
-    this.filteredBezeichnungOptions = this.filterOptions(controls.bezeichnung, this.bezeichnungOptions);
-    this.filteredStrasseOptions = this.filterOptions(controls.strasse, this.strasseOptions);
-    this.filteredHausnummerOptions = this.filterOptions(controls.hausnummer, this.hausnummerOptions);
+    this.filteredRegierungsbezirkOptions = filterOptions(controls.regierungsbezirk, this.regierungsbezirkOptions);
+    this.filteredKreisOptions = filterOptions(controls.kreis, this.kreisOptions);
+    this.filteredPlzOptions = filterOptions(controls.plz, this.plzOptions);
+    this.filteredBezeichnungOptions = filterOptions(controls.bezeichnung, this.bezeichnungOptions);
+    this.filteredStrasseOptions = filterOptions(controls.strasse, this.strasseOptions);
+    this.filteredHausnummerOptions = filterOptions(controls.hausnummer, this.hausnummerOptions);
   }
 
-  filterOptions(control, options): Observable<string[]> {
-    return control.valueChanges.pipe(
-      startWith(''),
-      map(it => this._filter(it, options))
-    );
-  }
 
-  private _filter(value, options: string[]): string[] {
-    const valueAsString = value + '';
-    const filterValue = valueAsString.toLowerCase();
-
-    return options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
-  }
 }

@@ -23,6 +23,8 @@ export class ZsbKontaktDetailComponent implements OnInit {
   kontakt: Kontakt = undefined;
 
   ngOnInit(): void {
+    this.service.kontaktForm.enable();
+
     // initialize form
     this.service.initializeKontaktForm();
 

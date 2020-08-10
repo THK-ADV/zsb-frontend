@@ -1,29 +1,35 @@
 <h1>Kontakt hinzufügen</h1>
 
-<form>
+<form [formGroup]="service.searchForm">
   <div class="controls-container">
     <!-- Search existing Kontakte -->
     <mat-form-field class="full-width">
-      <label>
-        <input matInput name="name" type="text" placeholder="Suche">
-      </label>
+    <input
+      name="name"
+      type="text"
+      placeholder="Suche"
+      aria-label="Number"
+      matInput
+      formControlName="searchKey"
+      [matAutocomplete]="ac_search">
+    <mat-autocomplete autoActiveFirstOption #ac_search="matAutocomplete">
+      <mat-option *ngFor="let option of filteredKontakteNames | async" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-autocomplete>
     </mat-form-field>
     <br>
 
     <!-- checkbox -> create new -->
-    <!-- TODO triggers disable of search or others -->
-    <mat-slide-toggle name="addToggle" [(ngModel)]="enableEdit">
+    <mat-slide-toggle name="addToggle"  formControlName="enableEdit">
       Neuen Kontakt hinzufügen?
     </mat-slide-toggle>
-    <button mat-button color="warn" disabled="{{enableEdit}}">Test</button>
   </div>
 </form>
 
 <br>
 
 <form [formGroup]="service.kontaktForm" class="normal-form example-form">
-  <button mat-button color="warn" disabled="{{enableEdit}}">Test</button>
-  <input matInput name="name" type="text" placeholder="Name2" disabled="{{enableEdit}}">
   <div class="controls-container">
     <!-- UUID -->
     <input type="hidden" formControlName="uuid">
@@ -31,7 +37,7 @@
     <!-- NAME -->
     <mat-form-field class="full-width">
       <label>
-        <input matInput name="name" type="text" placeholder="Name" formControlName="name" disabled="{{enableEdit}}">
+        <input matInput name="name" type="text" placeholder="Name" formControlName="name">
       </label>
       <mat-error>Ihre Eingabe wird benötigt.</mat-error>
     </mat-form-field>
