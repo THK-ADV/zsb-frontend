@@ -31,6 +31,7 @@ import {ZsbKontaktDetailComponent} from './zsb-kontakt/zsb-kontakt-detail/zsb-ko
 import {ZsbKontaktSearchComponent} from './zsb-kontakt/zsb-kontakt-search/zsb-kontakt-search.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 
 const appRoutes: Routes = [
@@ -78,7 +79,8 @@ const appRoutes: Routes = [
     MatAutocompleteModule,
     MatListModule,
     MatButtonToggleModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    FlexLayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent],
