@@ -1,4 +1,3 @@
-
 <ng-container *ngIf="this.schuleId != null; else newSchule">
   <h1>Schule bearbeiten</h1>
 </ng-container>
@@ -44,40 +43,54 @@
         </mat-form-field>
 
         <!-- Kontakte -->
-        <mat-list>
-          <div formArrayName="kontakte">
-            <h3>Kontakte</h3>
+        <div formArrayName="kontakte">
+          <h3>Kontakte</h3>
 
-
-            <div *ngFor="let kontakt of service.kontakte.controls; let i = index">
-              <mat-list-item role="listitem">
-                <label>
-                  <input type="text" [formControlName]="i" hidden>
-                  <ng-container *ngIf="kontakt != null && kontakt.value != null">
-                    {{kontakt.value.name}} (Funktion: {{getKontaktFunktionDescById(kontakt.value.funktion)}})
-
-                    <!-- go to details for this kontakt-->
-                    <button mat-icon-button (click)="showKontaktDetail(kontakt.value.uuid)">
-                      <mat-icon>launch</mat-icon>
-                    </button>
-                    <!-- delete icon TODO trigger delete connection between this kontakt and schule-->
-                    <button mat-icon-button color="warn" (click)="service.removeKontakt(kontakt.value.uuid)">
-                      <mat-icon>delete_outline</mat-icon>
-                    </button>
-                  </ng-container>
-                </label>
-              </mat-list-item>
-            </div>
-          </div>
-
-          <!-- ADD Kontakt (Button) -->
-          <mat-list-item role="listitem">
-            <button mat-flat-button (click)="addKontakt()">
-              <mat-icon>add</mat-icon>
-              Hinzufügen
-            </button>
-          </mat-list-item>
-        </mat-list>
+          <table class="kontakt-table">
+            <tr class="header-row">
+              <th>Name</th>
+              <th>Funktion</th>
+              <th></th>
+            </tr>
+            <ng-container *ngIf="service.kontakte.controls.length < 1">
+              <tr>
+                <td [attr.colspan]="3">Keine Kontakte vorhanden.</td>
+              </tr>
+            </ng-container>
+            <tr *ngFor="let kontakt of service.kontakte.controls; let i = index" class="border_bottom">
+              <ng-container *ngIf="kontakt != null && kontakt.value != null">
+                <td>
+                  <label>
+                    <input type="text" [formControlName]="i" hidden>
+                  </label>
+                  {{kontakt.value.name}}
+                </td>
+                <td>
+                  {{getKontaktFunktionDescById(kontakt.value.funktion)}}
+                </td>
+                <td>
+                  <!-- go to details for this kontakt-->
+                  <button mat-icon-button (click)="showKontaktDetail(kontakt.value.uuid)">
+                    <mat-icon>launch</mat-icon>
+                  </button>
+                  <!-- delete icon -> trigger delete connection between this kontakt and schule-->
+                  <button mat-icon-button color="warn" (click)="service.removeKontakt(kontakt.value.uuid)">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+            </tr>
+            <!-- ADD Kontakt (Button) -->
+            <tr>
+              <td [attr.colspan]="3">
+                <button class="btn-span-full-table" mat-stroked-button (click)="addKontakt()">
+                  <mat-icon>add</mat-icon>
+                  Hinzufügen
+                </button>
+              </td>
+            <tr>
+          </table>
+        </div>
       </div> <!-- grid controls-container -->
     </div>
     <div class="sec2" fxFlex="100" fxFlex.xs="55">
@@ -90,9 +103,10 @@
         </mat-form-field>
 
         <div class="single-btn-row">
-          <button mat-flat-button color="secondary" type="button" (click)="changeAdresse()">Standort verwalten
+          <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button" (click)="changeAdresse()">Standort verwalten
           </button>
         </div>
+        <br><br>
 
         <div class="add-bottom-padding">
           <mat-checkbox formControlName="kooperationsvertrag">Kooperationsvertrag</mat-checkbox>
@@ -106,7 +120,8 @@
 
 
         <div class="btn-row">
-          <button mat-raised-button color="primary" type="submit" (click)="onSubmit()" [disabled]="service.formGroup.invalid">Speichern
+          <button mat-raised-button color="primary" type="submit" (click)="onSubmit()"
+                  [disabled]="service.formGroup.invalid">Speichern
           </button>
           <button mat-raised-button color="warn" (click)="onClear()">Zurücksetzen</button>
         </div>

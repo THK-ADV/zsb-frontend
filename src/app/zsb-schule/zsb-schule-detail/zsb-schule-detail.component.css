@@ -23,3 +23,19 @@ form.normal-form {
   margin: 20px;
 }
 
+.header-row th {
+  text-align: left;
+}
+
+tr.border_bottom td {
+  border-bottom: 1px dashed #24292e;
+  padding: 2px 20px 2px 2px;
+}
+
+.kontakt-table {
+  width: 100%;
+}
+
+.btn-span-full-table {
+  width: 100%;
+}
