@@ -44,6 +44,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.service.initializeFormGroup();
     this.orteObservable = this.dbService.getOrte();
     this.adressenObservable = this.dbService.getAdressen();
 
@@ -59,6 +60,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
       this.schuleId = params.get('schuleId');
 
       if (this.schuleId != null) {
+        // load existing schule
         this.schuleObservable = this.dbService.getSchuleByIdAtomic(this.schuleId);
         this.schuleObservable.subscribe(schule => {
           this.service.loadFormData(schule);

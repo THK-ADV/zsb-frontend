@@ -1,3 +1,10 @@
+
+<ng-container *ngIf="this.schuleId != null; else newSchule">
+  <h1>Schule bearbeiten</h1>
+</ng-container>
+<ng-template #newSchule>
+  <h1>Schule hinzufügen</h1>
+</ng-template>
 <form [formGroup]="service.formGroup" class="normal-form"> <!-- (submit)="onSubmit()" -->
 
   <span class="hidden-color"> <!-- TODO find solution for scaling problem -->
@@ -7,7 +14,7 @@
     ###############################
   </span>
 
-  <mat-grid-list cols="2" rowHeight="400px">
+  <mat-grid-list cols="2" >
     <mat-grid-tile>
       <div class="controls-container">
         <input type="hidden" formControlName="schule_id">
