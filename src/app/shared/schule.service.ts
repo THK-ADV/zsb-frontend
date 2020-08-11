@@ -38,6 +38,8 @@ export class SchuleService {
   }
 
   initializeFormGroup() {
+    this.kontakte.clear();
+    this.kontakte.push(new FormControl());
     this.formGroup.setValue({
       schule_id: null,
       name: '',
