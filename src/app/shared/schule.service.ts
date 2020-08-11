@@ -190,15 +190,16 @@ export class SchuleService {
       adresseObservable.subscribe(newAdresse => {
         schule.adress_id = newAdresse.adress_id;
         schule.adresse = null;
-        schule.kontakt_ids = schule.kontakte.map(it => it.uuid);
+        schule.kontakte_ids = schule.kontakte.map(it => it.uuid);
         schule.schwerpunkt = 'unbekannt';
 
+        // check if schule already exists
         if (schule.schule_id === undefined || schule.schule_id === null) {
           this.dbService.createSchule(schule).subscribe(it => {
             if (it.schule_id !== undefined) {
-              notificationService.success(':: Schule erfolgreich aktualisiert.');
+              notificationService.success(':: Schule erfolgreich erstellt.');
             } else {
-              notificationService.failure('-- Schule konnte nicht aktualisiert werden.');
+              notificationService.failure('-- Schule konnte nicht erstellt werden.');
             }
           });
         } else {

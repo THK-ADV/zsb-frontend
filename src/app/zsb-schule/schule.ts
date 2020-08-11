@@ -13,7 +13,7 @@ export interface Schule {
   anzahl_sus: number;
   kaoa_hochschule: boolean;
   talentscouting: boolean;
-  kontakt_ids: string[];
+  kontakte_ids: string[];
   kontakte: Kontakt[];
   adresse: Adresse;
   ort: Ort;
