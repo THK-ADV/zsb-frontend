@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Kontakt} from '../kontakt';
+import {combineKontaktName, Kontakt} from '../kontakt';
 import {MatDialogRef} from '@angular/material/dialog';
 import {NotificationService} from '../../shared/notification.service';
 import {DatabaseService} from '../../shared/database.service';
@@ -57,7 +57,7 @@ export class ZsbKontaktSearchComponent implements OnInit {
   updateSearchAutoComplete() {
     this.filteredKontakteNames = filterOptions(
       this.service.searchForm.controls.searchKey,
-      this.currentKontakte.map(it => it.name)
+      this.currentKontakte.map(it => combineKontaktName(it))
     );
   }
 
@@ -80,7 +80,7 @@ export class ZsbKontaktSearchComponent implements OnInit {
   }
 
   private updateKontaktBySearchKey(newSearchKey: string) {
-    const kontakt = this.currentKontakte.find(it => it.name === newSearchKey);
+    const kontakt = this.currentKontakte.find(it => combineKontaktName(it) === newSearchKey);
     if (kontakt !== undefined) {
       this.service.populateKontaktForm(kontakt);
     } else {

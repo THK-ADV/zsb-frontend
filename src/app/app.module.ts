@@ -32,6 +32,7 @@ import {ZsbKontaktSearchComponent} from './zsb-kontakt/zsb-kontakt-search/zsb-ko
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 
 const appRoutes: Routes = [
@@ -51,37 +52,38 @@ const appRoutes: Routes = [
     ZsbKontaktDetailComponent,
     ZsbKontaktSearchComponent
   ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    RouterModule.forRoot(
-      appRoutes,
-      // {enableTracing: true} // debugging
-    ),
-    BrowserAnimationsModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatSliderModule,
-    FormsModule,
-    NgbModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatIconModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatGridListModule,
-    MatSnackBarModule,
-    MatAutocompleteModule,
-    MatListModule,
-    MatButtonToggleModule,
-    MatSlideToggleModule,
-    FlexLayoutModule
-  ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        RouterModule.forRoot(
+            appRoutes,
+            // {enableTracing: true} // debugging
+        ),
+        BrowserAnimationsModule,
+        MatButtonModule,
+        MatToolbarModule,
+        MatSliderModule,
+        FormsModule,
+        NgbModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatGridListModule,
+        MatSnackBarModule,
+        MatAutocompleteModule,
+        MatListModule,
+        MatButtonToggleModule,
+        MatSlideToggleModule,
+        FlexLayoutModule,
+        MatSidenavModule
+    ],
   providers: [],
   bootstrap: [AppComponent],
   // entryComponents: [ZsbSchuleDetailComponent]

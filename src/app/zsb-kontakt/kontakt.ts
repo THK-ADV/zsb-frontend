@@ -16,3 +16,12 @@ export interface KontaktAnrede {
   id: number;
   desc: string;
 }
+
+
+export function combineKontaktName(kontakt: Kontakt): string {
+  if (kontakt.vorname !== undefined && kontakt.vorname !== '') {
+    return kontakt.name + ', ' + kontakt.vorname;
+  } else {
+    return kontakt.name;
+  }
+}
