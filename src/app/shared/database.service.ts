@@ -65,6 +65,11 @@ export class DatabaseService {
     return this.httpClient.put<Schule>(this.DB_URL + '/schulen', schule);
   }
 
+  deleteSchule(uuid: string) {
+    console.log('REQUEST: DELETE SCHULE ->' + uuid);
+    return this.httpClient.delete(this.DB_URL + '/schulen/' + uuid);
+  }
+
   getSchulenAtomic() {
     return this.httpClient.get<Schule[]>(this.DB_URL + '/schulen?resolve_ids=true')
       .pipe(

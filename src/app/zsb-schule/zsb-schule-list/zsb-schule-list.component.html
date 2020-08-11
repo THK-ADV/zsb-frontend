@@ -3,10 +3,7 @@
     <mat-icon>add</mat-icon>
     Hinzufügen
   </button>
-<!--  <button mat-raised-button (click)="onCreate()" color="primary">-->
-<!--    <mat-icon>add</mat-icon>-->
-<!--    Hinzufügen-->
-<!--  </button>-->
+
   <mat-form-field class="search-form-field" floatLabel="never">
     <label>
       <input matInput [(ngModel)]="searchKey" placeholder="Suche" autocomplete="off" (keyup)="applyFilter()">
@@ -50,18 +47,6 @@
       <mat-cell *matCellDef="let row">{{row.ort.plz}}, {{row.ort.bezeichnung}}</mat-cell>
     </ng-container>
 
-    <!-- schulleitung_mail column -->
-<!--    <ng-container matColumnDef="schulleitung_mail">-->
-<!--      <mat-header-cell *matHeaderCellDef mat-sort-header>Schulleitung (Mail)</mat-header-cell>-->
-<!--      <mat-cell *matCellDef="let row">{{row.schulleitung_mail}}</mat-cell>-->
-<!--    </ng-container>-->
-
-    <!-- stubo_mail v -->
-<!--    <ng-container matColumnDef="stubo_mail">-->
-<!--      <mat-header-cell *matHeaderCellDef mat-sort-header>StuBo (Mail)</mat-header-cell>-->
-<!--      <mat-cell *matCellDef="let row">{{row.stubo_mail}}</mat-cell>-->
-<!--    </ng-container>-->
-
     <!-- schueleranzahl column -->
     <ng-container matColumnDef="schueleranzahl">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Schühleranzahl</mat-header-cell>
@@ -100,11 +85,8 @@
           <mat-icon>launch</mat-icon> <!-- use launch or edit -->
         </button>
         <button mat-icon-button color="warn">
-          <mat-icon>delete_outline</mat-icon>
+          <mat-icon (click)="deleteSchule(row.schule_id)">delete_outline</mat-icon>
         </button>
-
-        <!-- TODO make delete work: -->
-        <!-- <mat-icon (click)="(row.schule_id)">delete</mat-icon>-->
       </mat-cell>
     </ng-container>
 

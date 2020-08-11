@@ -3,8 +3,8 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {DatabaseService} from '../../shared/database.service';
-import {MatDialog} from '@angular/material/dialog';
 import {Schulform} from '../schulform';
+import {NotificationService} from '../../shared/notification.service';
 
 @Component({
   selector: 'app-zsb-schule-list',
@@ -35,7 +35,9 @@ export class ZsbSchuleListComponent implements OnInit {
     'actions',
   ];
 
-  constructor(private service: DatabaseService, private dialog: MatDialog) {
+  constructor(private service: DatabaseService,
+              private notificationService: NotificationService,
+  ) {
   }
 
   ngOnInit() {
@@ -70,10 +72,15 @@ export class ZsbSchuleListComponent implements OnInit {
     return this.schulformen.find(it => it.id === id).desc;
   }
 
-  // onCreate() {
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.disableClose = true;
-  //   dialogConfig.width = '60%';
-  //   this.dialog.open(ZsbSchuleDetailComponent);
-  // }
+  deleteSchule(uuid: string) {
+    this.service.deleteSchule(uuid).subscribe(it => {
+      if (it !== undefined) {
+        this.notificationService.success(':: Schule wurde erfolgreich entfernt.');
+        // TODO remove schule from table
+        this.ngOnInit();
+      } else {
+        this.notificationService.failure('-- Schule konnte nicht entfernt werden.');
+      }
+    });
+  }
 }
