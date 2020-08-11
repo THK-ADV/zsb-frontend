@@ -7,7 +7,7 @@ import {Observable, throwError} from 'rxjs';
 import {Schulform} from '../zsb-schule/schulform';
 import {Ort} from '../zsb-adresse/ort';
 import {AnzahlSus} from '../zsb-schule/anzahl-sus';
-import {Kontakt, KontaktFunktion} from '../zsb-kontakt/kontakt';
+import {Kontakt, KontaktAnrede, KontaktFunktion} from '../zsb-kontakt/kontakt';
 
 @Injectable({
   providedIn: 'root'
@@ -139,5 +139,9 @@ export class DatabaseService {
 
   getKontakte(): Observable<Kontakt[]> {
     return this.httpClient.get<Kontakt[]>(this.DB_URL + '/kontakte');
+  }
+
+  getKontaktAnredeOptionen() {
+    return this.httpClient.get<KontaktAnrede[]>(this.DB_URL + '/kontakte/anreden');
   }
 }

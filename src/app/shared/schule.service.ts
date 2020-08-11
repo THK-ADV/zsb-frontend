@@ -167,10 +167,6 @@ export class SchuleService {
     });
   }
 
-  deleteSchule(schule: Schule) {
-    // implement? theoretically not really needed.
-  }
-
   getReadableAdresse(adresse: Adresse, ort: Ort) {
     return adresse.strasse + ' ' + adresse.hausnummer + ', ' + ort.plz + ' ' + ort.bezeichnung;
   }

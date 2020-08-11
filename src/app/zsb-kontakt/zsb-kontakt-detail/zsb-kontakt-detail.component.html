@@ -4,10 +4,32 @@
     <!-- UUID -->
     <input type="hidden" formControlName="uuid">
 
+    <!-- Anrede -->
+    <mat-form-field class="full-width">
+      <mat-select formControlName="anrede" placeholder="Anrede*">
+        <ng-container *ngFor="let anrede of service.kontaktAnredeOptionen | async">
+          <mat-option [value]="anrede.id">
+            {{anrede.desc}} <br>
+          </mat-option>
+        </ng-container>
+      </mat-select>
+      <mat-error>Bitte wählen Sie eine passende Anrede aus.</mat-error>
+    </mat-form-field>
+    <br>
+
     <!-- NAME -->
     <mat-form-field class="full-width">
       <label>
         <input matInput name="name" type="text" placeholder="Name" formControlName="name">
+      </label>
+      <mat-error>Ihre Eingabe wird benötigt.</mat-error>
+    </mat-form-field>
+    <br>
+
+    <!-- VORNAME -->
+    <mat-form-field class="full-width">
+      <label>
+        <input matInput name="vorname" type="text" placeholder="Vorname" formControlName="vorname">
       </label>
       <mat-error>Ihre Eingabe wird benötigt.</mat-error>
     </mat-form-field>

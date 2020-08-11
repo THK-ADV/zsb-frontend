@@ -76,7 +76,7 @@ export class ZsbSchuleListComponent implements OnInit {
     this.service.deleteSchule(uuid).subscribe(it => {
       if (it !== undefined) {
         this.notificationService.success(':: Schule wurde erfolgreich entfernt.');
-        // TODO remove schule from table
+        // remove schule from table
         this.ngOnInit();
       } else {
         this.notificationService.failure('-- Schule konnte nicht entfernt werden.');

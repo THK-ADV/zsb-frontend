@@ -64,6 +64,9 @@
                     <input type="text" [formControlName]="i" hidden>
                   </label>
                   {{kontakt.value.name}}
+                  <ng-container *ngIf="kontakt.value.vorname !== undefined && kontakt.value.vorname.length > 0">
+                    , {{kontakt.value.vorname}}
+                  </ng-container>
                 </td>
                 <td>
                   {{getKontaktFunktionDescById(kontakt.value.funktion)}}

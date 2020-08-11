@@ -45,8 +45,10 @@ export class ZsbKontaktDetailComponent implements OnInit {
     // check if anything changed
     if (this.kontakt.uuid === editedKontakt.uuid
       && this.kontakt.name === editedKontakt.name
+      && this.kontakt.vorname === editedKontakt.vorname
       && this.kontakt.email === editedKontakt.email
-      && this.kontakt.funktion === editedKontakt.funktion) {
+      && this.kontakt.funktion === editedKontakt.funktion
+      && this.kontakt.anrede === editedKontakt.anrede) {
       // nothing has changed.
       this.onClose();
       return;
