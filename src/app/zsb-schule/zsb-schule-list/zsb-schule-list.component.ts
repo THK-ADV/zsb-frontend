@@ -72,15 +72,17 @@ export class ZsbSchuleListComponent implements OnInit {
     return this.schulformen.find(it => it.id === id).desc;
   }
 
-  deleteSchule(uuid: string) {
-    this.service.deleteSchule(uuid).subscribe(it => {
-      if (it !== undefined) {
-        this.notificationService.success(':: Schule wurde erfolgreich entfernt.');
-        // remove schule from table
-        this.ngOnInit();
-      } else {
-        this.notificationService.failure('-- Schule konnte nicht entfernt werden.');
-      }
-    });
+  deleteSchule(schulName: string, uuid: string) {
+    if (confirm('Seid ihr sicher, dass ihr "' + schulName + '" löschen möchtet?')) {
+      this.service.deleteSchule(uuid).subscribe(it => {
+        if (it !== undefined) {
+          this.notificationService.success(':: Schule wurde erfolgreich entfernt.');
+          // remove schule from table
+          this.ngOnInit();
+        } else {
+          this.notificationService.failure('-- Schule konnte nicht entfernt werden.');
+        }
+      });
+    }
   }
 }

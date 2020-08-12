@@ -85,7 +85,7 @@
           <mat-icon>launch</mat-icon> <!-- use launch or edit -->
         </button>
         <button mat-icon-button color="warn">
-          <mat-icon (click)="deleteSchule(row.schule_id)">delete_outline</mat-icon>
+          <mat-icon (click)="deleteSchule(row.name, row.schule_id)">delete_outline</mat-icon>
         </button>
       </mat-cell>
     </ng-container>
