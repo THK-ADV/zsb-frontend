@@ -21,6 +21,8 @@ export interface KontaktAnrede {
 export function combineKontaktName(kontakt: Kontakt): string {
   if (kontakt.vorname !== undefined && kontakt.vorname !== '') {
     return kontakt.name + ', ' + kontakt.vorname;
+  } else if (kontakt.name === '') {
+    return kontakt.email;
   } else {
     return kontakt.name;
   }

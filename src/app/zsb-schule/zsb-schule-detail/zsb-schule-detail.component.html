@@ -63,7 +63,10 @@
                   <label>
                     <input type="text" [formControlName]="i" hidden>
                   </label>
-                  {{kontakt.value.name}}
+                  <ng-container *ngIf="kontakt.value.name !== ''; else elseNoName">
+                    {{kontakt.value.name}}
+                  </ng-container>
+                  <ng-template #elseNoName>{{kontakt.value.email}}</ng-template>
                   <ng-container *ngIf="kontakt.value.vorname !== undefined && kontakt.value.vorname.length > 0">
                     , {{kontakt.value.vorname}}
                   </ng-container>
@@ -106,7 +109,8 @@
         </mat-form-field>
 
         <div class="single-btn-row">
-          <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button" (click)="changeAdresse()">Standort verwalten
+          <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
+                  (click)="changeAdresse()">Standort verwalten
           </button>
         </div>
         <br><br>
