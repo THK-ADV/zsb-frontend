@@ -58,6 +58,9 @@ export class SchuleService {
   }
 
   loadFormData(schule: Schule) {
+    this.kontakte.clear();
+    this.kontakte.push(new FormControl());
+
     this.formGroup.setValue({
       schule_id: schule.schule_id,
       name: schule.name,
