@@ -55,9 +55,10 @@ export class ZsbKontaktSearchComponent implements OnInit {
   }
 
   updateSearchAutoComplete() {
+    const unorderedNames = this.currentKontakte.map(it => combineKontaktName(it));
     this.filteredKontakteNames = filterOptions(
       this.service.searchForm.controls.searchKey,
-      this.currentKontakte.map(it => combineKontaktName(it))
+      this.sortArrayAlphabetically(unorderedNames)
     );
   }
 
@@ -86,5 +87,13 @@ export class ZsbKontaktSearchComponent implements OnInit {
     } else {
       this.service.initializeKontaktForm();
     }
+  }
+
+  sortArrayAlphabetically(array: string[]): string[] {
+    return array.sort((a, b) => {
+      const textA = a.toUpperCase();
+      const textB = b.toUpperCase();
+      return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+    });
   }
 }
