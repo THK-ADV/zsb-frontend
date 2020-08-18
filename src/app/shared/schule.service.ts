@@ -25,7 +25,7 @@ export class SchuleService {
     // schwerpunkt: new FormControl(null),
     adresse: new FormControl({value: '', disabled: true}),
     ort: new FormControl(0, Validators.required),
-    kontakte: new FormArray([new FormControl()]),
+    kontakte: new FormArray([]),
     kooperationsvertrag: new FormControl(false),
     anzahl_sus: new FormControl(''),
     kaoa_hochschule: new FormControl(false),
@@ -53,6 +53,7 @@ export class SchuleService {
       kaoa_hochschule: false,
       talentscouting: false
     });
+    this.kontakte.clear();
   }
 
   loadFormData(schule: Schule) {
