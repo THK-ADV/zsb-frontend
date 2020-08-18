@@ -7,13 +7,14 @@ import {Adresse} from '../zsb-adresse/adresse';
 import {Ort} from '../zsb-adresse/ort';
 import {NotificationService} from './notification.service';
 import {Kontakt} from '../zsb-kontakt/kontakt';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SchuleService {
 
-  constructor(private dbService: DatabaseService) {
+  constructor(private dbService: DatabaseService, private router: Router) {
   }
 
   newSchule: Observable<Schule>;
@@ -21,13 +22,13 @@ export class SchuleService {
   formGroup: FormGroup = new FormGroup({
     schule_id: new FormControl(null),
     name: new FormControl('', Validators.required),
-    schulform: new FormControl(''),
+    schulform: new FormControl('', Validators.required),
     // schwerpunkt: new FormControl(null),
-    adresse: new FormControl({value: '', disabled: true}),
-    ort: new FormControl(0, Validators.required),
+    adresse: new FormControl({value: '', disabled: true}, Validators.required),
+    ort: new FormControl(0),
     kontakte: new FormArray([]),
     kooperationsvertrag: new FormControl(false),
-    anzahl_sus: new FormControl(''),
+    anzahl_sus: new FormControl('', Validators.required),
     kaoa_hochschule: new FormControl(false),
     talentscouting: new FormControl(false)
   });
@@ -195,6 +196,8 @@ export class SchuleService {
           this.dbService.createSchule(schule).subscribe(it => {
             if (it.schule_id !== undefined) {
               notificationService.success(':: Schule erfolgreich erstellt.');
+              // return to overview
+              this.router.navigate(['/']);
             } else {
               notificationService.failure('-- Schule konnte nicht erstellt werden.');
             }

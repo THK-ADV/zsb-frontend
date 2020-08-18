@@ -15,6 +15,7 @@ import {AnzahlSus} from '../anzahl-sus';
 import {Kontakt, KontaktFunktion} from '../../zsb-kontakt/kontakt';
 import {ZsbKontaktDetailComponent} from '../../zsb-kontakt/zsb-kontakt-detail/zsb-kontakt-detail.component';
 import {ZsbKontaktSearchComponent} from '../../zsb-kontakt/zsb-kontakt-search/zsb-kontakt-search.component';
+import {ValidationErrors} from '@angular/forms';
 
 @Component({
   selector: 'app-zsb-schule-detail',
@@ -119,11 +120,24 @@ export class ZsbSchuleDetailComponent implements OnInit {
     this.adresseService.currentSchuleId = this.schuleId;
     this.dialog.open(ZsbAdresseComponent, dialogConfig);
 
-    this.dialog.afterAllClosed.subscribe(it => {
-      console.log('modal what? ' + it);
+    this.dialog.afterAllClosed.subscribe(() => {
       const adresse = this.adresseService.currentAdresse;
       if (adresse !== undefined) {
-        this.service.formGroup.patchValue({adresse: this.service.getReadableAdresse(adresse, adresse.ort)});
+        this.service.formGroup.patchValue(
+          {adresse: this.service.getReadableAdresse(adresse, adresse.ort)},
+        );
+      }
+    });
+  }
+
+  getFormValidationErrors() {
+    Object.keys(this.service.formGroup.controls).forEach(key => {
+
+      const controlErrors: ValidationErrors = this.service.formGroup.get(key).errors;
+      if (controlErrors != null) {
+        Object.keys(controlErrors).forEach(keyError => {
+          console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
+        });
       }
     });
   }
