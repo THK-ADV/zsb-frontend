@@ -40,10 +40,10 @@ export class AdresseService {
   loadAdresseFromSchule(schule: Schule) {
     this.formGroup.setValue({
       adresseId: schule.adress_id,
-      regierungsbezirk: schule.ort.regierungsbezirk,
-      kreis: schule.ort.kreis,
-      plz: schule.ort.plz,
-      bezeichnung: schule.ort.bezeichnung,
+      regierungsbezirk: schule.adresse.ort.regierungsbezirk,
+      kreis: schule.adresse.ort.kreis,
+      plz: schule.adresse.ort.plz,
+      bezeichnung: schule.adresse.ort.bezeichnung,
       strasse: schule.adresse.strasse,
       hausnummer: schule.adresse.hausnummer
     });

@@ -66,8 +66,8 @@ export class SchuleService {
       name: schule.name,
       schulform: schule.schulform,
       // schwerpunkt: schule.schwerpunkt,
-      adresse: this.getReadableAdresse(schule.adresse, schule.ort),
-      ort: schule.ort.ort_id,
+      adresse: this.getReadableAdresse(schule.adresse, schule.adresse.ort),
+      ort: schule.adresse.ort.ort_id,
       kontakte: [new FormControl()],
       kooperationsvertrag: schule.kooperationsvertrag,
       anzahl_sus: +schule.anzahl_sus,
@@ -177,7 +177,7 @@ export class SchuleService {
   }
 
   insertOrUpdateSchule(schule: Schule, notificationService: NotificationService) {
-    const ortObservable = this.dbService.updateOrCreateOrt(schule.ort);
+    const ortObservable = this.dbService.updateOrCreateOrt(schule.adresse.ort);
     ortObservable.subscribe(newOrt => {
       const adresse = {
         adress_id: null,
