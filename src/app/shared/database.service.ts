@@ -13,7 +13,7 @@ import {Kontakt, KontaktAnrede, KontaktFunktion} from '../zsb-kontakt/kontakt';
   providedIn: 'root'
 })
 export class DatabaseService {
-  readonly DB_PORT = 8080;
+  readonly DB_PORT = 9000;
   readonly DB_URL = 'http://localhost:' + this.DB_PORT;
 
   constructor(
