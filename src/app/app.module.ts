@@ -33,13 +33,15 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {ZsbVeranstaltungenComponent} from './zsb-veranstaltungen/zsb-veranstaltungen.component';
 
 
 const appRoutes: Routes = [
   {path: '', component: ZsbSchuleComponent},
   {path: 'schulen/:schuleId', component: ZsbSchuleDetailComponent},
   {path: 'schulen/:schuleId/adresse/:adresseId', component: ZsbAdresseComponent},
-  {path: 'schulen', component: ZsbSchuleDetailComponent}
+  {path: 'schulen', component: ZsbSchuleDetailComponent},
+  {path: 'veranstaltungen', component: ZsbVeranstaltungenComponent}
 ];
 
 @NgModule({
@@ -50,7 +52,8 @@ const appRoutes: Routes = [
     ZsbSchuleDetailComponent,
     ZsbAdresseComponent,
     ZsbKontaktDetailComponent,
-    ZsbKontaktSearchComponent
+    ZsbKontaktSearchComponent,
+    ZsbVeranstaltungenComponent
   ],
     imports: [
         BrowserModule,

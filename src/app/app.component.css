@@ -24,6 +24,14 @@ p {
   margin: 0;
 }
 
+.header-link {
+  padding: 5px;
+}
+
+.small-spacer {
+  margin-left: 20px;
+}
+
 .spacer {
   flex: 1;
 }
