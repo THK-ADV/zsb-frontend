@@ -8,17 +8,18 @@ import {Schulform} from '../zsb-schule/schulform';
 import {Ort} from '../zsb-adresse/ort';
 import {AnzahlSus} from '../zsb-schule/anzahl-sus';
 import {Kontakt, KontaktAnrede, KontaktFunktion} from '../zsb-kontakt/kontakt';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DatabaseService {
-  readonly DB_PORT = 9000;
-  readonly DB_URL = 'http://localhost:' + this.DB_PORT;
+  private readonly DB_URL: string;
 
   constructor(
     private httpClient: HttpClient
   ) {
+      this.DB_URL = environment.backend_url_prefix;
   }
 
   public schulen: Schule[];

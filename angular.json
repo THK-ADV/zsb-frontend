@@ -123,5 +123,8 @@
       }
     }
   },
-  "defaultProject": "zsb-frontend"
+  "defaultProject": "zsb-frontend",
+  "cli": {
+    "analytics": "2bcb616e-4bed-413c-b2e3-50e757b21f1f"
+  }
 }
