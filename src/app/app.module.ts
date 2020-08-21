@@ -34,6 +34,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {ZsbVeranstaltungenComponent} from './zsb-veranstaltungen/zsb-veranstaltungen.component';
+import {ZsbVeranstaltungenListComponent} from './zsb-veranstaltungen/zsb-veranstaltungen-list/zsb-veranstaltungen-list.component';
 
 
 const appRoutes: Routes = [
@@ -53,7 +54,8 @@ const appRoutes: Routes = [
     ZsbAdresseComponent,
     ZsbKontaktDetailComponent,
     ZsbKontaktSearchComponent,
-    ZsbVeranstaltungenComponent
+    ZsbVeranstaltungenComponent,
+    ZsbVeranstaltungenListComponent
   ],
     imports: [
         BrowserModule,

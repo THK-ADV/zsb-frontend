@@ -9,6 +9,7 @@ import {Ort} from '../zsb-adresse/ort';
 import {AnzahlSus} from '../zsb-schule/anzahl-sus';
 import {Kontakt, KontaktAnrede, KontaktFunktion} from '../zsb-kontakt/kontakt';
 import {environment} from '../../environments/environment';
+import {Veranstaltung} from '../zsb-veranstaltungen/veranstaltung';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class DatabaseService {
   constructor(
     private httpClient: HttpClient
   ) {
-      this.DB_URL = environment.backend_url_prefix;
+    this.DB_URL = environment.backend_url_prefix;
   }
 
   public schulen: Schule[];
@@ -144,5 +145,13 @@ export class DatabaseService {
 
   getKontaktAnredeOptionen() {
     return this.httpClient.get<KontaktAnrede[]>(this.DB_URL + '/kontakte/anreden');
+  }
+
+  getAllVeranstaltungen(): Observable<Veranstaltung[]> {
+    return this.httpClient.get<Veranstaltung[]>(this.DB_URL + '/veranstaltungen?resolve_ids=true');
+  }
+
+  getVeranstaltungById(uuid: string): Observable<Veranstaltung> {
+    return this.httpClient.get<Veranstaltung>(this.DB_URL + '/veranstaltungen' + uuid + '?resolve_ids=true');
   }
 }
