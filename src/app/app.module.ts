@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
 import {RouterModule, Routes} from '@angular/router';
@@ -33,6 +33,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {keycloakInitializer} from './authentication/keycloak.init';
+import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular'
 
 
 const appRoutes: Routes = [
@@ -52,39 +54,47 @@ const appRoutes: Routes = [
     ZsbKontaktDetailComponent,
     ZsbKontaktSearchComponent
   ],
-    imports: [
-        BrowserModule,
-        HttpClientModule,
-        RouterModule.forRoot(
-            appRoutes,
-            // {enableTracing: true} // debugging
-        ),
-        BrowserAnimationsModule,
-        MatButtonModule,
-        MatToolbarModule,
-        MatSliderModule,
-        FormsModule,
-        NgbModule,
-        MatTableModule,
-        MatCheckboxModule,
-        MatIconModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatDialogModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        MatGridListModule,
-        MatSnackBarModule,
-        MatAutocompleteModule,
-        MatListModule,
-        MatButtonToggleModule,
-        MatSlideToggleModule,
-        FlexLayoutModule,
-        MatSidenavModule
-    ],
-  providers: [],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    RouterModule.forRoot(
+      appRoutes,
+      // {enableTracing: true} // debugging
+    ),
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatSliderModule,
+    FormsModule,
+    NgbModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatGridListModule,
+    MatSnackBarModule,
+    MatAutocompleteModule,
+    MatListModule,
+    MatButtonToggleModule,
+    MatSlideToggleModule,
+    FlexLayoutModule,
+    MatSidenavModule,
+    KeycloakAngularModule
+  ],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: keycloakInitializer,
+      multi: true,
+      deps: [KeycloakService],
+    }
+  ],
   bootstrap: [AppComponent],
   // entryComponents: [ZsbSchuleDetailComponent]
 })
