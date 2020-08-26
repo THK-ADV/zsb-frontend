@@ -13,7 +13,7 @@
   <mat-form-field appearance="">
     <mat-label>Datum</mat-label>
     <label>
-      <input matInput [matDatepicker]="picker" formControlName="datum">
+      <input matInput [matDatepicker]="picker" formControlName="datum" (click)="picker.open()" readonly>
     </label>
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker disabled="false"></mat-datepicker>

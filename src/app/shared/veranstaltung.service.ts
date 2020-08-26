@@ -11,10 +11,14 @@ import {NotificationService} from './notification.service';
 })
 export class VeranstaltungService {
 
+  constructor(public dbService: DatabaseService) {
+    this.dbService.getKategorien().subscribe(it => this.kategorien = it);
+  }
+
   private kategorien: Kategorie[] = [];
   private detailForm: FormGroup = new FormGroup({
     uuid: new FormControl(null),
-    datum: new FormControl({value: '', disabled: true}),
+    datum: new FormControl(new Date()),
     bezeichnung: new FormControl(''),
     thema: new FormControl(''),
     veranstalterToggle: new FormControl(true),
@@ -29,10 +33,6 @@ export class VeranstaltungService {
     kontakt: new FormControl(''),
     veranstalterId: new FormControl('', Validators.required)
   });
-
-  constructor(public dbService: DatabaseService) {
-    this.dbService.getKategorien().subscribe(it => this.kategorien = it);
-  }
 
   getVeranstaltungen(): Observable<Veranstaltung[]> {
     return this.dbService.getAllVeranstaltungen();
@@ -53,7 +53,7 @@ export class VeranstaltungService {
   initializeDetailForm() {
     this.detailForm.setValue({
       uuid: null,
-      datum: {value: new FormControl((new Date()).toISOString()), disabled: true},
+      datum: new Date(),
       bezeichnung: '',
       thema: '',
       veranstalterToggle: true,
@@ -73,7 +73,7 @@ export class VeranstaltungService {
   loadFormData(veranstaltung: Veranstaltung) {
     this.detailForm.setValue({
       uuid: veranstaltung.uuid,
-      datum: {value: veranstaltung.datum, disabled: true},
+      datum: new Date(veranstaltung.datum),
       bezeichnung: veranstaltung.bezeichnung,
       thema: veranstaltung.thema,
       veranstalterToggle: true,
