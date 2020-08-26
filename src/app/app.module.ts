@@ -35,6 +35,10 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {ZsbVeranstaltungenComponent} from './zsb-veranstaltungen/zsb-veranstaltungen.component';
 import {ZsbVeranstaltungenListComponent} from './zsb-veranstaltungen/zsb-veranstaltungen-list/zsb-veranstaltungen-list.component';
+import {DatePipe} from '@angular/common';
+import {ZsbVeranstaltungenDetailComponent} from './zsb-veranstaltungen/zsb-veranstaltungen-detail/zsb-veranstaltungen-detail.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core';
 
 
 const appRoutes: Routes = [
@@ -42,7 +46,8 @@ const appRoutes: Routes = [
   {path: 'schulen/:schuleId', component: ZsbSchuleDetailComponent},
   {path: 'schulen/:schuleId/adresse/:adresseId', component: ZsbAdresseComponent},
   {path: 'schulen', component: ZsbSchuleDetailComponent},
-  {path: 'veranstaltungen', component: ZsbVeranstaltungenComponent}
+  {path: 'veranstaltungen', component: ZsbVeranstaltungenComponent},
+  {path: 'veranstaltungen/:veranstaltungId', component: ZsbVeranstaltungenDetailComponent},
 ];
 
 @NgModule({
@@ -55,41 +60,44 @@ const appRoutes: Routes = [
     ZsbKontaktDetailComponent,
     ZsbKontaktSearchComponent,
     ZsbVeranstaltungenComponent,
-    ZsbVeranstaltungenListComponent
+    ZsbVeranstaltungenListComponent,
+    ZsbVeranstaltungenDetailComponent
   ],
-    imports: [
-        BrowserModule,
-        HttpClientModule,
-        RouterModule.forRoot(
-            appRoutes,
-            // {enableTracing: true} // debugging
-        ),
-        BrowserAnimationsModule,
-        MatButtonModule,
-        MatToolbarModule,
-        MatSliderModule,
-        FormsModule,
-        NgbModule,
-        MatTableModule,
-        MatCheckboxModule,
-        MatIconModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatDialogModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        MatGridListModule,
-        MatSnackBarModule,
-        MatAutocompleteModule,
-        MatListModule,
-        MatButtonToggleModule,
-        MatSlideToggleModule,
-        FlexLayoutModule,
-        MatSidenavModule
-    ],
-  providers: [],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    RouterModule.forRoot(
+      appRoutes,
+      // {enableTracing: true} // debugging
+    ),
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatSliderModule,
+    FormsModule,
+    NgbModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatGridListModule,
+    MatSnackBarModule,
+    MatAutocompleteModule,
+    MatListModule,
+    MatButtonToggleModule,
+    MatSlideToggleModule,
+    FlexLayoutModule,
+    MatSidenavModule,
+    MatDatepickerModule,
+    MatNativeDateModule
+  ],
+  providers: [DatePipe, {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}],
   bootstrap: [AppComponent],
   // entryComponents: [ZsbSchuleDetailComponent]
 })
