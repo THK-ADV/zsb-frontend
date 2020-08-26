@@ -19,3 +19,11 @@ function _filter(value, options: string[]): string[] {
 
   return options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
 }
+
+export function sortArrayAlphabetically(array: string[]): string[] {
+  return array.sort((a, b) => {
+    const textA = a.toUpperCase();
+    const textB = b.toUpperCase();
+    return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+  });
+}

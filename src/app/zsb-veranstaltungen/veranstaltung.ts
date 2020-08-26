@@ -1,18 +1,19 @@
 import {Kontakt} from '../zsb-kontakt/kontakt';
+import {Veranstalter} from './veranstalter';
 
 export interface Veranstaltung {
   uuid: string;
   bezeichnung: string;
-  veranstalterId: number;
+  veranstalter_id: number;
   kategorie: number;
   thema: string;
   vortragsart: number;
   datum: string;
-  kontaktpersonId: number;
+  kontaktperson_id: string;
   anzahlSus: number;
   stufe: number;
   ablauf: string;
   durchlaeufe: string;
-  veranstalter?: Veranstaltung;
+  veranstalter?: Veranstalter;
   kontaktperson?: Kontakt;
 }

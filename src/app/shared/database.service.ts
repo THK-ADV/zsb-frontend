@@ -10,6 +10,10 @@ import {AnzahlSus} from '../zsb-schule/anzahl-sus';
 import {Kontakt, KontaktAnrede, KontaktFunktion} from '../zsb-kontakt/kontakt';
 import {environment} from '../../environments/environment';
 import {Veranstaltung} from '../zsb-veranstaltungen/veranstaltung';
+import {Kategorie} from '../zsb-veranstaltungen/kategorie';
+import {Stufe} from '../zsb-veranstaltungen/stufe';
+import {Vortragsart} from '../zsb-veranstaltungen/vortragsart';
+import {Institution} from '../zsb-veranstaltungen/institution';
 
 @Injectable({
   providedIn: 'root'
@@ -152,6 +156,34 @@ export class DatabaseService {
   }
 
   getVeranstaltungById(uuid: string): Observable<Veranstaltung> {
-    return this.httpClient.get<Veranstaltung>(this.DB_URL + '/veranstaltungen' + uuid + '?resolve_ids=true');
+    return this.httpClient.get<Veranstaltung>(this.DB_URL + '/veranstaltungen/' + uuid + '?resolve_ids=true');
+  }
+
+  deleteVeranstaltung(uuid: string): Observable<any> {
+    return this.httpClient.delete(this.DB_URL + '/veranstaltungen/' + uuid);
+  }
+
+  getKategorien() {
+    return this.httpClient.get<Kategorie[]>(this.DB_URL + '/veranstaltungen/kategorien');
+  }
+
+  getStufen() {
+    return this.httpClient.get<Stufe[]>(this.DB_URL + '/veranstaltungen/stufen');
+  }
+
+  getVortragsarten() {
+    return this.httpClient.get<Vortragsart[]>(this.DB_URL + '/veranstaltungen/vortragsarten');
+  }
+
+  getInstitutionen() {
+    return this.httpClient.get<Institution[]>(this.DB_URL + '/institutionen');
+  }
+
+  updateVeranstaltung(veranstaltung: Veranstaltung) {
+    return this.httpClient.put<Veranstaltung>(this.DB_URL + '/veranstaltungen', veranstaltung);
+  }
+
+  createVeranstaltung(veranstaltung: Veranstaltung) {
+    return this.httpClient.post<Veranstaltung>(this.DB_URL + '/veranstaltungen', veranstaltung);
   }
 }
