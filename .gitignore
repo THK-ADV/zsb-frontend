@@ -1,4 +1,4 @@
-
+src/environments/*
 .DS_STORE
 
 /dist/

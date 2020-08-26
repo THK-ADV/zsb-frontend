@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
 import {RouterModule, Routes} from '@angular/router';
@@ -33,13 +33,14 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {keycloakInitializer} from './authentication/keycloak.init';
+import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular'
 import {ZsbVeranstaltungenComponent} from './zsb-veranstaltungen/zsb-veranstaltungen.component';
 import {ZsbVeranstaltungenListComponent} from './zsb-veranstaltungen/zsb-veranstaltungen-list/zsb-veranstaltungen-list.component';
 import {DatePipe} from '@angular/common';
 import {ZsbVeranstaltungenDetailComponent} from './zsb-veranstaltungen/zsb-veranstaltungen-detail/zsb-veranstaltungen-detail.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core';
-
 
 const appRoutes: Routes = [
   {path: '', component: ZsbSchuleComponent},
@@ -94,10 +95,23 @@ const appRoutes: Routes = [
     MatSlideToggleModule,
     FlexLayoutModule,
     MatSidenavModule,
+    KeycloakAngularModule,
     MatDatepickerModule,
     MatNativeDateModule
   ],
-  providers: [DatePipe, {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}],
+  providers: [
+    DatePipe, 
+    {
+      provide: MAT_DATE_LOCALE, 
+      useValue: 'de-DE'
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: keycloakInitializer,
+      multi: true,
+      deps: [KeycloakService],
+    }
+  ],
   bootstrap: [AppComponent],
   // entryComponents: [ZsbSchuleDetailComponent]
 })
