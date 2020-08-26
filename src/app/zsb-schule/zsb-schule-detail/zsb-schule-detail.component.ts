@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Schule} from '../schule';
 import {DatabaseService} from '../../shared/database.service';
 import {Observable} from 'rxjs';
 import {Ort} from '../../zsb-adresse/ort';
@@ -24,7 +23,6 @@ import {ValidationErrors} from '@angular/forms';
 })
 export class ZsbSchuleDetailComponent implements OnInit {
   schuleId;
-  schuleObservable: Observable<Schule>;
   orteObservable: Observable<Ort[]>;
   adressenObservable: Observable<Adresse[]>;
   schulformen: Observable<Schulform[]>;
@@ -62,8 +60,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
 
       if (this.schuleId != null) {
         // load existing schule
-        this.schuleObservable = this.dbService.getSchuleByIdAtomic(this.schuleId);
-        this.schuleObservable.subscribe(schule => {
+        this.dbService.getSchuleByIdAtomic(this.schuleId).subscribe(schule => {
           this.service.loadFormData(schule);
           this.adresseId = schule.adress_id;
           this.adressenObservable.subscribe(it => {
@@ -71,8 +68,6 @@ export class ZsbSchuleDetailComponent implements OnInit {
             this.ortId = adresse.ort_id;
           });
         });
-      } else {
-        this.schuleObservable = undefined;
       }
     });
 

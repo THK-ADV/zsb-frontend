@@ -1,0 +1,74 @@
+<div class="search-div">
+  <button mat-raised-button [routerLink]="['/veranstaltungen/new']" color="primary">
+    <mat-icon>add</mat-icon>
+    Hinzufügen
+  </button>
+<!--  'datum', 'bezeichnung', 'kategorie', 'thema'-->
+  <mat-form-field class="search-form-field" floatLabel="never">
+    <label>
+      <input matInput [(ngModel)]="searchKey" placeholder="Suche" autocomplete="off" (keyup)="applyFilter()">
+    </label>
+    <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+
+<div class="mat-elevation-z8 data-table">
+  <mat-table [dataSource]="listData" matSort>
+
+    <!--  'datum', 'bezeichnung', 'kategorie', 'thema'-->
+    <!-- datum Column -->
+    <ng-container matColumnDef="datum">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Datum</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{toReadableDate(row.datum)}}</mat-cell>
+    </ng-container>
+
+    <!-- bezeichnung Column -->
+    <ng-container matColumnDef="bezeichnung">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Bezeichnung</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.bezeichnung}}</mat-cell>
+    </ng-container>
+
+    <!-- kategorie Column -->
+    <ng-container matColumnDef="kategorie">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Kategorie</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.kategorie}}</mat-cell>
+    </ng-container>
+
+    <!-- thema Column -->
+    <ng-container matColumnDef="thema">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Thema</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.thema}}</mat-cell>
+    </ng-container>
+
+    <!-- edit and delete Column -->
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <button mat-icon-button [routerLink]="['/veranstaltungen', row.uuid]">
+          <mat-icon>launch</mat-icon> <!-- use launch or edit -->
+        </button>
+        <button mat-icon-button color="warn">
+          <mat-icon (click)="deleteVeranstaltung(row.bezeichnung, row.uuid)">delete_outline</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="loading">
+      <mat-footer-cell *matFooterCellDef aria-colspan="6">Daten werden geladen...</mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="noData">
+      <mat-footer-cell *matFooterCellDef aria-colspan="6">Es sind keine Daten vorhanden.</mat-footer-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':listData!=null}"></mat-footer-row>
+    <mat-footer-row *matFooterRowDef="['noData']"
+                    [ngClass]="{'hide':!(listData!=null && listData.data.length==0)}"></mat-footer-row>
+
+  </mat-table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+</div>
