@@ -1,4 +1,4 @@
 export interface DbTextResponse {
-  msg: string;
-  status: number;
+  msg: string
+  status: number
 }

@@ -7,7 +7,7 @@ export function keycloakInitializer(keycloak: KeycloakService): () => Promise<an
       config: {
         url: environment.keycloak.authUrl,
         realm: environment.keycloak.realm,
-        clientId: environment.keycloak.clientID,
+        clientId: environment.keycloak.clientId,
       },
       initOptions: {
         onLoad: 'login-required',

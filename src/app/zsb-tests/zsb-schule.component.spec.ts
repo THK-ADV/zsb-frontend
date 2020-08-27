@@ -1,25 +1,25 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing'
 
-import {ZsbSchuleComponent} from '../zsb-schule/zsb-schule.component';
+import {ZsbSchuleComponent} from '../zsb-schule/zsb-schule.component'
 
 describe('ZsbSchuleComponent', () => {
-  let component: ZsbSchuleComponent;
-  let fixture: ComponentFixture<ZsbSchuleComponent>;
+  let component: ZsbSchuleComponent
+  let fixture: ComponentFixture<ZsbSchuleComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ZsbSchuleComponent ]
+      declarations: [ZsbSchuleComponent]
     })
-    .compileComponents();
-  }));
+      .compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ZsbSchuleComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(ZsbSchuleComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

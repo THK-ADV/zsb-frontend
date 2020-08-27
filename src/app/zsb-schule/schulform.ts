@@ -1,4 +1,4 @@
 export interface Schulform {
-  id: number;
-  desc: string;
+  id: number
+  desc: string
 }

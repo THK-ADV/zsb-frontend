@@ -1,13 +1,13 @@
-import {Injectable} from '@angular/core';
-import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Schule} from '../zsb-schule/schule';
-import {DatabaseService} from './database.service';
-import {Observable} from 'rxjs';
-import {Adresse} from '../zsb-adresse/adresse';
-import {Ort} from '../zsb-adresse/ort';
-import {NotificationService} from './notification.service';
-import {Kontakt} from '../zsb-kontakt/kontakt';
-import {Router} from '@angular/router';
+import {Injectable} from '@angular/core'
+import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms'
+import {Schule} from '../zsb-schule/schule'
+import {DatabaseService} from './database.service'
+import {Observable} from 'rxjs'
+import {Adresse} from '../zsb-adresse/adresse'
+import {Ort} from '../zsb-adresse/ort'
+import {NotificationService} from './notification.service'
+import {Kontakt} from '../zsb-kontakt/kontakt'
+import {Router} from '@angular/router'
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class SchuleService {
   constructor(private dbService: DatabaseService, private router: Router) {
   }
 
-  newSchule: Observable<Schule>;
+  newSchule: Observable<Schule>
 
   formGroup: FormGroup = new FormGroup({
     schule_id: new FormControl(null),
@@ -31,16 +31,16 @@ export class SchuleService {
     anzahl_sus: new FormControl('', Validators.required),
     kaoa_hochschule: new FormControl(false),
     talentscouting: new FormControl(false)
-  });
+  })
 
   // direct access to kontakte as array
   get kontakte(): FormArray {
-    return this.formGroup.get('kontakte') as FormArray;
+    return this.formGroup.get('kontakte') as FormArray
   }
 
   initializeFormGroup() {
-    this.kontakte.clear();
-    this.kontakte.push(new FormControl());
+    this.kontakte.clear()
+    this.kontakte.push(new FormControl())
     this.formGroup.setValue({
       schule_id: null,
       name: '',
@@ -53,13 +53,13 @@ export class SchuleService {
       anzahl_sus: '',
       kaoa_hochschule: false,
       talentscouting: false
-    });
-    this.kontakte.clear();
+    })
+    this.kontakte.clear()
   }
 
   loadFormData(schule: Schule) {
-    this.kontakte.clear();
-    this.kontakte.push(new FormControl());
+    this.kontakte.clear()
+    this.kontakte.push(new FormControl())
 
     this.formGroup.setValue({
       schule_id: schule.schule_id,
@@ -73,72 +73,72 @@ export class SchuleService {
       anzahl_sus: +schule.anzahl_sus,
       kaoa_hochschule: schule.kaoa_hochschule,
       talentscouting: schule.talentscouting
-    });
+    })
 
-    this.kontakte.clear();
-    this.addKontakte(schule.kontakte);
+    this.kontakte.clear()
+    this.addKontakte(schule.kontakte)
   }
 
   addKontakt(it: Kontakt) {
-    this.kontakte.push(new FormControl(it));
+    this.kontakte.push(new FormControl(it))
   }
 
   private addKontakte(kontakte: Kontakt[]) {
     kontakte.forEach(it => {
-      this.addKontakt(it);
-    });
+      this.addKontakt(it)
+    })
   }
 
   removeKontakt(uuid: string) {
     // get all kontakte from form
-    const formKontakte = this.getKontakteFromForm();
+    const formKontakte = this.getKontakteFromForm()
 
     // find kontakt to be removed
-    const wantedKontakt = formKontakte.find(it => it.uuid === uuid);
-    const wantedIndex = formKontakte.indexOf(wantedKontakt);
+    const wantedKontakt = formKontakte.find(it => it.uuid === uuid)
+    const wantedIndex = formKontakte.indexOf(wantedKontakt)
 
     // remove contact
-    formKontakte.splice(wantedIndex, 1);
+    formKontakte.splice(wantedIndex, 1)
 
     // update form-array
-    this.refillFormArray(formKontakte);
+    this.refillFormArray(formKontakte)
 
     // update form
-    console.log('removed kontakt ' + uuid + ' from this schule');
+    console.log('removed kontakt ' + uuid + ' from this schule')
   }
 
   updateKontakt(updated: Kontakt) {
-    const formKontakte = this.getKontakteFromForm();
+    const formKontakte = this.getKontakteFromForm()
 
     // get index of old kontakt
-    const oldKontakt = formKontakte.find(it => it.uuid === updated.uuid);
-    const index = formKontakte.indexOf(oldKontakt);
+    const oldKontakt = formKontakte.find(it => it.uuid === updated.uuid)
+    const index = formKontakte.indexOf(oldKontakt)
 
     // update kontakt
-    formKontakte[index] = updated;
+    formKontakte[index] = updated
 
     // update form-array
-    this.refillFormArray(formKontakte);
+    this.refillFormArray(formKontakte)
   }
 
   /** get all kontakte from form */
   private getKontakteFromForm(): Kontakt[] {
-    const schule = this.formGroup.value as Schule;
-    return schule.kontakte;
+    const schule = this.formGroup.value as Schule
+    return schule.kontakte
   }
 
   private refillFormArray(kontakte: Kontakt[]) {
-    this.kontakte.clear();
-    this.addKontakte(kontakte);
+    this.kontakte.clear()
+    this.addKontakte(kontakte)
   }
 
 
   updateSchuleWithoutNewAdresse(schule: Schule, notificationService: NotificationService) {
-    console.log('Kontakte before update:');
+    console.log('Kontakte before update:')
 
     schule.kontakte.forEach(it => {
-      console.log(it.uuid + ': ' + it.name + ' (' + it.funktion + ') - ' + it.email);
-    });
+      console.log(it.uuid + ': ' + it.name + ' (' + it.funktion + ') - ' + it.email)
+    })
 
     const newSchule = {
       schule_id: schule.schule_id,
@@ -153,31 +153,31 @@ export class SchuleService {
       talentscouting: schule.talentscouting,
       kontakte_ids: schule.kontakte.map(it => it.uuid),
       adresse: undefined,
-      ort: undefined,
-    };
+      ort: undefined
+    }
 
     if (newSchule.schule_id == null) {
-      notificationService.failure('-- Can\'t update "schule" without id. Please contact your administrator');
-      return;
+      notificationService.failure('-- Can\'t update "schule" without id. Please contact your administrator')
+      return
     } else {
-      this.newSchule = this.dbService.updateSchule(newSchule);
+      this.newSchule = this.dbService.updateSchule(newSchule)
     }
 
     this.newSchule.subscribe(it => {
       if (it.schule_id !== undefined) {
-        notificationService.success(':: Schule erfolgreich aktualisiert.');
+        notificationService.success(':: Schule erfolgreich aktualisiert.')
       } else {
-        notificationService.failure('-- Schule konnte nicht aktualisiert werden.');
+        notificationService.failure('-- Schule konnte nicht aktualisiert werden.')
       }
-    });
+    })
   }
 
   getReadableAdresse(adresse: Adresse, ort: Ort) {
-    return adresse.strasse + ' ' + adresse.hausnummer + ', ' + ort.plz + ' ' + ort.bezeichnung;
+    return adresse.strasse + ' ' + adresse.hausnummer + ', ' + ort.plz + ' ' + ort.bezeichnung
   }
 
   insertOrUpdateSchule(schule: Schule, notificationService: NotificationService) {
-    const ortObservable = this.dbService.updateOrCreateOrt(schule.adresse.ort);
+    const ortObservable = this.dbService.updateOrCreateOrt(schule.adresse.ort)
     ortObservable.subscribe(newOrt => {
       const adresse = {
         adress_id: null,
@@ -185,37 +185,37 @@ export class SchuleService {
         hausnummer: schule.adresse.hausnummer,
         ort_id: newOrt.ort_id,
         ort: null
-      };
-      const adresseObservable = this.dbService.updateOrCreateAdresse(adresse);
+      }
+      const adresseObservable = this.dbService.updateOrCreateAdresse(adresse)
 
       adresseObservable.subscribe(newAdresse => {
-        schule.adress_id = newAdresse.adress_id;
-        schule.adresse = null;
-        schule.kontakte_ids = schule.kontakte.map(it => it.uuid);
-        schule.schwerpunkt = 'unbekannt';
+        schule.adress_id = newAdresse.adress_id
+        schule.adresse = null
+        schule.kontakte_ids = schule.kontakte.map(it => it.uuid)
+        schule.schwerpunkt = 'unbekannt'
 
         // check if schule already exists
         if (schule.schule_id === undefined || schule.schule_id === null) {
           this.dbService.createSchule(schule).subscribe(it => {
             if (it.schule_id !== undefined) {
-              notificationService.success(':: Schule erfolgreich erstellt.');
+              notificationService.success(':: Schule erfolgreich erstellt.')
               // return to overview
-              this.router.navigate(['/']);
+              this.router.navigate(['/'])
             } else {
-              notificationService.failure('-- Schule konnte nicht erstellt werden.');
+              notificationService.failure('-- Schule konnte nicht erstellt werden.')
             }
-          });
+          })
         } else {
-          const result = this.dbService.updateSchule(schule);
+          const result = this.dbService.updateSchule(schule)
           result.subscribe(it => {
             if (it.schule_id !== undefined) {
-              notificationService.success(':: Schule erfolgreich aktualisiert.');
+              notificationService.success(':: Schule erfolgreich aktualisiert.')
             } else {
-              notificationService.failure('-- Schule konnte nicht aktualisiert werden.');
+              notificationService.failure('-- Schule konnte nicht aktualisiert werden.')
             }
-          });
+          })
         }
-      });
-    });
+      })
+    })
   }
 }

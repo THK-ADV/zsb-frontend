@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Schule} from '../zsb-schule/schule';
-import {Adresse} from '../zsb-adresse/adresse';
+import {Injectable} from '@angular/core'
+import {FormControl, FormGroup, Validators} from '@angular/forms'
+import {Schule} from '../zsb-schule/schule'
+import {Adresse} from '../zsb-adresse/adresse'
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +11,9 @@ export class AdresseService {
   constructor() {
   }
 
-  public currentSchuleId: string = undefined;
-  public currentAdresseId: string = undefined;
-  public currentAdresse: Adresse = undefined;
+  public currentSchuleId: string = undefined
+  public currentAdresseId: string = undefined
+  public currentAdresse: Adresse = undefined
 
   public formGroup: FormGroup = new FormGroup({
     adresseId: new FormControl(null),
@@ -23,7 +23,7 @@ export class AdresseService {
     bezeichnung: new FormControl('', Validators.required),
     strasse: new FormControl('', Validators.required),
     hausnummer: new FormControl('', Validators.required)
-  });
+  })
 
   initializeFormGroup() {
     this.formGroup.setValue({
@@ -34,7 +34,7 @@ export class AdresseService {
       bezeichnung: '',
       strasse: '',
       hausnummer: ''
-    });
+    })
   }
 
   loadAdresseFromSchule(schule: Schule) {
@@ -46,6 +46,6 @@ export class AdresseService {
       bezeichnung: schule.adresse.ort.bezeichnung,
       strasse: schule.adresse.strasse,
       hausnummer: schule.adresse.hausnummer
-    });
+    })
   }
 }

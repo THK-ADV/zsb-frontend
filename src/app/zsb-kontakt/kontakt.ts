@@ -1,29 +1,29 @@
 export interface Kontakt {
-  uuid: string;
-  name: string;
-  vorname: string;
-  anrede: number;
-  email: string;
-  funktion: number;
+  uuid: string
+  name: string
+  vorname: string
+  anrede: number
+  email: string
+  funktion: number
 }
 
 export interface KontaktFunktion {
-  id: number;
-  desc: string;
+  id: number
+  desc: string
 }
 
 export interface KontaktAnrede {
-  id: number;
-  desc: string;
+  id: number
+  desc: string
 }
 
 
 export function combineKontaktName(kontakt: Kontakt): string {
   if (kontakt.vorname !== undefined && kontakt.vorname !== '') {
-    return kontakt.name + ', ' + kontakt.vorname;
+    return kontakt.name + ', ' + kontakt.vorname
   } else if (kontakt.name === '') {
-    return kontakt.email;
+    return kontakt.email
   } else {
-    return kontakt.name;
+    return kontakt.name
   }
 }

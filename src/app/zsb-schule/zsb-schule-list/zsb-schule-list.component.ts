@@ -1,10 +1,10 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {DatabaseService} from '../../shared/database.service';
-import {Schulform} from '../schulform';
-import {NotificationService} from '../../shared/notification.service';
+import {Component, OnInit, ViewChild} from '@angular/core'
+import {MatPaginator} from '@angular/material/paginator'
+import {MatSort} from '@angular/material/sort'
+import {MatTableDataSource} from '@angular/material/table'
+import {DatabaseService} from '../../shared/database.service'
+import {Schulform} from '../schulform'
+import {NotificationService} from '../../shared/notification.service'
 
 @Component({
   selector: 'app-zsb-schule-list',
@@ -12,12 +12,12 @@ import {NotificationService} from '../../shared/notification.service';
   styleUrls: ['./zsb-schule-list.component.css']
 })
 export class ZsbSchuleListComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  searchKey: string;
+  @ViewChild(MatPaginator) paginator: MatPaginator
+  @ViewChild(MatSort) sort: MatSort
+  searchKey: string
 
-  listData: MatTableDataSource<any>;
-  schulformen: Schulform[];
+  listData: MatTableDataSource<any>
+  schulformen: Schulform[]
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns: Array<string> = [
@@ -32,11 +32,11 @@ export class ZsbSchuleListComponent implements OnInit {
     // 'kooperationsvertrag',
     // 'kaoa_hochschule',
     // 'talent',
-    'actions',
-  ];
+    'actions'
+  ]
 
   constructor(private service: DatabaseService,
-              private notificationService: NotificationService,
+              private notificationService: NotificationService
   ) {
   }
 
@@ -46,43 +46,43 @@ export class ZsbSchuleListComponent implements OnInit {
         const array = list.map(item => {
           return {
             ...item
-          };
-        });
-        this.listData = new MatTableDataSource(array);
-        this.listData.sort = this.sort;
-        this.listData.paginator = this.paginator;
-      });
+          }
+        })
+        this.listData = new MatTableDataSource(array)
+        this.listData.sort = this.sort
+        this.listData.paginator = this.paginator
+      })
 
-    this.service.getSchulform().subscribe(schulformen => this.schulformen = schulformen);
+    this.service.getSchulform().subscribe(schulformen => this.schulformen = schulformen)
   }
 
   onSearchClear() {
-    this.searchKey = '';
-    this.applyFilter();
+    this.searchKey = ''
+    this.applyFilter()
   }
 
   applyFilter() {
-    this.listData.filter = this.searchKey.trim().toLowerCase();
+    this.listData.filter = this.searchKey.trim().toLowerCase()
   }
 
   getSchulformById(id: number) {
     if (id === undefined || this.schulformen === undefined) {
-      return '';
+      return ''
     }
-    return this.schulformen.find(it => it.id === id).desc;
+    return this.schulformen.find(it => it.id === id).desc
   }
 
   deleteSchule(schulName: string, uuid: string) {
     if (confirm('Seid ihr sicher, dass ihr "' + schulName + '" löschen möchtet?')) {
       this.service.deleteSchule(uuid).subscribe(it => {
         if (it !== undefined) {
-          this.notificationService.success(':: Schule wurde erfolgreich entfernt.');
+          this.notificationService.success(':: Schule wurde erfolgreich entfernt.')
           // remove schule from table
-          this.ngOnInit();
+          this.ngOnInit()
         } else {
-          this.notificationService.failure('-- Schule konnte nicht entfernt werden.');
+          this.notificationService.failure('-- Schule konnte nicht entfernt werden.')
         }
-      });
+      })
     }
   }
 }

@@ -1,4 +1,4 @@
 export interface Stufe {
-  id: number;
-  desc: string;
+  id: number
+  desc: string
 }

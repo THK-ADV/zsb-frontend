@@ -1,4 +1,4 @@
 export interface Vortragsart {
-  id: number;
-  desc: string;
+  id: number
+  desc: string
 }

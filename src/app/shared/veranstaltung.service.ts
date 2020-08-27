@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
-import {DatabaseService} from './database.service';
-import {Observable} from 'rxjs';
-import {Veranstaltung} from '../zsb-veranstaltungen/veranstaltung';
-import {Kategorie} from '../zsb-veranstaltungen/kategorie';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {NotificationService} from './notification.service';
+import {Injectable} from '@angular/core'
+import {DatabaseService} from './database.service'
+import {Observable} from 'rxjs'
+import {Veranstaltung} from '../zsb-veranstaltungen/veranstaltung'
+import {Kategorie} from '../zsb-veranstaltungen/kategorie'
+import {FormControl, FormGroup, Validators} from '@angular/forms'
+import {NotificationService} from './notification.service'
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +12,10 @@ import {NotificationService} from './notification.service';
 export class VeranstaltungService {
 
   constructor(public dbService: DatabaseService) {
-    this.dbService.getKategorien().subscribe(it => this.kategorien = it);
+    this.dbService.getKategorien().subscribe(it => this.kategorien = it)
   }
 
-  private kategorien: Kategorie[] = [];
+  private kategorien: Kategorie[] = []
   private detailForm: FormGroup = new FormGroup({
     uuid: new FormControl(null),
     datum: new FormControl(new Date()),
@@ -32,22 +32,22 @@ export class VeranstaltungService {
     berichtBtn: new FormControl({value: '', disabled: true}),
     kontakt: new FormControl(''),
     veranstalterId: new FormControl('', Validators.required)
-  });
+  })
 
   getVeranstaltungen(): Observable<Veranstaltung[]> {
-    return this.dbService.getAllVeranstaltungen();
+    return this.dbService.getAllVeranstaltungen()
   }
 
   getKategorien(): Kategorie[] {
-    return this.kategorien;
+    return this.kategorien
   }
 
   deleteVeranstaltung(uuid: string) {
-    return this.dbService.deleteVeranstaltung(uuid);
+    return this.dbService.deleteVeranstaltung(uuid)
   }
 
   getDetailForm(): FormGroup {
-    return this.detailForm;
+    return this.detailForm
   }
 
   initializeDetailForm() {
@@ -67,7 +67,7 @@ export class VeranstaltungService {
       berichtBtn: {value: '', disabled: true},
       kontakt: '',
       veranstalterId: ''
-    });
+    })
   }
 
   loadFormData(veranstaltung: Veranstaltung) {
@@ -87,29 +87,29 @@ export class VeranstaltungService {
       berichtBtn: {value: '', disabled: true},
       kontakt: veranstaltung.kontaktperson_id,
       veranstalterId: ''
-    });
+    })
   }
 
   insertOrUpdateCurrentVeranstaltung(notificationService: NotificationService) {
-    const veranstalter = this.detailForm.value as Veranstaltung;
-    veranstalter.datum = '10.10.2020';
+    const veranstalter = this.detailForm.value as Veranstaltung
+    veranstalter.datum = '10.10.2020'
 
     if (veranstalter.uuid === undefined) {
       this.dbService.createVeranstaltung(veranstalter).subscribe(it => {
         if (it.uuid !== undefined) {
-          notificationService.success(':: Veranstaltung erfolgreich erstellt.');
+          notificationService.success(':: Veranstaltung erfolgreich erstellt.')
         } else {
-          notificationService.failure('-- Veranstaltung konnte nicht erstellt werden.');
+          notificationService.failure('-- Veranstaltung konnte nicht erstellt werden.')
         }
-      });
+      })
     } else {
       this.dbService.updateVeranstaltung(veranstalter).subscribe(it => {
         if (it.uuid !== undefined) {
-          notificationService.success(':: Veranstaltung erfolgreich aktualisiert.');
+          notificationService.success(':: Veranstaltung erfolgreich aktualisiert.')
         } else {
-          notificationService.failure('-- Veranstaltung konnte nicht aktualisiert werden.');
+          notificationService.failure('-- Veranstaltung konnte nicht aktualisiert werden.')
         }
-      });
+      })
     }
   }
 }

@@ -1,25 +1,25 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing'
 
-import {ZsbVeranstaltungenListComponent} from '../zsb-veranstaltungen/zsb-veranstaltungen-list/zsb-veranstaltungen-list.component';
+import {ZsbVeranstaltungenListComponent} from '../zsb-veranstaltungen/zsb-veranstaltungen-list/zsb-veranstaltungen-list.component'
 
 describe('ZsbVeranstaltungenListComponent', () => {
-  let component: ZsbVeranstaltungenListComponent;
-  let fixture: ComponentFixture<ZsbVeranstaltungenListComponent>;
+  let component: ZsbVeranstaltungenListComponent
+  let fixture: ComponentFixture<ZsbVeranstaltungenListComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ZsbVeranstaltungenListComponent ]
+      declarations: [ZsbVeranstaltungenListComponent]
     })
-    .compileComponents();
-  }));
+      .compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ZsbVeranstaltungenListComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(ZsbVeranstaltungenListComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})

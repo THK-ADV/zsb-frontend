@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
-import {Schule} from './schule';
-import {DatabaseService} from '../shared/database.service';
-import {MatDialog} from '@angular/material/dialog';
+import {Component, OnInit} from '@angular/core'
+import {Observable} from 'rxjs'
+import {Schule} from './schule'
+import {DatabaseService} from '../shared/database.service'
+import {MatDialog} from '@angular/material/dialog'
 
 @Component({
   selector: 'app-zsb-schule',
@@ -10,13 +10,13 @@ import {MatDialog} from '@angular/material/dialog';
   styleUrls: ['./zsb-schule.component.css']
 })
 export class ZsbSchuleComponent implements OnInit {
-  schulen: Observable<Schule[]>;
+  schulen: Observable<Schule[]>
 
   constructor(private databaseService: DatabaseService, private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
-    this.schulen = this.databaseService.getSchulenAtomic();
+    this.schulen = this.databaseService.getSchulenAtomic()
   }
 
   filterList() {

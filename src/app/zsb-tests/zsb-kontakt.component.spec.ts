@@ -1,25 +1,25 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing'
 
-import {ZsbKontaktDetailComponent} from '../zsb-kontakt/zsb-kontakt-detail/zsb-kontakt-detail.component';
+import {ZsbKontaktDetailComponent} from '../zsb-kontakt/zsb-kontakt-detail/zsb-kontakt-detail.component'
 
 describe('ZsbKontaktComponent', () => {
-  let component: ZsbKontaktDetailComponent;
-  let fixture: ComponentFixture<ZsbKontaktDetailComponent>;
+  let component: ZsbKontaktDetailComponent
+  let fixture: ComponentFixture<ZsbKontaktDetailComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ZsbKontaktDetailComponent ]
+      declarations: [ZsbKontaktDetailComponent]
     })
-    .compileComponents();
-  }));
+      .compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ZsbKontaktDetailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(ZsbKontaktDetailComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})
