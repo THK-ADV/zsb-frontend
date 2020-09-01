@@ -14,6 +14,7 @@ import {Kategorie} from '../zsb-veranstaltungen/kategorie'
 import {Stufe} from '../zsb-veranstaltungen/stufe'
 import {Vortragsart} from '../zsb-veranstaltungen/vortragsart'
 import {Institution} from '../zsb-veranstaltungen/institution'
+import {Veranstalter} from '../zsb-veranstaltungen/veranstalter'
 
 @Injectable({
   providedIn: 'root'
@@ -185,5 +186,13 @@ export class DatabaseService {
 
   createVeranstaltung(veranstaltung: Veranstaltung) {
     return this.httpClient.post<Veranstaltung>(this.DB_URL + '/veranstaltungen', veranstaltung)
+  }
+
+  createVeranstalter(veranstalter: Veranstalter) {
+    return this.httpClient.post<Veranstalter>(this.DB_URL + '/veranstalter', veranstalter)
+  }
+
+  updateVeranstalter(veranstalter: Veranstalter) {
+    return this.httpClient.put<Veranstalter>(this.DB_URL + '/veranstalter', veranstalter)
   }
 }

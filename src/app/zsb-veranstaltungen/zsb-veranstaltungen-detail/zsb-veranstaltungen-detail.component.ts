@@ -75,9 +75,9 @@ export class ZsbVeranstaltungenDetailComponent implements OnInit {
     this.service.getDetailForm().get('veranstalterToggle').valueChanges.subscribe(isSchule => {
       this.veranstalterIsSchule = isSchule
       if (isSchule) {
-        // hide institution
+        // hide institution relevant kategorien
       } else {
-        // hide schule
+        // hide schule relevant kategorien
       }
     })
   }

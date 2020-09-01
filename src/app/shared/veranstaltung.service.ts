@@ -3,8 +3,9 @@ import {DatabaseService} from './database.service'
 import {Observable} from 'rxjs'
 import {Veranstaltung} from '../zsb-veranstaltungen/veranstaltung'
 import {Kategorie} from '../zsb-veranstaltungen/kategorie'
-import {FormControl, FormGroup, Validators} from '@angular/forms'
+import {FormControl, FormGroup} from '@angular/forms'
 import {NotificationService} from './notification.service'
+import {Veranstalter} from '../zsb-veranstaltungen/veranstalter'
 
 @Injectable({
   providedIn: 'root'
@@ -28,10 +29,11 @@ export class VeranstaltungService {
     stufe: new FormControl(0),
     anzahlSus: new FormControl(0),
     vortragsart: new FormControl(0),
-    ablaufUndBewertung: new FormControl(''),
+    ablauf: new FormControl(''),
+    durchlaeufe: new FormControl(''),
     berichtBtn: new FormControl({value: '', disabled: true}),
-    kontakt: new FormControl(''),
-    veranstalterId: new FormControl('', Validators.required)
+    kontaktperson_id: new FormControl(''),
+    veranstalter_id: new FormControl(null)
   })
 
   getVeranstaltungen(): Observable<Veranstaltung[]> {
@@ -63,53 +65,92 @@ export class VeranstaltungService {
       stufe: 0,
       anzahlSus: 0,
       vortragsart: 0,
-      ablaufUndBewertung: '',
+      ablauf: '',
+      durchlaeufe: '',
       berichtBtn: {value: '', disabled: true},
-      kontakt: '',
-      veranstalterId: ''
+      kontaktperson_id: '',
+      veranstalter_id: null
     })
   }
 
   loadFormData(veranstaltung: Veranstaltung) {
+    const isHochschulVeranstalter = veranstaltung.veranstalter.hochschul_id !== null
+
+    console.log(veranstaltung.veranstalter)
+
     this.detailForm.setValue({
       uuid: veranstaltung.uuid,
       datum: new Date(veranstaltung.datum),
       bezeichnung: veranstaltung.bezeichnung,
       thema: veranstaltung.thema,
-      veranstalterToggle: true,
+      veranstalterToggle: isHochschulVeranstalter,
       schule: veranstaltung.veranstalter.hochschul_id,
       institution: veranstaltung.veranstalter.institution_id,
       kategorie: veranstaltung.kategorie,
       stufe: veranstaltung.stufe,
       anzahlSus: veranstaltung.anzahlSus,
       vortragsart: veranstaltung.vortragsart,
-      ablaufUndBewertung: veranstaltung.ablauf,
+      ablauf: veranstaltung.ablauf,
+      durchlaeufe: veranstaltung.durchlaeufe,
       berichtBtn: {value: '', disabled: true},
-      kontakt: veranstaltung.kontaktperson_id,
-      veranstalterId: ''
+      kontaktperson_id: veranstaltung.kontaktperson_id,
+      veranstalter_id: veranstaltung.veranstalter_id
     })
   }
 
   insertOrUpdateCurrentVeranstaltung(notificationService: NotificationService) {
-    const veranstalter = this.detailForm.value as Veranstaltung
-    veranstalter.datum = '10.10.2020'
+    const veranstaltungForm = this.detailForm.value
+    veranstaltungForm.datum = new Date(veranstaltungForm.datum).toISOString()
 
-    if (veranstalter.uuid === undefined) {
-      this.dbService.createVeranstaltung(veranstalter).subscribe(it => {
-        if (it.uuid !== undefined) {
-          notificationService.success(':: Veranstaltung erfolgreich erstellt.')
-        } else {
-          notificationService.failure('-- Veranstaltung konnte nicht erstellt werden.')
-        }
-      })
+    const isHochschulVeranstalter = veranstaltungForm.veranstalterToggle as boolean
+    let veranstalter: Veranstalter
+
+    if (isHochschulVeranstalter) {
+      veranstalter = {
+        uuid: veranstaltungForm.veranstalter_id,
+        hochschul_id: veranstaltungForm.schule ? veranstaltungForm.schule : null,
+        institution_id: null
+      }
     } else {
-      this.dbService.updateVeranstaltung(veranstalter).subscribe(it => {
-        if (it.uuid !== undefined) {
-          notificationService.success(':: Veranstaltung erfolgreich aktualisiert.')
-        } else {
-          notificationService.failure('-- Veranstaltung konnte nicht aktualisiert werden.')
-        }
-      })
+      veranstalter = {
+        uuid: veranstaltungForm.veranstalter_id,
+        hochschul_id: null,
+        institution_id: veranstaltungForm.institution ? veranstaltungForm.institution : null
+      }
     }
+
+    let updatedVeranstalterObservable: Observable<Veranstalter>
+    if (veranstaltungForm.veranstalter_id === undefined
+      || veranstaltungForm.veranstalter_id === ''
+      || veranstaltungForm.veranstalter_id === null) {
+      console.log('Create Veranstalter:')
+      updatedVeranstalterObservable = this.dbService.createVeranstalter(veranstalter)
+    } else {
+      console.log('Update Veranstalter:')
+      updatedVeranstalterObservable = this.dbService.updateVeranstalter(veranstalter)
+    }
+
+    updatedVeranstalterObservable.subscribe(veranstalterWithId => {
+      veranstaltungForm.veranstalter_id = veranstalterWithId.uuid
+      if (veranstaltungForm.uuid === undefined || veranstaltungForm.uuid === null) {
+        this.dbService.createVeranstaltung(veranstaltungForm).subscribe(it => {
+          if (it.uuid !== undefined) {
+            notificationService.success(':: Veranstaltung erfolgreich erstellt.')
+          } else {
+            notificationService.failure('-- Veranstaltung konnte nicht erstellt werden.')
+          }
+        })
+      } else {
+        this.dbService.updateVeranstaltung(veranstaltungForm).subscribe(it => {
+          if (it.uuid !== undefined) {
+            notificationService.success(':: Veranstaltung erfolgreich aktualisiert.')
+          } else {
+            notificationService.failure('-- Veranstaltung konnte nicht aktualisiert werden.')
+          }
+        })
+      }
+    })
   }
 }
+
+

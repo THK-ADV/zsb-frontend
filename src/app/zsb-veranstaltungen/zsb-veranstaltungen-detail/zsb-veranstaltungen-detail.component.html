@@ -142,8 +142,17 @@
   <!-- ablaufUndBewertung -->
   <mat-form-field>
     <label>
-      <textarea formControlName="ablaufUndBewertung" matInput placeholder="Ablauf und Bewertung"></textarea>
+      <textarea formControlName="ablauf" matInput placeholder="Ablauf und Bewertung"></textarea>
     </label>
+  </mat-form-field>
+  <br>
+
+  <!-- durchlaeufe -->
+  <mat-form-field>
+    <label>
+      <input formControlName="durchlaeufe" matInput placeholder="Durchläufe*">
+    </label>
+    <mat-error>Ihre Eingabe wird benötigt.</mat-error>
   </mat-form-field>
   <br>
 
@@ -169,7 +178,7 @@
 
   <!-- kontakt -->
   <mat-form-field>
-    <mat-select formControlName="kontakt" placeholder="Kontakt*">
+    <mat-select formControlName="kontaktperson_id" placeholder="Kontakt*">
       <mat-option value="-1">Keine</mat-option>
       <ng-container *ngFor="let it of kontakte | async">
         <mat-option [value]="it.uuid">
