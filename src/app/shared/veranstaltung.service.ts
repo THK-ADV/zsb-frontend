@@ -3,7 +3,7 @@ import {DatabaseService} from './database.service'
 import {Observable} from 'rxjs'
 import {Veranstaltung} from '../zsb-veranstaltungen/veranstaltung'
 import {Kategorie} from '../zsb-veranstaltungen/kategorie'
-import {FormControl, FormGroup} from '@angular/forms'
+import {FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms'
 import {NotificationService} from './notification.service'
 import {Veranstalter} from '../zsb-veranstaltungen/veranstalter'
 
@@ -19,22 +19,22 @@ export class VeranstaltungService {
   private kategorien: Kategorie[] = []
   private detailForm: FormGroup = new FormGroup({
     uuid: new FormControl(null),
-    datum: new FormControl(new Date()),
-    bezeichnung: new FormControl(''),
-    thema: new FormControl(''),
+    datum: new FormControl(new Date(), Validators.required),
+    bezeichnung: new FormControl('', Validators.required),
+    thema: new FormControl('', Validators.required),
     veranstalterToggle: new FormControl(true),
     schule: new FormControl(null),
     institution: new FormControl(null),
-    kategorie: new FormControl(0),
-    stufe: new FormControl(0),
-    anzahlSus: new FormControl(0),
-    vortragsart: new FormControl(0),
+    kategorie: new FormControl(0, Validators.required),
+    stufe: new FormControl(0, Validators.required),
+    anzahlSus: new FormControl(0, Validators.required),
+    vortragsart: new FormControl(0, Validators.required),
     ablauf: new FormControl(''),
     durchlaeufe: new FormControl(''),
     berichtBtn: new FormControl({value: '', disabled: true}),
-    kontaktperson_id: new FormControl(''),
+    kontaktperson_id: new FormControl('', Validators.required),
     veranstalter_id: new FormControl(null)
-  })
+  }, {validators: this.selectedVeranstalterRequired()})
 
   getVeranstaltungen(): Observable<Veranstaltung[]> {
     return this.dbService.getAllVeranstaltungen()
@@ -151,6 +151,21 @@ export class VeranstaltungService {
       }
     })
   }
+
+  selectedVeranstalterRequired() {
+    // const isHochschulVeranstalter = this.detailForm.value.veranstalterToggle as boolean
+
+    return (fg: FormGroup): ValidationErrors | null => {
+      const isHochschulVeranstalter = fg.get('veranstalterToggle').value as boolean
+      const schule = fg.get('schule').value
+      const institution = fg.get('institution').value
+
+      if ((isHochschulVeranstalter && (schule === undefined || schule === '' || schule === null))
+        || (!isHochschulVeranstalter && (institution === undefined || institution === '' || institution === null))) {
+        return {selectedVeranstalterRequired: 'Bitte einen Veranstalter wählen.'} as ValidationErrors
+      }
+
+      return null
+    }
+  }
 }
-
-
