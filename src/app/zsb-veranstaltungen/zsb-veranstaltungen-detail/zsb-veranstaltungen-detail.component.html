@@ -41,7 +41,7 @@
   <br>
 
   <!-- veranstalterToggle -->
-  <mat-slide-toggle name="veranstalterToggle"  formControlName="veranstalterToggle">
+  <mat-slide-toggle name="veranstalterToggle" formControlName="veranstalterToggle">
     Veranstalter ist Schule?
   </mat-slide-toggle>
   <br>
@@ -50,8 +50,7 @@
   <div *ngIf="veranstalterIsSchule">
     <!-- schule -->
     <mat-form-field>
-      <mat-select formControlName="schule" placeholder="schule*">
-        <mat-option value="-1">Keine</mat-option>
+      <mat-select formControlName="schule" placeholder="Schule">
         <ng-container *ngFor="let it of schulen | async">
           <mat-option [value]="it.schule_id">
             {{it.name}} <br>
@@ -66,8 +65,7 @@
   <div *ngIf="!veranstalterIsSchule">
     <!-- institution -->
     <mat-form-field>
-      <mat-select formControlName="institution" placeholder="institution*">
-        <mat-option value="-1">Keine</mat-option>
+      <mat-select formControlName="institution" placeholder="Institution*">
         <ng-container *ngFor="let it of institutionen | async">
           <mat-option [value]="it.uuid">
             {{it.bezeichnung}} <br>
@@ -80,11 +78,9 @@
   </div>
 
 
-
   <!-- kategorie -->
   <mat-form-field>
-    <mat-select formControlName="kategorie" placeholder="Kategorie*">
-      <mat-option value="-1">Keine</mat-option>
+    <mat-select formControlName="kategorie" placeholder="Kategorie">
       <ng-container *ngFor="let it of kategorien | async">
         <mat-option [value]="it.id">
           {{it.desc}} <br>
@@ -97,8 +93,7 @@
 
   <!-- stufe -->
   <mat-form-field>
-    <mat-select formControlName="stufe" placeholder="Stufe*">
-      <mat-option value="-1">Keine</mat-option>
+    <mat-select formControlName="stufe" placeholder="Stufe">
       <ng-container *ngFor="let it of stufen | async">
         <mat-option [value]="it.id">
           {{it.desc}} <br>
@@ -111,8 +106,7 @@
 
   <!-- anzahlSus -->
   <mat-form-field>
-    <mat-select formControlName="anzahlSus" placeholder="Anzahl SuS*">
-      <mat-option value="-1">Keine</mat-option>
+    <mat-select formControlName="anzahlSus" placeholder="Anzahl SuS">
       <ng-container *ngFor="let sus of anzahlSus | async">
         <mat-option [value]="sus.id">
           {{sus.range}} <br>
@@ -125,8 +119,7 @@
 
   <!-- vortragsart -->
   <mat-form-field>
-    <mat-select formControlName="vortragsart" placeholder="Vortragsart*">
-      <mat-option value="-1">Keine</mat-option>
+    <mat-select formControlName="vortragsart" placeholder="Vortragsart">
       <ng-container *ngFor="let it of vortragsarten | async">
         <mat-option [value]="it.id">
           {{it.desc}} <br>
@@ -150,36 +143,37 @@
   <!-- durchlaeufe -->
   <mat-form-field>
     <label>
-      <input formControlName="durchlaeufe" matInput placeholder="Durchläufe*">
+      <input formControlName="durchlaeufe" matInput placeholder="Durchläufe">
     </label>
     <mat-error>Ihre Eingabe wird benötigt.</mat-error>
   </mat-form-field>
   <br>
 
   <!-- berichtBtn -->
-  <div *ngIf="bericht === undefined else berichtAnpassen">
-    <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
-            (click)="editBericht()">Bericht erstellen
-    </button>
+  <div *ngIf="this.veranstalterId !== undefined">
+    <div *ngIf="bericht === undefined else berichtAnpassen">
+      <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
+              (click)="editBericht()">Bericht erstellen
+      </button>
+    </div>
+    <ng-template #berichtAnpassen>
+      <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
+              (click)="editBericht()">Bericht anpassen
+      </button>
+    </ng-template>
   </div>
-  <ng-template #berichtAnpassen>
-    <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
-            (click)="editBericht()">Bericht anpassen
-    </button>
-  </ng-template>
 
-<!--  <mat-form-field>-->
-<!--    <label>-->
-<!--      <input formControlName="berichtBtn" matInput placeholder="Bericht">-->
-<!--    </label>-->
-<!--    <mat-icon matSuffix>edit</mat-icon>-->
-<!--  </mat-form-field>-->
+  <!--  <mat-form-field>-->
+  <!--    <label>-->
+  <!--      <input formControlName="berichtBtn" matInput placeholder="Bericht">-->
+  <!--    </label>-->
+  <!--    <mat-icon matSuffix>edit</mat-icon>-->
+  <!--  </mat-form-field>-->
   <br>
 
   <!-- kontakt -->
   <mat-form-field>
     <mat-select formControlName="kontaktperson_id" placeholder="Kontakt*">
-      <mat-option value="-1">Keine</mat-option>
       <ng-container *ngFor="let it of kontakte | async">
         <mat-option [value]="it.uuid">
           {{combineKontaktName(it)}} <br>
