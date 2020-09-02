@@ -1,0 +1,26 @@
+.bericht-form {
+  min-width: 256px;
+  max-width: 512px;
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.bericht-form {
+  min-width: 350px;
+}
+
+.bericht-form mat-form-field {
+  width: 100%;
+}
+
+.bericht-form mat-form-field textarea {
+  min-height: max-content;
+  height: 200px;
+}
+
+.btn-span-full-table {
+  width: 100%;
+}

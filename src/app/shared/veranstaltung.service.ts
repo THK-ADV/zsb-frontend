@@ -76,8 +76,6 @@ export class VeranstaltungService {
   loadFormData(veranstaltung: Veranstaltung) {
     const isHochschulVeranstalter = veranstaltung.veranstalter.hochschul_id !== null
 
-    console.log(veranstaltung.veranstalter)
-
     this.detailForm.setValue({
       uuid: veranstaltung.uuid,
       datum: new Date(veranstaltung.datum),

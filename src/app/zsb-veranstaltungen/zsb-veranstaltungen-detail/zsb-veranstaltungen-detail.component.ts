@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core'
 import {VeranstaltungService} from '../../shared/veranstaltung.service'
-import {MatDialog} from '@angular/material/dialog'
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
 import {ActivatedRoute} from '@angular/router'
 import {Observable} from 'rxjs'
 import {Kategorie} from '../kategorie'
@@ -11,7 +11,8 @@ import {Institution} from '../institution'
 import {AnzahlSus} from '../../zsb-schule/anzahl-sus'
 import {combineKontaktName, Kontakt} from '../../zsb-kontakt/kontakt'
 import {NotificationService} from '../../shared/notification.service'
-import {Bericht} from '../bericht'
+import {Bericht} from '../zsb-bericht/bericht'
+import {ZsbBerichtComponent} from '../zsb-bericht/zsb-bericht.component'
 
 @Component({
   selector: 'app-zsb-veranstaltungen-detail',
@@ -64,6 +65,12 @@ export class ZsbVeranstaltungenDetailComponent implements OnInit {
   private loadVeranstaltung(uuid: string) {
     this.service.dbService.getVeranstaltungById(uuid).subscribe(veranstaltung => {
       this.service.loadFormData(veranstaltung)
+
+      this.service.dbService.getAllBerichte().subscribe(berichte => {
+        berichte.forEach(it => {
+          if (it.veranstaltung_id === veranstaltung.uuid) this.bericht = it
+        })
+      })
     })
   }
 
@@ -75,9 +82,9 @@ export class ZsbVeranstaltungenDetailComponent implements OnInit {
     this.service.getDetailForm().get('veranstalterToggle').valueChanges.subscribe(isSchule => {
       this.veranstalterIsSchule = isSchule
       if (isSchule) {
-        // hide institution relevant kategorien
+        // TODO hide institution relevant kategorien
       } else {
-        // hide schule relevant kategorien
+        // TODO hide schule relevant kategorien
       }
     })
   }
@@ -95,8 +102,17 @@ export class ZsbVeranstaltungenDetailComponent implements OnInit {
     this.notificationService.success(':: Formular zurückgesetzt.')
   }
 
-  editBericht() {
-    alert('Hinweis: Hier wird ein Pop-Up-Fenster entstehen, in welchem der Bericht angepasst bzw. erstellt werden kann.')
-    // TODO implement
+  editBericht(bericht?: Bericht) {
+    const dialogConfig = new MatDialogConfig()
+    dialogConfig.disableClose = true
+    dialogConfig.width = '30%'
+    const dialogRef = this.dialog.open(ZsbBerichtComponent, dialogConfig)
+    dialogRef.componentInstance.berichtId = bericht?.uuid
+    dialogRef.componentInstance.veranstaltungId = this.service.getDetailForm().controls.uuid.value
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === undefined) return
+      this.bericht = result
+    })
   }
 }

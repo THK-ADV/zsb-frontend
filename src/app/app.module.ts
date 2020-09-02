@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser'
-import {APP_INITIALIZER, NgModule} from '@angular/core'
+import {NgModule} from '@angular/core'
 import {AppComponent} from './app.component'
 import {RouterModule, Routes} from '@angular/router'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
@@ -32,14 +32,15 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle'
 import {MatSlideToggleModule} from '@angular/material/slide-toggle'
 import {FlexLayoutModule} from '@angular/flex-layout'
 import {MatSidenavModule} from '@angular/material/sidenav'
-import {keycloakInitializer} from './authentication/keycloak.init'
-import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular'
+import {KeycloakAngularModule} from 'keycloak-angular'
 import {ZsbVeranstaltungenComponent} from './zsb-veranstaltungen/zsb-veranstaltungen.component'
 import {ZsbVeranstaltungenListComponent} from './zsb-veranstaltungen/zsb-veranstaltungen-list/zsb-veranstaltungen-list.component'
 import {DatePipe} from '@angular/common'
 import {ZsbVeranstaltungenDetailComponent} from './zsb-veranstaltungen/zsb-veranstaltungen-detail/zsb-veranstaltungen-detail.component'
 import {MatDatepickerModule} from '@angular/material/datepicker'
 import {MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core'
+import {MatTooltipModule} from '@angular/material/tooltip'
+import {ZsbBerichtComponent} from './zsb-veranstaltungen/zsb-bericht/zsb-bericht.component'
 
 const appRoutes: Routes = [
   {path: '', component: ZsbSchuleComponent},
@@ -47,7 +48,7 @@ const appRoutes: Routes = [
   {path: 'schulen/:schuleId/adresse/:adresseId', component: ZsbAdresseComponent},
   {path: 'schulen', component: ZsbSchuleDetailComponent},
   {path: 'veranstaltungen', component: ZsbVeranstaltungenComponent},
-  {path: 'veranstaltungen/:veranstaltungId', component: ZsbVeranstaltungenDetailComponent},
+  {path: 'veranstaltungen/:veranstaltungId', component: ZsbVeranstaltungenDetailComponent}
 ]
 
 @NgModule({
@@ -61,13 +62,14 @@ const appRoutes: Routes = [
     ZsbKontaktSearchComponent,
     ZsbVeranstaltungenComponent,
     ZsbVeranstaltungenListComponent,
-    ZsbVeranstaltungenDetailComponent
+    ZsbVeranstaltungenDetailComponent,
+    ZsbBerichtComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     RouterModule.forRoot(
-      appRoutes,
+      appRoutes
       // {enableTracing: true} // debugging
     ),
     BrowserAnimationsModule,
@@ -96,22 +98,17 @@ const appRoutes: Routes = [
     MatSidenavModule,
     KeycloakAngularModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatTooltipModule
   ],
   providers: [
     DatePipe,
     {
       provide: MAT_DATE_LOCALE,
       useValue: 'de-DE'
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: keycloakInitializer,
-      multi: true,
-      deps: [KeycloakService],
     }
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
   // entryComponents: [ZsbSchuleDetailComponent]
 })
 export class AppModule {

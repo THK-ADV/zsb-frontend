@@ -1,4 +1,4 @@
-import {Veranstaltung} from './veranstaltung'
+import {Veranstaltung} from '../veranstaltung'
 
 export interface Bericht {
   uuid: string

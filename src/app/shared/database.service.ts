@@ -15,6 +15,7 @@ import {Stufe} from '../zsb-veranstaltungen/stufe'
 import {Vortragsart} from '../zsb-veranstaltungen/vortragsart'
 import {Institution} from '../zsb-veranstaltungen/institution'
 import {Veranstalter} from '../zsb-veranstaltungen/veranstalter'
+import {Bericht} from '../zsb-veranstaltungen/zsb-bericht/bericht'
 
 @Injectable({
   providedIn: 'root'
@@ -91,10 +92,6 @@ export class DatabaseService {
         retry(1),
         catchError(this.handleError)
       )
-  }
-
-  getSchuleById(id: string) {
-    return this.httpClient.get<Schule>(this.DB_URL + '/schulen/' + id)
   }
 
   getSchuleByIdAtomic(id: string) {
@@ -194,5 +191,21 @@ export class DatabaseService {
 
   updateVeranstalter(veranstalter: Veranstalter) {
     return this.httpClient.put<Veranstalter>(this.DB_URL + '/veranstalter', veranstalter)
+  }
+
+  getAllBerichte() {
+    return this.httpClient.get<Bericht[]>(this.DB_URL + '/berichte')
+  }
+
+  getBerichtById(uuid: string) {
+    return this.httpClient.get<Bericht>(this.DB_URL + '/berichte/' + uuid)
+  }
+
+  createBericht(bericht: Bericht) {
+    return this.httpClient.post<Bericht>(this.DB_URL + '/berichte', bericht)
+  }
+
+  updateBericht(bericht: Bericht) {
+    return this.httpClient.put<Bericht>(this.DB_URL + '/berichte', bericht)
   }
 }
