@@ -12,7 +12,9 @@ export interface Schule {
   adress_id: string
   anzahl_sus: number
   kaoa_hochschule: boolean
+  kaoa_partner: number
   talentscouting: boolean
+  talentscouting_partner: number
   kontakte_ids: string[]
   kontakte: Kontakt[]
   adresse: Adresse

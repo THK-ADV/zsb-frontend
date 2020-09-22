@@ -76,11 +76,13 @@
                 </td>
                 <td>
                   <!-- go to details for this kontakt-->
-                  <button mat-icon-button (click)="showKontaktDetail(kontakt.value.uuid)">
-                    <mat-icon>launch</mat-icon>
+                  <button mat-icon-button (click)="showKontaktDetail(kontakt.value.uuid)"
+                          matTooltip="Kontakt editieren">
+                    <mat-icon>edit</mat-icon>
                   </button>
                   <!-- delete icon -> trigger delete connection between this kontakt and schule-->
-                  <button mat-icon-button color="warn" (click)="service.removeKontakt(kontakt.value.uuid)">
+                  <button mat-icon-button color="warn" (click)="service.removeKontakt(kontakt.value.uuid)"
+                          matTooltip="Kontakt entfernen">
                     <mat-icon>delete_outline</mat-icon>
                   </button>
                 </td>
@@ -119,10 +121,36 @@
           <mat-checkbox formControlName="kooperationsvertrag">Kooperationsvertrag</mat-checkbox>
         </div>
         <div class="add-bottom-padding">
-          <mat-checkbox formControlName="kaoa_hochschule">kaoa Hochschule</mat-checkbox>
+          <mat-checkbox #kaoa_cb formControlName="kaoa_hochschule">kaoa Hochschule</mat-checkbox>
+          <div *ngIf="kaoa_cb.checked">
+
+            <mat-form-field>
+              <mat-select formControlName="kaoa_partner" placeholder="Partner*">
+                <ng-container *ngFor="let option of kooperationspartner">
+                  <mat-option [value]="option.id">
+                    {{option.desc}} <br>
+                  </mat-option>
+                </ng-container>
+              </mat-select>
+            </mat-form-field>
+
+          </div>
         </div>
         <div class="add-bottom-padding">
-          <mat-checkbox formControlName="talentscouting">Talentscouting</mat-checkbox>
+          <mat-checkbox #talentscouting_cb formControlName="talentscouting">Talentscouting</mat-checkbox>
+          <div *ngIf="talentscouting_cb.checked">
+
+            <mat-form-field>
+              <mat-select formControlName="talentscouting_partner" placeholder="Partner*">
+                <ng-container *ngFor="let option of kooperationspartner">
+                  <mat-option [value]="option.id">
+                    {{option.desc}} <br>
+                  </mat-option>
+                </ng-container>
+              </mat-select>
+            </mat-form-field>
+
+          </div>
         </div>
 
 

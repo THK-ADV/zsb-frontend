@@ -15,6 +15,7 @@ import {Kontakt, KontaktFunktion} from '../../zsb-kontakt/kontakt'
 import {ZsbKontaktDetailComponent} from '../../zsb-kontakt/zsb-kontakt-detail/zsb-kontakt-detail.component'
 import {ZsbKontaktSearchComponent} from '../../zsb-kontakt/zsb-kontakt-search/zsb-kontakt-search.component'
 import {ValidationErrors} from '@angular/forms'
+import {Kooperationspartner} from '../kooperationspartner'
 
 @Component({
   selector: 'app-zsb-schule-detail',
@@ -28,6 +29,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
   schulformen: Observable<Schulform[]>
   anzahlSusRanges: Observable<AnzahlSus[]>
   kontaktFunktionen: KontaktFunktion[]
+  kooperationspartner: Kooperationspartner[]
 
   adresseId: string
   ortId: string
@@ -55,6 +57,10 @@ export class ZsbSchuleDetailComponent implements OnInit {
       this.kontaktFunktionen = funktionen
     })
 
+    this.dbService.getKooperationspartner().subscribe(partner => {
+      this.kooperationspartner = partner
+    })
+
     this.route.paramMap.subscribe(params => {
       this.schuleId = params.get('schuleId')
 
@@ -70,13 +76,9 @@ export class ZsbSchuleDetailComponent implements OnInit {
         })
       }
     })
-
-    console.log('finished init (schule-detail-component)')
   }
 
   onSubmit() {
-    console.log('SUB')
-
     const schule = this.service.formGroup.value
 
     // remove nulls from kontakte-array

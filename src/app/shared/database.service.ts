@@ -16,6 +16,7 @@ import {Vortragsart} from '../zsb-veranstaltungen/vortragsart'
 import {Institution} from '../zsb-veranstaltungen/institution'
 import {Veranstalter} from '../zsb-veranstaltungen/veranstalter'
 import {Bericht} from '../zsb-veranstaltungen/zsb-bericht/bericht'
+import {Kooperationspartner} from '../zsb-schule/kooperationspartner'
 
 @Injectable({
   providedIn: 'root'
@@ -207,5 +208,9 @@ export class DatabaseService {
 
   updateBericht(bericht: Bericht) {
     return this.httpClient.put<Bericht>(this.DB_URL + '/berichte', bericht)
+  }
+
+  getKooperationspartner() {
+    return this.httpClient.get<Kooperationspartner[]>(this.DB_URL + '/schulen/kooperationspartner')
   }
 }

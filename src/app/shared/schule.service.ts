@@ -30,7 +30,9 @@ export class SchuleService {
     kooperationsvertrag: new FormControl(false),
     anzahl_sus: new FormControl('', Validators.required),
     kaoa_hochschule: new FormControl(false),
-    talentscouting: new FormControl(false)
+    kaoa_partner: new FormControl(-1),
+    talentscouting: new FormControl(false),
+    talentscouting_partner: new FormControl(-1)
   })
 
   // direct access to kontakte as array
@@ -52,7 +54,9 @@ export class SchuleService {
       kooperationsvertrag: false,
       anzahl_sus: '',
       kaoa_hochschule: false,
-      talentscouting: false
+      kaoa_partner: -1,
+      talentscouting: false,
+      talentscouting_partner: -1
     })
     this.kontakte.clear()
   }
@@ -72,7 +76,9 @@ export class SchuleService {
       kooperationsvertrag: schule.kooperationsvertrag,
       anzahl_sus: +schule.anzahl_sus,
       kaoa_hochschule: schule.kaoa_hochschule,
-      talentscouting: schule.talentscouting
+      kaoa_partner: schule.kaoa_partner,
+      talentscouting: schule.talentscouting,
+      talentscouting_partner: schule.talentscouting_partner
     })
 
     this.kontakte.clear()
@@ -134,12 +140,6 @@ export class SchuleService {
 
 
   updateSchuleWithoutNewAdresse(schule: Schule, notificationService: NotificationService) {
-    console.log('Kontakte before update:')
-
-    schule.kontakte.forEach(it => {
-      console.log(it.uuid + ': ' + it.name + ' (' + it.funktion + ') - ' + it.email)
-    })
-
     const newSchule = {
       schule_id: schule.schule_id,
       name: schule.name,
@@ -150,7 +150,9 @@ export class SchuleService {
       kooperationsvertrag: schule.kooperationsvertrag,
       anzahl_sus: +schule.anzahl_sus,
       kaoa_hochschule: schule.kaoa_hochschule,
+      kaoa_partner: schule.kaoa_partner,
       talentscouting: schule.talentscouting,
+      talentscouting_partner: schule.talentscouting_partner,
       kontakte_ids: schule.kontakte.map(it => it.uuid),
       adresse: undefined,
       ort: undefined
@@ -194,6 +196,8 @@ export class SchuleService {
         schule.kontakte_ids = schule.kontakte.map(it => it.uuid)
         schule.schwerpunkt = 'unbekannt'
 
+        console.log('Schule before request')
+        console.log(schule)
         // check if schule already exists
         if (schule.schule_id === undefined || schule.schule_id === null) {
           this.dbService.createSchule(schule).subscribe(it => {
