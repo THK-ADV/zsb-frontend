@@ -4,7 +4,7 @@
     Hinzufügen
   </button>
 <!--  'datum', 'bezeichnung', 'kategorie', 'thema'-->
-  <mat-form-field class="search-form-field" floatLabel="never">
+  <mat-form-field class="search-form-field" floatLabel="never" matTooltip="Suche ist hier noch nicht über mehrere Suchbegriffe möglich. Kommt aber noch.">
     <label>
       <input matInput [(ngModel)]="searchKey" placeholder="Suche" autocomplete="off" (keyup)="applyFilter()">
     </label>
@@ -21,35 +21,35 @@
     <!-- datum Column -->
     <ng-container matColumnDef="datum">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Datum</mat-header-cell>
-      <mat-cell *matCellDef="let row">{{toReadableDate(row.datum)}}</mat-cell>
+      <mat-cell [routerLink]="['/veranstaltungen', row.uuid]" *matCellDef="let row">{{toReadableDate(row.datum)}}</mat-cell>
     </ng-container>
 
     <!-- bezeichnung Column -->
     <ng-container matColumnDef="bezeichnung">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Bezeichnung</mat-header-cell>
-      <mat-cell *matCellDef="let row">{{row.bezeichnung}}</mat-cell>
+      <mat-cell [routerLink]="['/veranstaltungen', row.uuid]" *matCellDef="let row">{{row.bezeichnung}}</mat-cell>
     </ng-container>
 
     <!-- kategorie Column -->
     <ng-container matColumnDef="kategorie">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Kategorie</mat-header-cell>
-      <mat-cell *matCellDef="let row">{{row.kategorie}}</mat-cell>
+      <mat-cell [routerLink]="['/veranstaltungen', row.uuid]" *matCellDef="let row">{{row.kategorie}}</mat-cell>
     </ng-container>
 
     <!-- thema Column -->
     <ng-container matColumnDef="thema">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Thema</mat-header-cell>
-      <mat-cell *matCellDef="let row">{{row.thema}}</mat-cell>
+      <mat-cell [routerLink]="['/veranstaltungen', row.uuid]" *matCellDef="let row">{{row.thema}}</mat-cell>
     </ng-container>
 
     <!-- edit and delete Column -->
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let row">
-        <button mat-icon-button [routerLink]="['/veranstaltungen', row.uuid]">
-          <mat-icon>launch</mat-icon> <!-- use launch or edit -->
+        <button mat-icon-button [routerLink]="['/veranstaltungen', row.uuid]" matTooltip="Veranstaltung editieren">
+          <mat-icon>edit</mat-icon> <!-- use launch or edit -->
         </button>
-        <button mat-icon-button color="warn">
+        <button mat-icon-button color="warn" matTooltip="Veranstaltung entfernen">
           <mat-icon (click)="deleteVeranstaltung(row.bezeichnung, row.uuid)">delete_outline</mat-icon>
         </button>
       </mat-cell>
