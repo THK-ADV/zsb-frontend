@@ -5,6 +5,8 @@ import {MatTableDataSource} from '@angular/material/table'
 import {DatabaseService} from '../../shared/database.service'
 import {Schulform} from '../schulform'
 import {NotificationService} from '../../shared/notification.service'
+import {completeSchuleAsString, Schule} from '../schule'
+import {AnzahlSus} from '../anzahl-sus'
 
 @Component({
   selector: 'app-zsb-schule-list',
@@ -18,6 +20,7 @@ export class ZsbSchuleListComponent implements OnInit {
 
   listData: MatTableDataSource<any>
   schulformen: Schulform[]
+  anzahlSus: AnzahlSus[]
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns: Array<string> = [
@@ -51,9 +54,11 @@ export class ZsbSchuleListComponent implements OnInit {
         this.listData = new MatTableDataSource(array)
         this.listData.sort = this.sort
         this.listData.paginator = this.paginator
+        this.buildCustomFilter()
       })
 
     this.service.getSchulform().subscribe(schulformen => this.schulformen = schulformen)
+    this.service.getAnzahlSus().subscribe(anzahlSus => this.anzahlSus = anzahlSus)
   }
 
   onSearchClear() {
@@ -63,6 +68,24 @@ export class ZsbSchuleListComponent implements OnInit {
 
   applyFilter() {
     this.listData.filter = this.searchKey.trim().toLowerCase()
+  }
+
+  buildCustomFilter() {
+    this.listData.filterPredicate = (schule: Schule, filter: string) => {
+      // split keyword by comma ,
+      const keywords = filter.split(',').map(it => it.trim())
+
+      // filter data for every keyword -> loop through keywords
+      let keywordsFound = true
+      keywords.forEach(keyword => {
+        if (!completeSchuleAsString(schule, this.schulformen, this.anzahlSus).toLowerCase().includes(keyword)) {
+          keywordsFound = false
+        }
+      })
+
+      // found all keywords
+      return keywordsFound
+    }
   }
 
   getSchulformById(id: number) {

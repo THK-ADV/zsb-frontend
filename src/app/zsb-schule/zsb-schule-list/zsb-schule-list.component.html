@@ -4,9 +4,11 @@
     Hinzufügen
   </button>
 
-  <mat-form-field class="search-form-field" floatLabel="never">
+  <mat-form-field class="search-form-field" floatLabel="never" matTooltipPosition="above"
+                  matTooltip="Mehrere Suchbegriffe können durch Komma getrennt eingegeben werden. Dabei werden nicht nur die derzeit in der Tabelle visualisierten Werte berücksichtigt, sondern alle zur Schule gehörigen Attribute.">
     <label>
-      <input matInput [(ngModel)]="searchKey" placeholder="Suche" autocomplete="off" (keyup)="applyFilter()">
+      <input matInput [(ngModel)]="searchKey" placeholder="Suchbegriffe getrennt durch Komma" autocomplete="off"
+             (keyup)="applyFilter()">
     </label>
     <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
       <mat-icon>close</mat-icon>
@@ -26,25 +28,28 @@
     <!-- schulform Column -->
     <ng-container matColumnDef="schulform">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Schulform</mat-header-cell>
-      <mat-cell [routerLink]="['/schulen', row.schule_id]" *matCellDef="let row">{{ getSchulformById(row.schulform) }}</mat-cell>
+      <mat-cell [routerLink]="['/schulen', row.schule_id]"
+                *matCellDef="let row">{{ getSchulformById(row.schulform) }}</mat-cell>
     </ng-container>
 
     <!-- schwerpunkt column -->
-<!--    <ng-container matColumnDef="schwerpunkt">-->
-<!--      <mat-header-cell *matHeaderCellDef mat-sort-header>schwerpunkt</mat-header-cell>-->
-<!--      <mat-cell *matCellDef="let row">{{row.schwerpunkt}}</mat-cell>-->
-<!--    </ng-container>-->
+    <!--    <ng-container matColumnDef="schwerpunkt">-->
+    <!--      <mat-header-cell *matHeaderCellDef mat-sort-header>schwerpunkt</mat-header-cell>-->
+    <!--      <mat-cell *matCellDef="let row">{{row.schwerpunkt}}</mat-cell>-->
+    <!--    </ng-container>-->
 
     <!-- adresse column -->
     <ng-container matColumnDef="adresse">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Adresse</mat-header-cell>
-      <mat-cell [routerLink]="['/schulen', row.schule_id]" *matCellDef="let row">{{row.adresse.strasse}}, {{row.adresse.hausnummer}}</mat-cell>
+      <mat-cell [routerLink]="['/schulen', row.schule_id]" *matCellDef="let row">{{row.adresse.strasse}}
+        , {{row.adresse.hausnummer}}</mat-cell>
     </ng-container>
 
     <!-- ort column column -->
     <ng-container matColumnDef="ort">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Ort</mat-header-cell>
-      <mat-cell [routerLink]="['/schulen', row.schule_id]" *matCellDef="let row">{{row.adresse.ort.plz}}, {{row.adresse.ort.bezeichnung}}</mat-cell>
+      <mat-cell [routerLink]="['/schulen', row.schule_id]" *matCellDef="let row">{{row.adresse.ort.plz}}
+        , {{row.adresse.ort.bezeichnung}}</mat-cell>
     </ng-container>
 
     <!-- schueleranzahl column -->
@@ -78,7 +83,7 @@
     </ng-container>
 
     <!-- edit and delete Column -->
-    <ng-container matColumnDef="actions" >
+    <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let row" class="actions-col">
         <button mat-icon-button [routerLink]="['/schulen', row.schule_id]" matTooltip="Schule editieren">
