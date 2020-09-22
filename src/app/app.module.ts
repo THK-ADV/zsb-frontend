@@ -41,6 +41,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker'
 import {MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core'
 import {MatTooltipModule} from '@angular/material/tooltip'
 import {ZsbBerichtComponent} from './zsb-veranstaltungen/zsb-bericht/zsb-bericht.component'
+import {ZsbInstitutionenComponent} from './zsb-institutionen/zsb-institutionen.component'
 
 const appRoutes: Routes = [
   {path: '', component: ZsbSchuleComponent},
@@ -48,7 +49,8 @@ const appRoutes: Routes = [
   {path: 'schulen/:schuleId/adresse/:adresseId', component: ZsbAdresseComponent},
   {path: 'schulen', component: ZsbSchuleDetailComponent},
   {path: 'veranstaltungen', component: ZsbVeranstaltungenComponent},
-  {path: 'veranstaltungen/:veranstaltungId', component: ZsbVeranstaltungenDetailComponent}
+  {path: 'veranstaltungen/:veranstaltungId', component: ZsbVeranstaltungenDetailComponent},
+  {path: 'institutionen', component: ZsbInstitutionenComponent}
 ]
 
 @NgModule({
@@ -63,7 +65,8 @@ const appRoutes: Routes = [
     ZsbVeranstaltungenComponent,
     ZsbVeranstaltungenListComponent,
     ZsbVeranstaltungenDetailComponent,
-    ZsbBerichtComponent
+    ZsbBerichtComponent,
+    ZsbInstitutionenComponent
   ],
   imports: [
     BrowserModule,
