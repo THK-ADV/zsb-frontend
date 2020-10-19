@@ -1,0 +1,7 @@
+form.normal-form {
+  margin: 10px;
+}
+
+form.normal-form > mat-form-field {
+  width: 100%;
+}

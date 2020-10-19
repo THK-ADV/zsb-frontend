@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser'
-import {NgModule} from '@angular/core'
+import {APP_INITIALIZER, NgModule} from '@angular/core'
 import {AppComponent} from './app.component'
 import {RouterModule, Routes} from '@angular/router'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
@@ -32,7 +32,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle'
 import {MatSlideToggleModule} from '@angular/material/slide-toggle'
 import {FlexLayoutModule} from '@angular/flex-layout'
 import {MatSidenavModule} from '@angular/material/sidenav'
-import {KeycloakAngularModule} from 'keycloak-angular'
+import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular'
 import {ZsbVeranstaltungenComponent} from './zsb-veranstaltungen/zsb-veranstaltungen.component'
 import {ZsbVeranstaltungenListComponent} from './zsb-veranstaltungen/zsb-veranstaltungen-list/zsb-veranstaltungen-list.component'
 import {DatePipe} from '@angular/common'
@@ -42,6 +42,9 @@ import {MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core'
 import {MatTooltipModule} from '@angular/material/tooltip'
 import {ZsbBerichtComponent} from './zsb-veranstaltungen/zsb-bericht/zsb-bericht.component'
 import {ZsbInstitutionenComponent} from './zsb-institutionen/zsb-institutionen.component'
+import {ZsbInstitutionenListComponent} from './zsb-institutionen/zsb-institutionen-list/zsb-institutionen-list.component'
+import {ZsbInstitutionenDetailComponent} from './zsb-institutionen/zsb-institutionen-detail/zsb-institutionen-detail.component'
+import {keycloakInitializer} from './authentication/keycloak.init'
 
 const appRoutes: Routes = [
   {path: '', component: ZsbSchuleComponent},
@@ -50,7 +53,8 @@ const appRoutes: Routes = [
   {path: 'schulen', component: ZsbSchuleDetailComponent},
   {path: 'veranstaltungen', component: ZsbVeranstaltungenComponent},
   {path: 'veranstaltungen/:veranstaltungId', component: ZsbVeranstaltungenDetailComponent},
-  {path: 'institutionen', component: ZsbInstitutionenComponent}
+  {path: 'institutionen', component: ZsbInstitutionenComponent},
+  {path: 'institutionen/:institutionId', component: ZsbInstitutionenDetailComponent},
 ]
 
 @NgModule({
@@ -66,7 +70,9 @@ const appRoutes: Routes = [
     ZsbVeranstaltungenListComponent,
     ZsbVeranstaltungenDetailComponent,
     ZsbBerichtComponent,
-    ZsbInstitutionenComponent
+    ZsbInstitutionenComponent,
+    ZsbInstitutionenListComponent,
+    ZsbInstitutionenDetailComponent
   ],
   imports: [
     BrowserModule,

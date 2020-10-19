@@ -1,0 +1,68 @@
+<div class="search-div">
+  <button mat-raised-button [routerLink]="['/institutionen/new']" color="primary">
+    <mat-icon>add</mat-icon>
+    Hinzufügen
+  </button>
+  <!--  'datum', 'bezeichnung', 'kategorie', 'thema'-->
+  <mat-form-field class="search-form-field" floatLabel="never" matTooltip="Suche ist hier noch nicht über mehrere Suchbegriffe möglich. Kommt aber noch.">
+    <label>
+      <input matInput [(ngModel)]="searchKey" placeholder="Suche" autocomplete="off" (keyup)="applyFilter()">
+    </label>
+    <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+
+<div class="mat-elevation-z8 data-table">
+  <mat-table [dataSource]="listData" matSort>
+
+    <!--  'datum', 'bezeichnung', 'kategorie', 'thema'-->
+    <!-- datum Column -->
+    <ng-container matColumnDef="bezeichnung">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Bezeichnung</mat-header-cell>
+      <mat-cell [routerLink]="['/institutionen', row.uuid]" *matCellDef="let row">{{row.bezeichnung}}</mat-cell>
+    </ng-container>
+
+    <!-- bezeichnung Column -->
+    <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>E-Mail</mat-header-cell>
+      <mat-cell [routerLink]="['/institutionen', row.uuid]" *matCellDef="let row">{{row.email}}</mat-cell>
+    </ng-container>
+
+    <!-- kategorie Column -->
+    <ng-container matColumnDef="ort">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Ort</mat-header-cell>
+      <mat-cell [routerLink]="['/institutionen', row.uuid]" *matCellDef="let row">{{row.adresse.ort.bezeichnung}}</mat-cell>
+    </ng-container>
+
+    <!-- edit and delete Column -->
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <button mat-icon-button [routerLink]="['/institutionen', row.uuid]" matTooltip="Veranstaltung editieren">
+          <mat-icon>edit</mat-icon> <!-- use launch or edit -->
+        </button>
+        <button mat-icon-button color="warn" matTooltip="Veranstaltung entfernen">
+          <mat-icon (click)="deleteInstitution(row.bezeichnung, row.uuid)">delete_outline</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="loading">
+      <mat-footer-cell *matFooterCellDef aria-colspan="6">Daten werden geladen...</mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="noData">
+      <mat-footer-cell *matFooterCellDef aria-colspan="6">Es sind keine Daten vorhanden.</mat-footer-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':listData!=null}"></mat-footer-row>
+    <mat-footer-row *matFooterRowDef="['noData']"
+                    [ngClass]="{'hide':!(listData!=null && listData.data.length==0)}"></mat-footer-row>
+
+  </mat-table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+</div>
