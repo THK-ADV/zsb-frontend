@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser'
-import {APP_INITIALIZER, NgModule} from '@angular/core'
+import {NgModule} from '@angular/core'
 import {AppComponent} from './app.component'
 import {RouterModule, Routes} from '@angular/router'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
@@ -44,7 +44,6 @@ import {ZsbBerichtComponent} from './zsb-veranstaltungen/zsb-bericht/zsb-bericht
 import {ZsbInstitutionenComponent} from './zsb-institutionen/zsb-institutionen.component'
 import {ZsbInstitutionenListComponent} from './zsb-institutionen/zsb-institutionen-list/zsb-institutionen-list.component'
 import {ZsbInstitutionenDetailComponent} from './zsb-institutionen/zsb-institutionen-detail/zsb-institutionen-detail.component'
-import {keycloakInitializer} from './authentication/keycloak.init'
 
 const appRoutes: Routes = [
   {path: '', component: ZsbSchuleComponent},
@@ -115,7 +114,13 @@ const appRoutes: Routes = [
     {
       provide: MAT_DATE_LOCALE,
       useValue: 'de-DE'
-    }
+    },
+    // {
+    //   provide: APP_INITIALIZER,
+    //   useFactory: keycloakInitializer,
+    //   multi: true,
+    //   deps: [KeycloakService],
+    // }
   ],
   bootstrap: [AppComponent]
   // entryComponents: [ZsbSchuleDetailComponent]
