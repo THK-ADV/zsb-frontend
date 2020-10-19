@@ -13,7 +13,7 @@ import {Veranstaltung} from '../zsb-veranstaltungen/veranstaltung'
 import {Kategorie} from '../zsb-veranstaltungen/kategorie'
 import {Stufe} from '../zsb-veranstaltungen/stufe'
 import {Vortragsart} from '../zsb-veranstaltungen/vortragsart'
-import {Institution} from '../zsb-veranstaltungen/institution'
+import {Institution} from '../zsb-institutionen/institution'
 import {Veranstalter} from '../zsb-veranstaltungen/veranstalter'
 import {Bericht} from '../zsb-veranstaltungen/zsb-bericht/bericht'
 import {Kooperationspartner} from '../zsb-schule/kooperationspartner'
@@ -174,8 +174,8 @@ export class DatabaseService {
     return this.httpClient.get<Vortragsart[]>(this.DB_URL + '/veranstaltungen/vortragsarten')
   }
 
-  getInstitutionen() {
-    return this.httpClient.get<Institution[]>(this.DB_URL + '/institutionen')
+  getAllInstitutionen() {
+    return this.httpClient.get<Institution[]>(this.DB_URL + '/institutionen?resolve_ids=true')
   }
 
   updateVeranstaltung(veranstaltung: Veranstaltung) {
@@ -212,5 +212,21 @@ export class DatabaseService {
 
   getKooperationspartner() {
     return this.httpClient.get<Kooperationspartner[]>(this.DB_URL + '/schulen/kooperationspartner')
+  }
+
+  deleteInstitution(uuid: string): Observable<any> {
+    return this.httpClient.delete(this.DB_URL + '/institutionen/' + uuid)
+  }
+
+  getInstitutionAtomic(uuid: string) {
+    return this.httpClient.get(this.DB_URL + '/institutionen/' + uuid + '?resolve_ids=true')
+  }
+
+  createInstitution(institution: Institution) {
+    return this.httpClient.post<Institution>(this.DB_URL + '/institutionen', institution)
+  }
+
+  updateInstitution(institution: Institution) {
+    return this.httpClient.put<Institution>(this.DB_URL + '/institutionen', institution)
   }
 }

@@ -7,7 +7,7 @@ import {Kategorie} from '../kategorie'
 import {Stufe} from '../stufe'
 import {Vortragsart} from '../vortragsart'
 import {Schule} from '../../zsb-schule/schule'
-import {Institution} from '../institution'
+import {Institution} from '../../zsb-institutionen/institution'
 import {AnzahlSus} from '../../zsb-schule/anzahl-sus'
 import {combineKontaktName, Kontakt} from '../../zsb-kontakt/kontakt'
 import {NotificationService} from '../../shared/notification.service'
@@ -48,7 +48,7 @@ export class ZsbVeranstaltungenDetailComponent implements OnInit {
     this.stufen = this.service.dbService.getStufen()
     this.vortragsarten = this.service.dbService.getVortragsarten()
     this.schulen = this.service.dbService.getSchulenAtomic()
-    this.institutionen = this.service.dbService.getInstitutionen()
+    this.institutionen = this.service.dbService.getAllInstitutionen()
     this.anzahlSus = this.service.dbService.getAnzahlSus()
     this.kontakte = this.service.dbService.getKontakte()
 

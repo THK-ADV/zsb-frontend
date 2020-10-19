@@ -32,7 +32,6 @@ export class VeranstaltungService {
     ablauf: new FormControl(''),
     durchlaeufe: new FormControl(''),
     berichtBtn: new FormControl({value: '', disabled: true}),
-    kontaktperson_id: new FormControl('', Validators.required),
     veranstalter_id: new FormControl(null)
   }, {validators: this.selectedVeranstalterRequired()})
 
@@ -68,7 +67,6 @@ export class VeranstaltungService {
       ablauf: '',
       durchlaeufe: '',
       berichtBtn: {value: '', disabled: true},
-      kontaktperson_id: '',
       veranstalter_id: null
     })
   }
@@ -91,7 +89,6 @@ export class VeranstaltungService {
       ablauf: veranstaltung.ablauf,
       durchlaeufe: veranstaltung.durchlaeufe,
       berichtBtn: {value: '', disabled: true},
-      kontaktperson_id: veranstaltung.kontaktperson_id,
       veranstalter_id: veranstaltung.veranstalter_id
     })
   }

@@ -1,6 +1,8 @@
 import {Observable} from 'rxjs'
 import {map, startWith} from 'rxjs/operators'
 import {AbstractControl} from '@angular/forms'
+import {Adresse} from '../zsb-adresse/adresse'
+import {Ort} from '../zsb-adresse/ort'
 
 export function filterDuplicates(array: string[]) {
   return array.filter((it, index) => array.indexOf(it) === index)
@@ -26,4 +28,8 @@ export function sortArrayAlphabetically(array: string[]): string[] {
     const textB = b.toUpperCase()
     return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
   })
+}
+
+export function getReadableAdresse(adresse: Adresse, ort: Ort) {
+  return (adresse.strasse + ' ' + adresse.hausnummer + ', ' + ort.plz + ' ' + ort.bezeichnung).trim()
 }

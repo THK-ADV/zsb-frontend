@@ -1,5 +1,5 @@
 import {Schule} from '../zsb-schule/schule'
-import {Institution} from './institution'
+import {Institution} from '../zsb-institutionen/institution'
 
 export interface Veranstalter {
   uuid: string

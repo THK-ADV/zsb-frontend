@@ -48,8 +48,8 @@
     <!-- ort column column -->
     <ng-container matColumnDef="ort">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Ort</mat-header-cell>
-      <mat-cell [routerLink]="['/schulen', row.schule_id]" *matCellDef="let row">{{row.adresse.ort.plz}}
-        , {{row.adresse.ort.bezeichnung}}</mat-cell>
+      <mat-cell [routerLink]="['/schulen', row.schule_id]" *matCellDef="let row">{{row.adresse.ort.plz}},
+        {{row.adresse.ort.bezeichnung}}</mat-cell>
     </ng-container>
 
     <!-- schueleranzahl column -->

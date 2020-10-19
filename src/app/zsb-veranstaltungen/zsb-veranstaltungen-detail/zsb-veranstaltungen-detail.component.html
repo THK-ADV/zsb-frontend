@@ -37,6 +37,21 @@
     <mat-error>Ihre Eingabe wird benötigt.</mat-error>
   </mat-form-field>
   <br>
+
+
+  <!-- berichtBtn -->
+  <div *ngIf="this.veranstalterId !== undefined">
+    <div *ngIf="bericht === undefined else berichtAnpassen">
+      <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
+              (click)="editBericht()">Bericht erstellen
+      </button>
+    </div>
+    <ng-template #berichtAnpassen>
+      <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
+              (click)="editBericht(this.bericht)">Bericht anpassen
+      </button>
+    </ng-template>
+  </div>
   <br>
   <br>
 
@@ -148,40 +163,6 @@
     <mat-error>Ihre Eingabe wird benötigt.</mat-error>
   </mat-form-field>
   <br>
-
-  <!-- berichtBtn -->
-  <div *ngIf="this.veranstalterId !== undefined">
-    <div *ngIf="bericht === undefined else berichtAnpassen">
-      <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
-              (click)="editBericht()">Bericht erstellen
-      </button>
-    </div>
-    <ng-template #berichtAnpassen>
-      <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
-              (click)="editBericht(this.bericht)">Bericht anpassen
-      </button>
-    </ng-template>
-  </div>
-
-  <!--  <mat-form-field>-->
-  <!--    <label>-->
-  <!--      <input formControlName="berichtBtn" matInput placeholder="Bericht">-->
-  <!--    </label>-->
-  <!--    <mat-icon matSuffix>edit</mat-icon>-->
-  <!--  </mat-form-field>-->
-  <br>
-
-  <!-- kontakt -->
-  <mat-form-field>
-    <mat-select formControlName="kontaktperson_id" placeholder="Kontakt*">
-      <ng-container *ngFor="let it of kontakte | async">
-        <mat-option [value]="it.uuid">
-          {{combineKontaktName(it)}} <br>
-        </mat-option>
-      </ng-container>
-    </mat-select>
-    <mat-error>Bitte wählen Sie eine Vortragsart aus.</mat-error>
-  </mat-form-field>
   <br>
 
   <div class="btn-row">
