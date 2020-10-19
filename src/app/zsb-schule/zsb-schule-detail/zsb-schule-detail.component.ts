@@ -2,13 +2,12 @@ import {Component, OnInit} from '@angular/core'
 import {ActivatedRoute} from '@angular/router'
 import {DatabaseService} from '../../shared/database.service'
 import {Observable} from 'rxjs'
-import {Ort} from '../../zsb-adresse/ort'
 import {Adresse} from '../../zsb-adresse/adresse'
 import {SchuleService} from '../../shared/schule.service'
 import {NotificationService} from '../../shared/notification.service'
 import {Schulform} from '../schulform'
 import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog'
-import {ZsbAdresseComponent} from '../../zsb-adresse/zsb-adresse.component'
+import {AdresseStatus} from '../../zsb-adresse/zsb-adresse.component'
 import {AdresseService} from '../../shared/adresse.service'
 import {AnzahlSus} from '../anzahl-sus'
 import {Kontakt, KontaktFunktion} from '../../zsb-kontakt/kontakt'
@@ -23,8 +22,9 @@ import {Kooperationspartner} from '../kooperationspartner'
   styleUrls: ['./zsb-schule-detail.component.css']
 })
 export class ZsbSchuleDetailComponent implements OnInit {
-  schuleId
-  orteObservable: Observable<Ort[]>
+
+  private adresse: Adresse
+  schuleId: string
   adressenObservable: Observable<Adresse[]>
   schulformen: Observable<Schulform[]>
   anzahlSusRanges: Observable<AnzahlSus[]>
@@ -46,7 +46,6 @@ export class ZsbSchuleDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.service.initializeFormGroup()
-    this.orteObservable = this.dbService.getOrte()
     this.adressenObservable = this.dbService.getAdressen()
 
     this.schulformen = this.dbService.getSchulform()
@@ -90,9 +89,9 @@ export class ZsbSchuleDetailComponent implements OnInit {
     })
     schule.kontakte = cleanedKontakte
 
-    if (this.adresseService.currentAdresse !== undefined) {
-      schule.ort = this.adresseService.currentAdresse.ort
-      schule.adresse = this.adresseService.currentAdresse
+    if (this.adresse !== undefined) {
+      schule.ort = this.adresse.ort
+      schule.adresse = this.adresse
       this.service.insertOrUpdateSchule(schule, this.notificationService)
     } else {
       schule.adress_id = this.adresseId
@@ -109,22 +108,26 @@ export class ZsbSchuleDetailComponent implements OnInit {
   }
 
   changeAdresse() {
-    const dialogConfig = new MatDialogConfig()
-    dialogConfig.disableClose = true
-    dialogConfig.width = '40%'
+    if (this.adresseId === undefined) this.adresseId = null
 
-    this.adresseService.currentAdresseId = this.adresseId
-    this.adresseService.currentSchuleId = this.schuleId
-    this.dialog.open(ZsbAdresseComponent, dialogConfig)
+    AdresseService.openAdresseDialog(this.dialog, this.adresseId)
+      .subscribe(adresseResult => {
+        if (adresseResult === undefined) {
+          this.notificationService.failure('Adresse konnte nicht aktualisiert werden.')
+          return
+        }
 
-    this.dialog.afterAllClosed.subscribe(() => {
-      const adresse = this.adresseService.currentAdresse
-      if (adresse !== undefined) {
-        this.service.formGroup.patchValue(
-          {adresse: this.service.getReadableAdresse(adresse, adresse.ort)}
-        )
-      }
-    })
+        if (adresseResult.status === AdresseStatus.CANCELLATION) return
+
+        // adresse update
+        this.adresse = adresseResult.adresse
+        this.notificationService.success('Adresse aktualisiert.')
+        if (this.adresse !== undefined) {
+          this.service.formGroup.patchValue(
+            {adresse: this.service.getReadableAdresse(this.adresse, this.adresse.ort)}
+          )
+        }
+      })
   }
 
   getFormValidationErrors() {

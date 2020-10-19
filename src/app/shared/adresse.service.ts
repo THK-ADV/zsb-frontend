@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core'
 import {FormControl, FormGroup, Validators} from '@angular/forms'
-import {Schule} from '../zsb-schule/schule'
 import {Adresse} from '../zsb-adresse/adresse'
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
+import {AdresseResult, ZsbAdresseComponent} from '../zsb-adresse/zsb-adresse.component'
+import {Observable} from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +12,6 @@ export class AdresseService {
 
   constructor() {
   }
-
-  public currentSchuleId: string = undefined
-  public currentAdresseId: string = undefined
-  public currentAdresse: Adresse = undefined
 
   public formGroup: FormGroup = new FormGroup({
     adresseId: new FormControl(null),
@@ -24,6 +22,23 @@ export class AdresseService {
     strasse: new FormControl('', Validators.required),
     hausnummer: new FormControl('', Validators.required)
   })
+
+  static getStandardDialogConfig(): MatDialogConfig {
+    const config = new MatDialogConfig()
+    config.disableClose = true
+    config.width = '40%'
+    return config
+  }
+
+  static openAdresseDialog(
+    dialog: MatDialog,
+    uuid?: string,
+    config: MatDialogConfig = this.getStandardDialogConfig()
+  ): Observable<AdresseResult> {
+    const ref = dialog.open(ZsbAdresseComponent, config)
+    ref.componentInstance.adresseId = uuid
+    return ref.afterClosed()
+  }
 
   initializeFormGroup() {
     this.formGroup.setValue({
@@ -37,15 +52,16 @@ export class AdresseService {
     })
   }
 
-  loadAdresseFromSchule(schule: Schule) {
+  loadAdresse(adresse: Adresse) {
     this.formGroup.setValue({
-      adresseId: schule.adress_id,
-      regierungsbezirk: schule.adresse.ort.regierungsbezirk,
-      kreis: schule.adresse.ort.kreis,
-      plz: schule.adresse.ort.plz,
-      bezeichnung: schule.adresse.ort.bezeichnung,
-      strasse: schule.adresse.strasse,
-      hausnummer: schule.adresse.hausnummer
+      adresseId: adresse.adress_id,
+      regierungsbezirk: adresse.ort.regierungsbezirk,
+      kreis: adresse.ort.kreis,
+      plz: adresse.ort.plz,
+      bezeichnung: adresse.ort.bezeichnung,
+      strasse: adresse.strasse,
+      hausnummer: adresse.hausnummer
     })
   }
+
 }

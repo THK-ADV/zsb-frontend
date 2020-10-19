@@ -27,11 +27,8 @@ export class ZsbAdresseComponent implements OnInit {
   adressenObservable: Observable<Adresse[]>
   adressen: Adresse[]
 
-  schuleId: string
-  adresseId: string
-  ortId: string
-
-  initialAdresse: Adresse
+  public adresseId: string // filled via dialog
+  private adresse: Adresse
 
   // options for all autocomplete inputs
   regierungsbezirkOptions: string[] = []
@@ -48,7 +45,7 @@ export class ZsbAdresseComponent implements OnInit {
   filteredHausnummerOptions: Observable<string[]>
 
   private static equalsWithoutId(adresseA: Adresse, adresseB: Adresse): boolean {
-    return adresseA.strasse === adresseA.strasse
+    return adresseA.strasse === adresseB.strasse
       && adresseA.hausnummer === adresseB.hausnummer
       && adresseA.ort.regierungsbezirk === adresseB.ort.regierungsbezirk
       && adresseA.ort.kreis === adresseB.ort.kreis
@@ -59,11 +56,22 @@ export class ZsbAdresseComponent implements OnInit {
   ngOnInit(): void {
     this.service.initializeFormGroup()
     this.loadDataFromDB()
+    this.initAutocomplete()
 
-    this.schuleId = this.service.currentSchuleId
-    this.adresseId = this.service.currentAdresseId
+    if (this.adresseId === undefined) {
+      console.log('Adresse ID not given.')
+      return
+    }
 
-    // init autocomplete
+    // not a uuid --> load empty form
+    if (this.adresseId === null) {
+      return
+    }
+
+    this.loadAdresseById(this.adresseId)
+  }
+
+  initAutocomplete() {
     this.adressenObservable.subscribe(adressen => {
       // get all values and filter duplicates
       this.regierungsbezirkOptions = filterDuplicates(adressen.map(it => it.ort.regierungsbezirk.trim()))
@@ -74,31 +82,17 @@ export class ZsbAdresseComponent implements OnInit {
       this.hausnummerOptions = filterDuplicates(adressen.map(it => it.hausnummer.trim()))
 
       this.updateAutocomplete()
-
-      // load data from schule (if given)
-      if (this.schuleId != null && this.adresseId != null) {
-        this.initialAdresse = this.dbService.getAdresseFromArrayByAdressId(adressen, this.adresseId)
-        this.ortId = this.initialAdresse.ort_id
-
-        this.schuleObservable = this.dbService.getSchuleByIdAtomic(this.schuleId)
-        this.schuleObservable.subscribe(schule => {
-          if (this.adresseId !== schule.adress_id) {
-            console.log('Given should be equal to requested: ' + this.adresseId + ' === ' + schule.adress_id)
-            console.log('given adresseId does not match with schule.adress_id; using schule.adress_id')
-            this.adresseId = schule.adress_id
-          }
-
-          this.service.loadAdresseFromSchule(schule)
-        })
-      } else {
-        this.schuleObservable = undefined
-        this.adressenObservable = undefined
-      }
     })
   }
 
 
   onSubmit() {
+    let adresseId = null
+    if (this.adresseId !== null) {
+      adresseId = this.adresse.adress_id
+    }
+
+    // maybe save ort id if nothing has changed. Should be covered by backend but would be cleaner here
     const newOrt: Ort = {
       regierungsbezirk: this.service.formGroup.value.regierungsbezirk,
       kreis: this.service.formGroup.value.kreis,
@@ -107,24 +101,33 @@ export class ZsbAdresseComponent implements OnInit {
       ort_id: undefined
     }
 
-    this.service.currentAdresse = {
-      adress_id: undefined,
+    const newAdresse = {
+      adress_id: adresseId,
       strasse: this.service.formGroup.value.strasse,
       hausnummer: this.service.formGroup.value.hausnummer,
       ort_id: undefined,
       ort: newOrt
     }
 
-    if (this.initialAdresse !== undefined && ZsbAdresseComponent.equalsWithoutId(this.service.currentAdresse, this.initialAdresse)) {
-      this.service.currentAdresse = undefined
+    if (this.adresse !== undefined && ZsbAdresseComponent.equalsWithoutId(this.adresse, newAdresse)) {
       console.log('Nothing changed here.')
+      this.dialogRef.close(new AdresseResult(this.adresse, AdresseStatus.NO_CHANGES))
+    } else {
+      console.log('return new/updated adresse')
+      this.dbService.updateOrCreateOrt(newOrt).subscribe(ort => {
+        newAdresse.ort_id = ort.ort_id
+        this.dbService.updateOrCreateAdresse(newAdresse)
+          .subscribe(result => {
+            if (result === undefined) {
+              this.dialogRef.close(new AdresseResult(null, AdresseStatus.FAILURE))
+            } else {
+              this.dbService.getAdresseAtomicById(result.adress_id).subscribe(atomicAdresse => {
+                this.dialogRef.close(new AdresseResult(atomicAdresse, AdresseStatus.UPDATED))
+              })
+            }
+          })
+      })
     }
-
-    this.onClose()
-  }
-
-  onClose() {
-    this.dialogRef.close()
   }
 
   private loadDataFromDB() {
@@ -146,4 +149,27 @@ export class ZsbAdresseComponent implements OnInit {
   }
 
 
+  private loadAdresseById(adresseId: string) {
+    this.dbService.getAdresseAtomicById(adresseId)
+      .subscribe(adresse => {
+        this.adresse = adresse
+        this.service.loadAdresse(adresse)
+      })
+  }
+
+  onCancel() {
+    this.dialogRef.close(new AdresseResult(null, AdresseStatus.CANCELLATION))
+  }
 }
+
+export class AdresseResult {
+  adresse: Adresse
+  status: AdresseStatus
+
+  constructor(adresse: Adresse, status: AdresseStatus) {
+    this.adresse = adresse
+    this.status = status
+  }
+}
+
+export enum AdresseStatus { UPDATED, NO_CHANGES, CANCELLATION, FAILURE }

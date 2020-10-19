@@ -48,6 +48,10 @@ export class DatabaseService {
       )
   }
 
+  getAdresseAtomicById(uuid: string) {
+    return this.httpClient.get<Adresse>(this.DB_URL + '/adressen/' + uuid + '?resolve_ids=true')
+  }
+
   updateOrCreateAdresse(adresse: Adresse) {
     return this.httpClient.put<Adresse>(this.DB_URL + '/adressen', adresse)
   }
