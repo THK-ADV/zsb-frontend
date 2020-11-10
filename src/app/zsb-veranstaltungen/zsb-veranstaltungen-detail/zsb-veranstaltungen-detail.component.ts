@@ -5,10 +5,8 @@ import {ActivatedRoute} from '@angular/router'
 import {Observable} from 'rxjs'
 import {Kategorie} from '../kategorie'
 import {Stufe} from '../stufe'
-import {Vortragsart} from '../vortragsart'
 import {Schule} from '../../zsb-schule/schule'
 import {Institution} from '../../zsb-institutionen/institution'
-import {AnzahlSus} from '../../zsb-schule/anzahl-sus'
 import {combineKontaktName, Kontakt} from '../../zsb-kontakt/kontakt'
 import {NotificationService} from '../../shared/notification.service'
 import {Bericht} from '../zsb-bericht/bericht'
@@ -22,12 +20,9 @@ import {ZsbBerichtComponent} from '../zsb-bericht/zsb-bericht.component'
 export class ZsbVeranstaltungenDetailComponent implements OnInit {
   public kategorien: Observable<Kategorie[]>
   public stufen: Observable<Stufe[]>
-  public vortragsarten: Observable<Vortragsart[]>
   public schulen: Observable<Schule[]>
   public institutionen: Observable<Institution[]>
   public veranstalterId: string = undefined
-  public anzahlSus: Observable<AnzahlSus[]>
-  public kontakte: Observable<Kontakt[]>
   public bericht: Bericht = undefined
   public veranstalterIsSchule = true
 
@@ -46,11 +41,8 @@ export class ZsbVeranstaltungenDetailComponent implements OnInit {
     // initialize lists for all dropdowns
     this.kategorien = this.service.dbService.getKategorien()
     this.stufen = this.service.dbService.getStufen()
-    this.vortragsarten = this.service.dbService.getVortragsarten()
     this.schulen = this.service.dbService.getSchulenAtomic()
     this.institutionen = this.service.dbService.getAllInstitutionen()
-    this.anzahlSus = this.service.dbService.getAnzahlSus()
-    this.kontakte = this.service.dbService.getKontakte()
 
     // check routeParam
     this.route.paramMap.subscribe(paramMap => {
@@ -81,11 +73,6 @@ export class ZsbVeranstaltungenDetailComponent implements OnInit {
   private initVeranstalterToggle() {
     this.service.getDetailForm().get('veranstalterToggle').valueChanges.subscribe(isSchule => {
       this.veranstalterIsSchule = isSchule
-      if (isSchule) {
-        // TODO hide institution relevant kategorien
-      } else {
-        // TODO hide schule relevant kategorien
-      }
     })
   }
 

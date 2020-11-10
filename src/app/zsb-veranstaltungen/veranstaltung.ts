@@ -4,11 +4,11 @@ export interface Veranstaltung {
   uuid: string
   bezeichnung: string
   veranstalter_id: string
-  kategorie: number
+  kategorie: number[]
   thema: string
   datum: string
-  anzahlSus: number
-  stufe: number
+  anzahlSus: string
+  stufe: number[]
   ablauf: string
   durchlaeufe: string
   ansprechpartner: string
