@@ -1,0 +1,30 @@
+<!--<p>zsb-adresse works!</p>-->
+<h1>Brief generieren</h1>
+<form [formGroup]="formGroup" class="letter-form">
+
+  <div class="controls-container">
+    <mat-form-field class="full-width">
+      <label>
+        <textarea formControlName="msg" matInput placeholder="Nachricht"></textarea>
+      </label>
+    </mat-form-field>
+    <br>
+
+    <mat-form-field>
+      <mat-select formControlName="signature_id" placeholder="Signatur">
+        <ng-container *ngFor="let signature of signatures | async">
+          <mat-option [value]="signature.id">
+            {{signature.desc}} <br>
+          </mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="btn-row">
+      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="formGroup.invalid">
+        Brief generieren
+      </button>
+      <button mat-raised-button color="warn" (click)="onCancel()">Abbrechen</button>
+    </div>
+  </div>
+</form>

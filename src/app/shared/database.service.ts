@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core'
-import {HttpClient} from '@angular/common/http'
+import {HttpClient, HttpHeaders} from '@angular/common/http'
 import {Schule} from '../zsb-schule/schule'
 import {Adresse} from '../zsb-adresse/adresse'
 import {catchError, retry} from 'rxjs/operators'
@@ -17,6 +17,8 @@ import {Institution} from '../zsb-institutionen/institution'
 import {Veranstalter} from '../zsb-veranstaltungen/veranstalter'
 import {Bericht} from '../zsb-veranstaltungen/zsb-bericht/bericht'
 import {Kooperationspartner} from '../zsb-schule/kooperationspartner'
+import {Signature} from '../zsb-communication/zsb-letter/signature'
+import {Letter} from '../zsb-communication/zsb-letter/letter'
 
 @Injectable({
   providedIn: 'root'
@@ -232,5 +234,18 @@ export class DatabaseService {
 
   updateInstitution(institution: Institution) {
     return this.httpClient.put<Institution>(this.DB_URL + '/institutionen', institution)
+  }
+
+  getSignatures() {
+    return this.httpClient.get<Signature[]>(this.DB_URL + '/assets')
+  }
+
+  createLetter(letter: Letter): Observable<Blob> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8')
+    return this.httpClient.post(
+      this.DB_URL + '/serialletter',
+      letter,
+      { headers, responseType: 'blob'}
+    )
   }
 }

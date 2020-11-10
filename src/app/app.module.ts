@@ -32,7 +32,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle'
 import {MatSlideToggleModule} from '@angular/material/slide-toggle'
 import {FlexLayoutModule} from '@angular/flex-layout'
 import {MatSidenavModule} from '@angular/material/sidenav'
-import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular'
+import {KeycloakAngularModule} from 'keycloak-angular'
 import {ZsbVeranstaltungenComponent} from './zsb-veranstaltungen/zsb-veranstaltungen.component'
 import {ZsbVeranstaltungenListComponent} from './zsb-veranstaltungen/zsb-veranstaltungen-list/zsb-veranstaltungen-list.component'
 import {DatePipe} from '@angular/common'
@@ -44,6 +44,8 @@ import {ZsbBerichtComponent} from './zsb-veranstaltungen/zsb-bericht/zsb-bericht
 import {ZsbInstitutionenComponent} from './zsb-institutionen/zsb-institutionen.component'
 import {ZsbInstitutionenListComponent} from './zsb-institutionen/zsb-institutionen-list/zsb-institutionen-list.component'
 import {ZsbInstitutionenDetailComponent} from './zsb-institutionen/zsb-institutionen-detail/zsb-institutionen-detail.component'
+import {ZsbLetterComponent} from './zsb-communication/zsb-letter/zsb-letter.component'
+import {ZsbEmailComponent} from './zsb-communication/zsb-email/zsb-email.component'
 
 const appRoutes: Routes = [
   {path: '', component: ZsbSchuleComponent},
@@ -71,7 +73,9 @@ const appRoutes: Routes = [
     ZsbBerichtComponent,
     ZsbInstitutionenComponent,
     ZsbInstitutionenListComponent,
-    ZsbInstitutionenDetailComponent
+    ZsbInstitutionenDetailComponent,
+    ZsbLetterComponent,
+    ZsbEmailComponent
   ],
   imports: [
     BrowserModule,

@@ -20,6 +20,15 @@
   <mat-table [dataSource]="listData" matSort>
 
     <!-- schulname Column -->
+    <ng-container matColumnDef="select">
+      <mat-header-cell *matHeaderCellDef [ngClass]="'w-02'"></mat-header-cell>
+      <mat-cell *matCellDef="let row" class="actions-col" [ngClass]="'w-02'">
+        <mat-checkbox [checked]="this.shouldRowBeSelected(row.schule_id)"
+                      (change)="toggleSelectedSchule(row.schule_id)"></mat-checkbox>
+      </mat-cell>
+    </ng-container>
+
+    <!-- schulname Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
       <mat-cell [routerLink]="['/schulen', row.schule_id]" *matCellDef="let row">{{row.name}}</mat-cell>
@@ -111,4 +120,16 @@
 
   </mat-table>
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+</div>
+
+<div class="mail-div">
+  <button mat-stroked-button (click)="openEmailDialog()" color="primary">
+    <mat-icon>mail_outline</mat-icon>
+    E-Mail senden
+  </button>
+
+  <button mat-stroked-button (click)="openLetterDialog()" color="primary">
+    <mat-icon>mail</mat-icon>
+    Brief generieren
+  </button>
 </div>

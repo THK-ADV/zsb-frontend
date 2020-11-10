@@ -7,6 +7,8 @@ import {Schulform} from '../schulform'
 import {NotificationService} from '../../shared/notification.service'
 import {completeSchuleAsString, Schule} from '../schule'
 import {AnzahlSus} from '../anzahl-sus'
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
+import {ZsbLetterComponent} from '../../zsb-communication/zsb-letter/zsb-letter.component'
 
 @Component({
   selector: 'app-zsb-schule-list',
@@ -21,9 +23,11 @@ export class ZsbSchuleListComponent implements OnInit {
   listData: MatTableDataSource<any>
   schulformen: Schulform[]
   anzahlSus: AnzahlSus[]
+  private selectedSchulenIds: string[] = []
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns: Array<string> = [
+    'select',
     'name',
     'schulform',
     // 'schwerpunkt',
@@ -39,7 +43,8 @@ export class ZsbSchuleListComponent implements OnInit {
   ]
 
   constructor(private service: DatabaseService,
-              private notificationService: NotificationService
+              private notificationService: NotificationService,
+              private dialog: MatDialog
   ) {
   }
 
@@ -59,6 +64,7 @@ export class ZsbSchuleListComponent implements OnInit {
 
     this.service.getSchulform().subscribe(schulformen => this.schulformen = schulformen)
     this.service.getAnzahlSus().subscribe(anzahlSus => this.anzahlSus = anzahlSus)
+    this.selectedSchulenIds = []
   }
 
   onSearchClear() {
@@ -107,5 +113,39 @@ export class ZsbSchuleListComponent implements OnInit {
         }
       })
     }
+  }
+
+  toggleSelectedSchule(schuleId: string) {
+    if (this.shouldRowBeSelected(schuleId)) {
+      this.selectedSchulenIds = this.selectedSchulenIds.filter(id => id !== schuleId)
+    } else {
+      this.selectedSchulenIds.push(schuleId)
+    }
+  }
+
+  shouldRowBeSelected(schuleId: string): boolean {
+    return this.selectedSchulenIds.some(id => id === schuleId)
+  }
+
+  warnIfSelectedSchulenIsEmpty(): boolean {
+    if (this.selectedSchulenIds.length === 0) {
+      alert('Bitte wählen Sie zuerst mind. eine Schule aus.')
+      return true
+    }
+    return false
+  }
+
+  openLetterDialog() {
+    if (this.warnIfSelectedSchulenIsEmpty()) return
+    const dialogConfig = new MatDialogConfig()
+    dialogConfig.disableClose = true
+    dialogConfig.width = '30%'
+    const dialogRef = this.dialog.open(ZsbLetterComponent, dialogConfig)
+    dialogRef.componentInstance.addresseesIds = this.selectedSchulenIds
+  }
+
+  openEmailDialog() {
+    if (this.warnIfSelectedSchulenIsEmpty()) return
+    alert('Funktionalität ist noch in Arbeit. Folgt in Kürze.')
   }
 }
