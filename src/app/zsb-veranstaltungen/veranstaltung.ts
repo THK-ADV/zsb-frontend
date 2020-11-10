@@ -6,11 +6,11 @@ export interface Veranstaltung {
   veranstalter_id: string
   kategorie: number
   thema: string
-  vortragsart: number
   datum: string
   anzahlSus: number
   stufe: number
   ablauf: string
   durchlaeufe: string
+  ansprechpartner: string
   veranstalter?: Veranstalter
 }

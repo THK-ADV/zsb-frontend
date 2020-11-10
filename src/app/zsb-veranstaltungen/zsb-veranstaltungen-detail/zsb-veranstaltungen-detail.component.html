@@ -132,21 +132,6 @@
   </mat-form-field>
   <br>
 
-  <!-- vortragsart -->
-  <mat-form-field>
-    <mat-select formControlName="vortragsart" placeholder="Vortragsart">
-      <ng-container *ngFor="let it of vortragsarten | async">
-        <mat-option [value]="it.id">
-          {{it.desc}} <br>
-        </mat-option>
-      </ng-container>
-    </mat-select>
-    <mat-error>Bitte wählen Sie eine Vortragsart aus.</mat-error>
-  </mat-form-field>
-  <br>
-  <br>
-  <br>
-
   <!-- ablaufUndBewertung -->
   <mat-form-field>
     <label>
@@ -161,6 +146,15 @@
       <input formControlName="durchlaeufe" matInput placeholder="Durchläufe">
     </label>
     <mat-error>Ihre Eingabe wird benötigt.</mat-error>
+  </mat-form-field>
+  <br>
+  <br>
+
+  <!-- ansprechpartner -->
+  <mat-form-field>
+    <label>
+      <input formControlName="ansprechpartner" matInput placeholder="Ansprechpartner">
+    </label>
   </mat-form-field>
   <br>
   <br>

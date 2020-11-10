@@ -28,9 +28,9 @@ export class VeranstaltungService {
     kategorie: new FormControl(0, Validators.required),
     stufe: new FormControl(0, Validators.required),
     anzahlSus: new FormControl(0, Validators.required),
-    vortragsart: new FormControl(0, Validators.required),
     ablauf: new FormControl(''),
     durchlaeufe: new FormControl(''),
+    ansprechpartner: new FormControl(''),
     berichtBtn: new FormControl({value: '', disabled: true}),
     veranstalter_id: new FormControl(null)
   }, {validators: this.selectedVeranstalterRequired()})
@@ -63,9 +63,9 @@ export class VeranstaltungService {
       kategorie: 0,
       stufe: 0,
       anzahlSus: 0,
-      vortragsart: 0,
       ablauf: '',
       durchlaeufe: '',
+      ansprechpartner: '',
       berichtBtn: {value: '', disabled: true},
       veranstalter_id: null
     })
@@ -85,9 +85,9 @@ export class VeranstaltungService {
       kategorie: veranstaltung.kategorie,
       stufe: veranstaltung.stufe,
       anzahlSus: veranstaltung.anzahlSus,
-      vortragsart: veranstaltung.vortragsart,
       ablauf: veranstaltung.ablauf,
       durchlaeufe: veranstaltung.durchlaeufe,
+      ansprechpartner: veranstaltung.ansprechpartner,
       berichtBtn: {value: '', disabled: true},
       veranstalter_id: veranstaltung.veranstalter_id
     })
