@@ -6,6 +6,8 @@ import {Kategorie} from '../zsb-veranstaltungen/kategorie'
 import {FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms'
 import {NotificationService} from './notification.service'
 import {Veranstalter} from '../zsb-veranstaltungen/veranstalter'
+import {Institution} from '../zsb-institutionen/institution'
+import {Schule} from '../zsb-schule/schule'
 
 @Injectable({
   providedIn: 'root'
@@ -162,5 +164,19 @@ export class VeranstaltungService {
 
       return null
     }
+  }
+
+  initFormWithSchule(schule: Schule) {
+    this.detailForm.patchValue({
+      veranstalterToggle: true,
+      schule: schule.schule_id,
+    })
+  }
+
+  initFormWithInstitution(institution: Institution) {
+    this.detailForm.patchValue({
+      veranstalterToggle: false,
+      institution: institution.uuid,
+    })
   }
 }

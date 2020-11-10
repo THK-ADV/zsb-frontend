@@ -7,10 +7,10 @@ import {Kategorie} from '../kategorie'
 import {Stufe} from '../stufe'
 import {Schule} from '../../zsb-schule/schule'
 import {Institution} from '../../zsb-institutionen/institution'
-import {combineKontaktName, Kontakt} from '../../zsb-kontakt/kontakt'
 import {NotificationService} from '../../shared/notification.service'
 import {Bericht} from '../zsb-bericht/bericht'
 import {ZsbBerichtComponent} from '../zsb-bericht/zsb-bericht.component'
+import {DatabaseService} from '../../shared/database.service'
 
 @Component({
   selector: 'app-zsb-veranstaltungen-detail',
@@ -22,12 +22,13 @@ export class ZsbVeranstaltungenDetailComponent implements OnInit {
   public stufen: Observable<Stufe[]>
   public schulen: Observable<Schule[]>
   public institutionen: Observable<Institution[]>
-  public veranstalterId: string = undefined
+  public veranstaltungId: string = undefined
   public bericht: Bericht = undefined
   public veranstalterIsSchule = true
 
   constructor(
     public service: VeranstaltungService,
+    private dbService: DatabaseService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private notificationService: NotificationService
@@ -44,13 +45,41 @@ export class ZsbVeranstaltungenDetailComponent implements OnInit {
     this.schulen = this.service.dbService.getSchulenAtomic()
     this.institutionen = this.service.dbService.getAllInstitutionen()
 
+
     // check routeParam
     this.route.paramMap.subscribe(paramMap => {
       const parameter = paramMap.get('veranstaltungId')
-      if (parameter !== 'new') {
-        this.veranstalterId = parameter
+      if (parameter === 'new') {
+        this.checkQueryParametersAndPreloadAvailableData()
+      } else {
+        this.veranstaltungId = parameter
         this.loadVeranstaltung(parameter)
       }
+    })
+  }
+
+  private checkQueryParametersAndPreloadAvailableData() {
+    this.route.queryParams.subscribe(params => {
+      const copyId = params.copy
+      const schuleId = params.schule_id
+      const institutionId = params.institution_id
+      if (copyId !== undefined) {
+        this.loadVeranstaltungWithoutId(copyId)
+        return
+      }
+      if (schuleId !== undefined) {
+        this.loadNewFormWithPreFilledSchule(schuleId)
+      }
+      if (institutionId !== undefined) {
+        this.loadNewFormWithPreFilledInstitution(institutionId)
+      }
+    })
+  }
+
+  private loadVeranstaltungWithoutId(uuid: string) {
+    this.service.dbService.getVeranstaltungById(uuid).subscribe(veranstaltung => {
+      veranstaltung.uuid = null
+      this.service.loadFormData(veranstaltung)
     })
   }
 
@@ -64,10 +93,6 @@ export class ZsbVeranstaltungenDetailComponent implements OnInit {
         })
       })
     })
-  }
-
-  combineKontaktName(kontakt: Kontakt) {
-    return combineKontaktName(kontakt)
   }
 
   private initVeranstalterToggle() {
@@ -98,8 +123,22 @@ export class ZsbVeranstaltungenDetailComponent implements OnInit {
     dialogRef.componentInstance.veranstaltungId = this.service.getDetailForm().controls.uuid.value
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result === undefined) return
+      if (result === undefined) {
+        return
+      }
       this.bericht = result
+    })
+  }
+
+  private loadNewFormWithPreFilledSchule(schuleId: string) {
+    this.dbService.getSchuleByIdAtomic(schuleId).subscribe(schule => {
+      this.service.initFormWithSchule(schule)
+    })
+  }
+
+  private loadNewFormWithPreFilledInstitution(institutionId: any) {
+    this.dbService.getInstitutionByIdAtomic(institutionId).subscribe( institution => {
+      this.service.initFormWithInstitution(institution)
     })
   }
 }

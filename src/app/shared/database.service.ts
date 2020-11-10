@@ -25,6 +25,7 @@ import {Letter} from '../zsb-communication/zsb-letter/letter'
 })
 export class DatabaseService {
   private readonly DB_URL: string
+  private readonly ATOMIC: string = '?resolve_ids=true'
 
   constructor(
     private httpClient: HttpClient
@@ -247,5 +248,9 @@ export class DatabaseService {
       letter,
       { headers, responseType: 'blob'}
     )
+  }
+
+  getInstitutionByIdAtomic(institutionId: string) {
+    return this.httpClient.get<Institution>(this.DB_URL + '/institutionen/' + institutionId + this.ATOMIC)
   }
 }

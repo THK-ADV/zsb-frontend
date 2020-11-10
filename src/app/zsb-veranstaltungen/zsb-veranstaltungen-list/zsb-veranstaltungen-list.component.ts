@@ -76,10 +76,8 @@ export class VeranstaltungenListDisplay {
   constructor(veranstaltung: Veranstaltung, kategorien: Kategorie[]) {
     let kategorienAsString = ''
     veranstaltung.kategorie.forEach(it => {
-      console.log(it)
       kategorienAsString = Kategorie.getKategorieWithId(it, kategorien).desc + ' ' + kategorienAsString
     })
-    console.log(kategorienAsString)
     this.uuid = veranstaltung.uuid
     this.datum = veranstaltung.datum
     this.bezeichnung = veranstaltung.bezeichnung

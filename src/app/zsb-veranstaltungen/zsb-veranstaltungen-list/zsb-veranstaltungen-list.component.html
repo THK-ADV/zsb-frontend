@@ -49,6 +49,9 @@
         <button mat-icon-button [routerLink]="['/veranstaltungen', row.uuid]" matTooltip="Veranstaltung editieren">
           <mat-icon>edit</mat-icon> <!-- use launch or edit -->
         </button>
+        <button mat-icon-button [routerLink]="['/veranstaltungen/new']" [queryParams]="{copy: row.uuid}" matTooltip="Veranstaltung kopieren">
+          <mat-icon>content_copy</mat-icon> <!-- use launch or edit -->
+        </button>
         <button mat-icon-button color="warn" matTooltip="Veranstaltung entfernen">
           <mat-icon (click)="deleteVeranstaltung(row.bezeichnung, row.uuid)">delete_outline</mat-icon>
         </button>

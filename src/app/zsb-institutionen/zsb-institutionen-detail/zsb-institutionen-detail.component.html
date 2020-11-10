@@ -30,6 +30,17 @@
     </label>
   </mat-form-field>
 
+  <ng-container *ngIf="this.getInstitutionId() != null">
+    <div class="btn-row">
+      <button mat-flat-button color="" [routerLink]="['../../veranstaltungen/new']"
+              [queryParams]="{institution_id: this.getInstitutionId()}" matTooltip="Schule editieren">
+        Veranstaltung erstellen
+      </button>
+    </div>
+    <br>
+    <br>
+  </ng-container>
+
   <div class="single-btn-row">
     <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
             (click)="changeAdresse()">Standort verwalten

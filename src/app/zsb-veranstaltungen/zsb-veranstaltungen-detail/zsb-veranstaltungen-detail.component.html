@@ -1,4 +1,4 @@
-<ng-container *ngIf="this.veranstalterId === undefined; else edit">
+<ng-container *ngIf="this.veranstaltungId === undefined; else edit">
   <h1>Veranstaltung hinzufügen</h1>
 </ng-container>
 <ng-template #edit>
@@ -40,7 +40,7 @@
 
 
   <!-- berichtBtn -->
-  <div *ngIf="this.veranstalterId !== undefined">
+  <div *ngIf="this.veranstaltungId !== undefined">
     <div *ngIf="bericht === undefined else berichtAnpassen">
       <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
               (click)="editBericht()">Bericht erstellen
