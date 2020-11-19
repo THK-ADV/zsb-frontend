@@ -6,6 +6,7 @@ import {Observable} from 'rxjs'
 import {FormControl, FormGroup, Validators} from '@angular/forms'
 import {Letter} from './letter'
 import {Schule} from '../../zsb-schule/schule'
+import {DatePipe} from '@angular/common'
 
 @Component({
   selector: 'app-zsb-letter',
@@ -22,7 +23,7 @@ export class ZsbLetterComponent implements OnInit {
     signature_id: new FormControl(0)
   })
 
-  constructor(private dbService: DatabaseService, public dialogRef: MatDialogRef<ZsbLetterComponent>) {
+  constructor(private dbService: DatabaseService, public dialogRef: MatDialogRef<ZsbLetterComponent>, private datePipe: DatePipe) {
   }
 
   ngOnInit(): void {
@@ -70,13 +71,26 @@ export class ZsbLetterComponent implements OnInit {
 
     const link = document.createElement('a')
     link.href = data
-    link.download = 'Brief.doc'
+    link.download = this.generateDocumentTitle(this.addressees)
     link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }))
 
     setTimeout(_ => {
       window.URL.revokeObjectURL(data)
       link.remove()
     }, 100)
+  }
+
+  generateDocumentTitle(addressees: Schule[]): string {
+    const currentDate = new Date()
+    const currentDateString = this.datePipe.transform(currentDate, 'yyyy-MM-dd')
+
+    if (addressees.length === 0) return ''
+    if (addressees.length > 1) {
+      return 'Serienbrief-' + addressees.length + '_' + currentDateString + '.doc'
+    }
+
+    const schulName = addressees.pop().name
+    return schulName + '_' + currentDateString + '.doc'
   }
 
   onCancel() {
