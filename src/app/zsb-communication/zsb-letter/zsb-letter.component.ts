@@ -5,7 +5,7 @@ import {Signature} from './signature'
 import {Observable} from 'rxjs'
 import {FormControl, FormGroup, Validators} from '@angular/forms'
 import {Letter} from './letter'
-import {Schule} from '../../zsb-schule/schule'
+import {School} from '../../zsb-school/school'
 import {DatePipe} from '@angular/common'
 
 @Component({
@@ -16,7 +16,7 @@ import {DatePipe} from '@angular/common'
 export class ZsbLetterComponent implements OnInit {
 
   public addresseesIds: string[] = []
-  private addressees: Schule[] = []
+  private addressees: School[] = []
   public signatures: Observable<Signature[]>
   public formGroup: FormGroup = new FormGroup({
     msg: new FormControl('', Validators.required),
@@ -28,7 +28,7 @@ export class ZsbLetterComponent implements OnInit {
 
   ngOnInit(): void {
     this.signatures = this.dbService.getSignatures()
-    this.dbService.getSchulenAtomic().subscribe(schulen => {
+    this.dbService.getSchoolsAtomic().subscribe(schulen => {
       this.resolveAddresses(schulen)
     })
 
@@ -36,9 +36,9 @@ export class ZsbLetterComponent implements OnInit {
     console.log(this.addresseesIds)
   }
 
-  resolveAddresses(schulen: Schule[]) {
+  resolveAddresses(schulen: School[]) {
     schulen.forEach(it => {
-      if (this.addresseesIds.some(id => id === it.schule_id)) {
+      if (this.addresseesIds.some(id => id === it.school_id)) {
         this.addressees.push(it)
       }
     })
@@ -80,7 +80,7 @@ export class ZsbLetterComponent implements OnInit {
     }, 100)
   }
 
-  generateDocumentTitle(addressees: Schule[]): string {
+  generateDocumentTitle(addressees: School[]): string {
     const currentDate = new Date()
     const currentDateString = this.datePipe.transform(currentDate, 'yyyy-MM-dd')
 
@@ -89,7 +89,7 @@ export class ZsbLetterComponent implements OnInit {
       return 'Serienbrief-' + addressees.length + '_' + currentDateString + '.doc'
     }
 
-    const schulName = addressees.pop().name
+    const schulName = addressees.pop().surname
     return schulName + '_' + currentDateString + '.doc'
   }
 

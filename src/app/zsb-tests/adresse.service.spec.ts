@@ -1,13 +1,13 @@
 import {TestBed} from '@angular/core/testing'
 
-import {AdresseService} from '../shared/adresse.service'
+import {AddressService} from '../shared/address.service'
 
 describe('AdresseService', () => {
-  let service: AdresseService
+  let service: AddressService
 
   beforeEach(() => {
     TestBed.configureTestingModule({})
-    service = TestBed.inject(AdresseService)
+    service = TestBed.inject(AddressService)
   })
 
   it('should be created', () => {

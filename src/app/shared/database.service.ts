@@ -1,22 +1,22 @@
 import {Injectable} from '@angular/core'
 import {HttpClient, HttpHeaders} from '@angular/common/http'
-import {Schule} from '../zsb-schule/schule'
-import {Adresse} from '../zsb-adresse/adresse'
+import {School} from '../zsb-school/school'
+import {Address} from '../zsb-address/address'
 import {catchError, retry} from 'rxjs/operators'
 import {Observable, throwError} from 'rxjs'
-import {Schulform} from '../zsb-schule/schulform'
-import {Ort} from '../zsb-adresse/ort'
-import {AnzahlSus} from '../zsb-schule/anzahl-sus'
-import {Kontakt, KontaktAnrede, KontaktFunktion} from '../zsb-kontakt/kontakt'
+import {SchoolType} from '../zsb-school/schoolType'
+import {City} from '../zsb-address/city'
+import {AmountStudents} from '../zsb-school/amount-students'
+import {Contact, ContactSalutation, ContactFunction} from '../zsb-contact/contact'
 import {environment} from '../../environments/environment'
-import {Veranstaltung} from '../zsb-veranstaltungen/veranstaltung'
-import {Kategorie} from '../zsb-veranstaltungen/kategorie'
-import {Stufe} from '../zsb-veranstaltungen/stufe'
-import {Vortragsart} from '../zsb-veranstaltungen/vortragsart'
-import {Institution} from '../zsb-institutionen/institution'
-import {Veranstalter} from '../zsb-veranstaltungen/veranstalter'
-import {Bericht} from '../zsb-veranstaltungen/zsb-bericht/bericht'
-import {Kooperationspartner} from '../zsb-schule/kooperationspartner'
+import {Event} from '../zsb-events/event'
+import {Category} from '../zsb-events/category'
+import {Level} from '../zsb-events/level'
+import {PresentationType} from '../zsb-events/presentationType'
+import {Institution} from '../zsb-institutions/institution'
+import {Host} from '../zsb-events/host'
+import {Report} from '../zsb-events/zsb-bericht/report'
+import {CooperationPartner} from '../zsb-school/cooperationPartner'
 import {Signature} from '../zsb-communication/zsb-letter/signature'
 import {Letter} from '../zsb-communication/zsb-letter/letter'
 
@@ -33,95 +33,95 @@ export class DatabaseService {
     this.DB_URL = environment.backend_url_prefix
   }
 
-  public schulen: Schule[]
+  public schools: School[]
 
-  getAdressen() {
-    return this.httpClient.get<Adresse[]>(this.DB_URL + '/adressen')
+  getAddresses() {
+    return this.httpClient.get<Address[]>(this.DB_URL + '/addresses')
       .pipe(
         retry(1),
         catchError(this.handleError)
       )
   }
 
-  getAdressenAtomic() {
-    return this.httpClient.get<Adresse[]>(this.DB_URL + '/adressen?resolve_ids=true')
+  getAddressesAtomic() {
+    return this.httpClient.get<Address[]>(this.DB_URL + '/addresses?resolve_ids=true')
       .pipe(
         retry(1),
         catchError(this.handleError)
       )
   }
 
-  getAdresseAtomicById(uuid: string) {
-    return this.httpClient.get<Adresse>(this.DB_URL + '/adressen/' + uuid + '?resolve_ids=true')
+  getAddressAtomicById(uuid: string) {
+    return this.httpClient.get<Address>(this.DB_URL + '/addresses/' + uuid + '?resolve_ids=true')
   }
 
-  updateOrCreateAdresse(adresse: Adresse) {
-    return this.httpClient.put<Adresse>(this.DB_URL + '/adressen', adresse)
+  updateOrCreateAddress(address: Address) {
+    return this.httpClient.put<Address>(this.DB_URL + '/addresses', address)
   }
 
-  getOrte() {
-    return this.httpClient.get<Ort[]>(this.DB_URL + '/orte')
+  getCities() {
+    return this.httpClient.get<City[]>(this.DB_URL + '/cities')
       .pipe(
         retry(1),
         catchError(this.handleError)
       )
   }
 
-  updateOrCreateOrt(ort: Ort) {
-    return this.httpClient.put<Ort>(this.DB_URL + '/orte', ort)
+  updateOrCreateCity(city: City) {
+    return this.httpClient.put<City>(this.DB_URL + '/cities', city)
   }
 
-  createSchule(schule) {
+  createSchool(school) {
     console.log('REQUEST: CREATE SCHULE')
-    return this.httpClient.post<Schule>(this.DB_URL + '/schulen', schule)
+    return this.httpClient.post<School>(this.DB_URL + '/schools', school)
   }
 
-  updateSchule(schule) {
+  updateSchool(school) {
     console.log('REQUEST: UPDATE SCHULE')
-    return this.httpClient.put<Schule>(this.DB_URL + '/schulen', schule)
+    return this.httpClient.put<School>(this.DB_URL + '/schools', school)
   }
 
-  deleteSchule(uuid: string) {
+  deleteSchool(uuid: string) {
     console.log('REQUEST: DELETE SCHULE ->' + uuid)
-    return this.httpClient.delete(this.DB_URL + '/schulen/' + uuid)
+    return this.httpClient.delete(this.DB_URL + '/schools/' + uuid)
   }
 
-  getSchulenAtomic() {
-    return this.httpClient.get<Schule[]>(this.DB_URL + '/schulen?resolve_ids=true')
+  getSchoolsAtomic() {
+    return this.httpClient.get<School[]>(this.DB_URL + '/schools?resolve_ids=true')
       .pipe(
         retry(1),
         catchError(this.handleError)
       )
   }
 
-  getSchulen() {
-    return this.httpClient.get<Schule[]>(this.DB_URL + '/schulen')
+  getSchools() {
+    return this.httpClient.get<School[]>(this.DB_URL + '/schools')
       .pipe(
         retry(1),
         catchError(this.handleError)
       )
   }
 
-  getSchuleByIdAtomic(id: string) {
-    return this.httpClient.get<Schule>(this.DB_URL + '/schulen/' + id + '?resolve_ids=true')
+  getSchoolByIdAtomic(id: string) {
+    return this.httpClient.get<School>(this.DB_URL + '/schools/' + id + '?resolve_ids=true')
   }
 
-  getSchulform() {
-    return this.httpClient.get<Schulform[]>(this.DB_URL + '/schulen/schulformen')
+  getSchoolType() {
+    return this.httpClient.get<SchoolType[]>(this.DB_URL + '/schools/schooltypes')
   }
 
-  getAnzahlSus() {
-    return this.httpClient.get<AnzahlSus[]>(this.DB_URL + '/schulen/anzahl_sus')
+  getAmountStudents() {
+    return this.httpClient.get<AmountStudents[]>(this.DB_URL + '/schools/amountstudents')
   }
 
-  getKontaktFunktionen() {
-    return this.httpClient.get<KontaktFunktion[]>(this.DB_URL + '/kontakte/funktion')
+  getContactFunctions() {
+    return this.httpClient.get<ContactFunction[]>(this.DB_URL + '/contacts/function')
   }
 
-  getAdresseFromArrayByAdressId(adressen: Adresse[], id: string): Adresse {
+  getAddressFromArrayByAddressId(addresses: Address[], id: string): Address {
     let result = null
-    adressen.forEach(it => {
-      if (it.adress_id === id) {
+    addresses.forEach(it => {
+      if (it.address_id === id) {
         result = it
       }
     })
@@ -141,100 +141,100 @@ export class DatabaseService {
     return throwError(errorMessage)
   }
 
-  updateOrCreateKontakt(kontakt: Kontakt): Observable<Kontakt> {
-    return this.httpClient.put<Kontakt>(this.DB_URL + '/kontakte', kontakt)
+  updateOrCreateContact(contact: Contact): Observable<Contact> {
+    return this.httpClient.put<Contact>(this.DB_URL + '/contacts', contact)
   }
 
-  getKontaktById(uuid: string) {
-    return this.httpClient.get<Kontakt>(this.DB_URL + '/kontakte/' + uuid)
+  getContactById(uuid: string) {
+    return this.httpClient.get<Contact>(this.DB_URL + '/contacts/' + uuid)
   }
 
-  getKontakte(): Observable<Kontakt[]> {
-    return this.httpClient.get<Kontakt[]>(this.DB_URL + '/kontakte')
+  getContacts(): Observable<Contact[]> {
+    return this.httpClient.get<Contact[]>(this.DB_URL + '/contacts')
   }
 
-  getKontaktAnredeOptionen() {
-    return this.httpClient.get<KontaktAnrede[]>(this.DB_URL + '/kontakte/anreden')
+  getContactSalutationOptions() {
+    return this.httpClient.get<ContactSalutation[]>(this.DB_URL + '/contacts/salutations')
   }
 
-  getAllVeranstaltungen(): Observable<Veranstaltung[]> {
-    return this.httpClient.get<Veranstaltung[]>(this.DB_URL + '/veranstaltungen?resolve_ids=true')
+  getAllEvents(): Observable<Event[]> {
+    return this.httpClient.get<Event[]>(this.DB_URL + '/events?resolve_ids=true')
   }
 
-  getVeranstaltungById(uuid: string): Observable<Veranstaltung> {
-    return this.httpClient.get<Veranstaltung>(this.DB_URL + '/veranstaltungen/' + uuid + '?resolve_ids=true')
+  getEventById(uuid: string): Observable<Event> {
+    return this.httpClient.get<Event>(this.DB_URL + '/events/' + uuid + '?resolve_ids=true')
   }
 
-  deleteVeranstaltung(uuid: string): Observable<any> {
-    return this.httpClient.delete(this.DB_URL + '/veranstaltungen/' + uuid)
+  deleteEvents(uuid: string): Observable<any> {
+    return this.httpClient.delete(this.DB_URL + '/events/' + uuid)
   }
 
-  getKategorien() {
-    return this.httpClient.get<Kategorie[]>(this.DB_URL + '/veranstaltungen/kategorien')
+  getCategories() {
+    return this.httpClient.get<Category[]>(this.DB_URL + '/events/categories')
   }
 
-  getStufen() {
-    return this.httpClient.get<Stufe[]>(this.DB_URL + '/veranstaltungen/stufen')
+  getLevels() {
+    return this.httpClient.get<Level[]>(this.DB_URL + '/events/levels')
   }
 
-  getVortragsarten() {
-    return this.httpClient.get<Vortragsart[]>(this.DB_URL + '/veranstaltungen/vortragsarten')
+  getPresentationType() {
+    return this.httpClient.get<PresentationType[]>(this.DB_URL + '/events/presentationtypes')
   }
 
-  getAllInstitutionen() {
-    return this.httpClient.get<Institution[]>(this.DB_URL + '/institutionen?resolve_ids=true')
+  getAllInstitutions() {
+    return this.httpClient.get<Institution[]>(this.DB_URL + '/institutions?resolve_ids=true')
   }
 
-  updateVeranstaltung(veranstaltung: Veranstaltung) {
-    return this.httpClient.put<Veranstaltung>(this.DB_URL + '/veranstaltungen', veranstaltung)
+  updateEvent(event: Event) {
+    return this.httpClient.put<Event>(this.DB_URL + '/events', event)
   }
 
-  createVeranstaltung(veranstaltung: Veranstaltung) {
-    return this.httpClient.post<Veranstaltung>(this.DB_URL + '/veranstaltungen', veranstaltung)
+  createEvent(event: Event) {
+    return this.httpClient.post<Event>(this.DB_URL + '/events', event)
   }
 
-  createVeranstalter(veranstalter: Veranstalter) {
-    return this.httpClient.post<Veranstalter>(this.DB_URL + '/veranstalter', veranstalter)
+  createHost(host: Host) {
+    return this.httpClient.post<Host>(this.DB_URL + '/host', host)
   }
 
-  updateVeranstalter(veranstalter: Veranstalter) {
-    return this.httpClient.put<Veranstalter>(this.DB_URL + '/veranstalter', veranstalter)
+  updateHost(host: Host) {
+    return this.httpClient.put<Host>(this.DB_URL + '/host', host)
   }
 
-  getAllBerichte() {
-    return this.httpClient.get<Bericht[]>(this.DB_URL + '/berichte')
+  getAllReports() {
+    return this.httpClient.get<Report[]>(this.DB_URL + '/reports')
   }
 
-  getBerichtById(uuid: string) {
-    return this.httpClient.get<Bericht>(this.DB_URL + '/berichte/' + uuid)
+  getReportById(uuid: string) {
+    return this.httpClient.get<Report>(this.DB_URL + '/reports/' + uuid)
   }
 
-  createBericht(bericht: Bericht) {
-    return this.httpClient.post<Bericht>(this.DB_URL + '/berichte', bericht)
+  createReport(report: Report) {
+    return this.httpClient.post<Report>(this.DB_URL + '/reports', report)
   }
 
-  updateBericht(bericht: Bericht) {
-    return this.httpClient.put<Bericht>(this.DB_URL + '/berichte', bericht)
+  updateReport(report: Report) {
+    return this.httpClient.put<Report>(this.DB_URL + '/reports', report)
   }
 
-  getKooperationspartner() {
-    return this.httpClient.get<Kooperationspartner[]>(this.DB_URL + '/schulen/kooperationspartner')
+  getCooperationPartner() {
+    return this.httpClient.get<CooperationPartner[]>(this.DB_URL + '/schools/cooperationpartner')
   }
 
   deleteInstitution(uuid: string): Observable<any> {
-    return this.httpClient.delete(this.DB_URL + '/institutionen/' + uuid)
+    return this.httpClient.delete(this.DB_URL + '/institutions/' + uuid)
   }
 
   getInstitutionAtomic(uuid: string) {
-    return this.httpClient.get(this.DB_URL + '/institutionen/' + uuid + '?resolve_ids=true')
+    return this.httpClient.get(this.DB_URL + '/institutions/' + uuid + '?resolve_ids=true')
   }
 
   createInstitution(institution: Institution) {
-    return this.httpClient.post<Institution>(this.DB_URL + '/institutionen', institution)
+    return this.httpClient.post<Institution>(this.DB_URL + '/institutions', institution)
   }
 
   updateInstitution(institution: Institution) {
-    return this.httpClient.put<Institution>(this.DB_URL + '/institutionen', institution)
+    return this.httpClient.put<Institution>(this.DB_URL + '/institutions', institution)
   }
 
   getSignatures() {

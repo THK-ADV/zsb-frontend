@@ -1,0 +1,100 @@
+<h1>Kontakt hinzufügen</h1>
+
+<form [formGroup]="service.searchForm">
+  <div class="controls-container">
+    <!-- Search existing Kontakte -->
+    <mat-form-field class="full-width">
+    <input
+      name="name"
+      type="text"
+      placeholder="Suche"
+      aria-label="Number"
+      matInput
+      formControlName="searchKey"
+      [matAutocomplete]="ac_search">
+    <mat-autocomplete autoActiveFirstOption #ac_search="matAutocomplete">
+      <mat-option *ngFor="let option of filteredKontakteNames | async" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-autocomplete>
+    </mat-form-field>
+    <br>
+
+    <!-- checkbox -> create new -->
+    <mat-slide-toggle name="addToggle"  formControlName="enableEdit">
+      Neuen Kontakt hinzufügen?
+    </mat-slide-toggle>
+  </div>
+</form>
+
+<br>
+
+<form [formGroup]="service.contactForm" class="normal-form example-form">
+  <div class="controls-container">
+    <!-- UUID -->
+    <input type="hidden" formControlName="uuid">
+
+    <!-- Anrede -->
+    <mat-form-field class="full-width">
+      <mat-select formControlName="anrede" placeholder="Anrede*">
+        <ng-container *ngFor="let anrede of service.contactSalutationOptions | async">
+          <mat-option [value]="anrede.id">
+            {{anrede.desc}} <br>
+          </mat-option>
+        </ng-container>
+      </mat-select>
+      <mat-error>Bitte wählen Sie eine passende Anrede aus.</mat-error>
+    </mat-form-field>
+    <br>
+
+    <!-- NAME -->
+    <mat-form-field class="full-width">
+      <label>
+        <input matInput name="name" type="text" placeholder="Name" formControlName="name">
+      </label>
+      <mat-error>Ihre Eingabe wird benötigt.</mat-error>
+    </mat-form-field>
+    <br>
+
+    <!-- VORNAME -->
+    <mat-form-field class="full-width">
+      <label>
+        <input matInput name="vorname" type="text" placeholder="Vorname" formControlName="vorname">
+      </label>
+      <mat-error>Ihre Eingabe wird benötigt.</mat-error>
+    </mat-form-field>
+    <br>
+
+    <!-- EMAIL -->
+    <mat-form-field class="full-width">
+      <label>
+        <input matInput name="email" type="text" placeholder="E-Mail" formControlName="email">
+      </label>
+      <mat-error>Bitte prüfen Sie, ob es sich hierbei um eine valide E-Mail handelt.</mat-error>
+    </mat-form-field>
+    <br>
+
+    <!-- FUNKTION -->
+    <mat-form-field class="full-width">
+      <mat-select formControlName="funktion" placeholder="Funktion*">
+        <mat-option value="-1">Keine</mat-option>
+        <ng-container *ngFor="let funktion of service.contactFunctions | async">
+          <mat-option [value]="funktion.id">
+            {{funktion.desc}} <br>
+          </mat-option>
+        </ng-container>
+      </mat-select>
+      <mat-error>Bitte wählen Sie eine passende Funktion aus.</mat-error>
+    </mat-form-field>
+    <br>
+
+    <!-- BUTTONS -->
+    <div class="btn-row">
+      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="service.contactForm.invalid">
+        <!-- type="submit" -->
+        Übernehmen
+      </button>
+      <button mat-raised-button color="warn" (click)="onClose()">Abbrechen</button>
+    </div>
+  </div>
+</form>

@@ -1,6 +1,6 @@
 import {TestBed} from '@angular/core/testing'
 
-import {InstitutionenService} from '../zsb-institutionen/institutionen.service'
+import {InstitutionenService} from '../zsb-institutions/institutionen.service'
 
 describe('InstitutionenService', () => {
   let service: InstitutionenService

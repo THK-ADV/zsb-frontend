@@ -1,0 +1,177 @@
+<ng-container *ngIf="this.schuleId != null; else newSchule">
+  <h1>Schule bearbeiten</h1>
+</ng-container>
+<ng-template #newSchule>
+  <h1>Schule hinzufügen</h1>
+</ng-template>
+<form [formGroup]="service.formGroup" class="normal-form"> <!-- (submit)="onSubmit()" -->
+
+  <div class="" fxLayout="row" fxLayout.xs="column" fxFlexFill>
+    <div class="sec1" fxFlex="100" fxFlex.xs="55">
+      <div class="controls-container">
+        <input type="hidden" formControlName="schule_id">
+
+        <mat-form-field>
+          <label>
+            <input formControlName="name" matInput placeholder="Name*">
+          </label>
+          <mat-error>Ihre Eingabe wird benötigt.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select formControlName="schulform" placeholder="Schulform*">
+            <mat-option value="-1">Keine</mat-option>
+            <ng-container *ngFor="let schulform of schulformen | async">
+              <mat-option [value]="schulform.id">
+                {{schulform.desc}} <br>
+              </mat-option>
+            </ng-container>
+          </mat-select>
+          <mat-error>Bitte wählen Sie die passende Schulform aus</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select formControlName="anzahl_sus" placeholder="Anzahl SuS*">
+            <mat-option value="-1">Keine</mat-option>
+            <ng-container *ngFor="let sus of anzahlSusRanges | async">
+              <mat-option [value]="sus.id">
+                {{sus.range}} <br>
+              </mat-option>
+            </ng-container>
+          </mat-select>
+          <mat-error>Bitte wählen Sie die passende Schulform aus</mat-error>
+        </mat-form-field>
+
+        <!-- Kontakte -->
+        <div formArrayName="kontakte">
+          <h3>Kontakte</h3>
+
+          <table class="kontakt-table">
+            <tr class="header-row">
+              <th>Name</th>
+              <th>Funktion</th>
+              <th></th>
+            </tr>
+            <ng-container *ngIf="service.contacts.controls.length < 1">
+              <tr>
+                <td [attr.colspan]="3">Keine Kontakte vorhanden.</td>
+              </tr>
+            </ng-container>
+            <tr *ngFor="let kontakt of service.contacts.controls; let i = index" class="border_bottom">
+              <ng-container *ngIf="kontakt != null && kontakt.value != null">
+                <td>
+                  <label>
+                    <input type="text" [formControlName]="i" hidden>
+                  </label>
+                  <ng-container *ngIf="kontakt.value.name !== ''; else elseNoName">
+                    {{kontakt.value.name}}
+                  </ng-container>
+                  <ng-template #elseNoName>{{kontakt.value.email}}</ng-template>
+                  <ng-container *ngIf="kontakt.value.vorname !== undefined && kontakt.value.vorname.length > 0">
+                    , {{kontakt.value.vorname}}
+                  </ng-container>
+                </td>
+                <td>
+                  {{getKontaktFunktionDescById(kontakt.value.funktion)}}
+                </td>
+                <td>
+                  <!-- go to details for this kontakt-->
+                  <button mat-icon-button (click)="showKontaktDetail(kontakt.value.uuid)"
+                          matTooltip="Kontakt editieren">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <!-- delete icon -> trigger delete connection between this kontakt and schule-->
+                  <button mat-icon-button color="warn" (click)="service.removeContact(kontakt.value.uuid)"
+                          matTooltip="Kontakt entfernen">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+            </tr>
+            <!-- ADD Kontakt (Button) -->
+            <tr>
+              <td [attr.colspan]="3">
+                <button class="btn-span-full-table" mat-stroked-button (click)="addKontakt()">
+                  <mat-icon>add</mat-icon>
+                  Hinzufügen
+                </button>
+              </td>
+            <tr>
+          </table>
+        </div>
+      </div> <!-- grid controls-container -->
+    </div>
+    <div class="sec2" fxFlex="100" fxFlex.xs="55">
+      <div class="controls-container">
+        <!-- Adresse -->
+        <mat-form-field>
+          <label>
+            <input formControlName="adresse" matInput placeholder="Standort*">
+          </label>
+        </mat-form-field>
+
+        <div class="single-btn-row">
+          <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
+                  (click)="changeAdresse()">Standort verwalten
+          </button>
+        </div>
+        <br><br>
+
+        <div class="add-bottom-padding">
+          <mat-checkbox formControlName="kooperationsvertrag">Kooperationsvertrag</mat-checkbox>
+        </div>
+        <div class="add-bottom-padding">
+          <mat-checkbox #kaoa_cb formControlName="kaoa_hochschule">kaoa Hochschule</mat-checkbox>
+          <div *ngIf="kaoa_cb.checked">
+
+            <mat-form-field>
+              <mat-select formControlName="kaoa_partner" placeholder="Partner*">
+                <ng-container *ngFor="let option of kooperationspartner">
+                  <mat-option [value]="option.id">
+                    {{option.desc}} <br>
+                  </mat-option>
+                </ng-container>
+              </mat-select>
+            </mat-form-field>
+
+          </div>
+        </div>
+        <div class="add-bottom-padding">
+          <mat-checkbox #talentscouting_cb formControlName="talentscouting">Talentscouting</mat-checkbox>
+          <div *ngIf="talentscouting_cb.checked">
+
+            <mat-form-field>
+              <mat-select formControlName="talentscouting_partner" placeholder="Partner*">
+                <ng-container *ngFor="let option of kooperationspartner">
+                  <mat-option [value]="option.id">
+                    {{option.desc}} <br>
+                  </mat-option>
+                </ng-container>
+              </mat-select>
+            </mat-form-field>
+
+          </div>
+        </div>
+
+        <ng-container *ngIf="this.schuleId != null">
+          <div class="btn-row">
+            <button mat-flat-button color="" [routerLink]="['../../veranstaltungen/new']"
+                    [queryParams]="{school_id: schuleId}" matTooltip="Schule editieren">
+              Veranstaltung erstellen
+            </button>
+          </div>
+          <br>
+          <br>
+        </ng-container>
+
+        <div class="btn-row">
+          <button mat-raised-button color="primary" type="submit" (click)="onSubmit()"
+                  [disabled]="service.formGroup.invalid">Speichern
+          </button>
+          <button mat-raised-button color="warn" (click)="onClear()">Zurücksetzen</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</form>

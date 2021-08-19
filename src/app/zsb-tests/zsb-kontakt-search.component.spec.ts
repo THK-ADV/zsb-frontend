@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing'
 
-import {ZsbKontaktSearchComponent} from '../zsb-kontakt/zsb-kontakt-search/zsb-kontakt-search.component'
+import {ZsbKontaktSearchComponent} from '../zsb-contact/zsb-kontakt-search/zsb-kontakt-search.component'
 
 describe('ZsbKontaktSearchComponent', () => {
   let component: ZsbKontaktSearchComponent

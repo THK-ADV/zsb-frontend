@@ -1,20 +1,20 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing'
 
-import {ZsbAdresseComponent} from '../zsb-adresse/zsb-adresse.component'
+import {ZsbAddressComponent} from '../zsb-address/zsb-address.component'
 
 describe('ZsbAdresseComponent', () => {
-  let component: ZsbAdresseComponent
-  let fixture: ComponentFixture<ZsbAdresseComponent>
+  let component: ZsbAddressComponent
+  let fixture: ComponentFixture<ZsbAddressComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ZsbAdresseComponent]
+      declarations: [ZsbAddressComponent]
     })
       .compileComponents()
   }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ZsbAdresseComponent)
+    fixture = TestBed.createComponent(ZsbAddressComponent)
     component = fixture.componentInstance
     fixture.detectChanges()
   })
