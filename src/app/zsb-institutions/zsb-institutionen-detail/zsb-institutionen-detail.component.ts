@@ -5,7 +5,7 @@ import {NotificationService} from '../../shared/notification.service'
 import {MatDialog} from '@angular/material/dialog'
 import {Institution} from '../institution'
 import {AddressService} from '../../shared/address.service'
-import {AdresseStatus} from '../../zsb-address/zsb-address.component'
+import {AddressStatus} from '../../zsb-address/zsb-address.component'
 
 
 @Component({
@@ -78,7 +78,7 @@ export class ZsbInstitutionenDetailComponent implements OnInit {
           return
         }
 
-        if (adresseResult.status === AdresseStatus.CANCELLATION) return
+        if (adresseResult.status === AddressStatus.CANCELLATION) return
 
         this.institution.adresse = adresseResult.address
         this.institution.adress_id = adresseResult.address.address_id

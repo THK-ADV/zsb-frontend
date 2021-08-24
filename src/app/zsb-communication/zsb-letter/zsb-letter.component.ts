@@ -28,16 +28,16 @@ export class ZsbLetterComponent implements OnInit {
 
   ngOnInit(): void {
     this.signatures = this.dbService.getSignatures()
-    this.dbService.getSchoolsAtomic().subscribe(schulen => {
-      this.resolveAddresses(schulen)
+    this.dbService.getSchoolsAtomic().subscribe(schools => {
+      this.resolveAddresses(schools)
     })
 
-    console.log('send stuff to schulen with id:')
+    console.log('send stuff to schools with id:')
     console.log(this.addresseesIds)
   }
 
-  resolveAddresses(schulen: School[]) {
-    schulen.forEach(it => {
+  resolveAddresses(schools: School[]) {
+    schools.forEach(it => {
       if (this.addresseesIds.some(id => id === it.school_id)) {
         this.addressees.push(it)
       }
@@ -89,8 +89,8 @@ export class ZsbLetterComponent implements OnInit {
       return 'Serienbrief-' + addressees.length + '_' + currentDateString + '.doc'
     }
 
-    const schulName = addressees.pop().surname
-    return schulName + '_' + currentDateString + '.doc'
+    const schoolName = addressees.pop().surname
+    return schoolName + '_' + currentDateString + '.doc'
   }
 
   onCancel() {

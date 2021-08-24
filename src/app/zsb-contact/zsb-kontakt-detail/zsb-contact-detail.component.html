@@ -6,10 +6,10 @@
 
     <!-- Anrede -->
     <mat-form-field class="full-width">
-      <mat-select formControlName="anrede" placeholder="Anrede*">
-        <ng-container *ngFor="let anrede of service.contactSalutationOptions | async">
-          <mat-option [value]="anrede.id">
-            {{anrede.desc}} <br>
+      <mat-select formControlName="salutation" placeholder="Anrede*">
+        <ng-container *ngFor="let salutation of service.contactSalutationOptions | async">
+          <mat-option [value]="salutation.id">
+            {{salutation.desc}} <br>
           </mat-option>
         </ng-container>
       </mat-select>
@@ -20,7 +20,7 @@
     <!-- NAME -->
     <mat-form-field class="full-width">
       <label>
-        <input matInput name="name" type="text" placeholder="Name" formControlName="name">
+        <input matInput name="surname" type="text" placeholder="Name" formControlName="surname">
       </label>
       <mat-error>Ihre Eingabe wird benötigt.</mat-error>
     </mat-form-field>
@@ -29,7 +29,7 @@
     <!-- VORNAME -->
     <mat-form-field class="full-width">
       <label>
-        <input matInput name="vorname" type="text" placeholder="Vorname" formControlName="vorname">
+        <input matInput name="firstname" type="text" placeholder="Vorname" formControlName="firstname">
       </label>
       <mat-error>Ihre Eingabe wird benötigt.</mat-error>
     </mat-form-field>
@@ -46,7 +46,7 @@
 
     <!-- FUNKTION -->
     <mat-form-field class="full-width">
-      <mat-select formControlName="funktion" placeholder="Funktion*">
+      <mat-select formControlName="function" placeholder="Funktion*">
         <mat-option value="-1">Keine</mat-option>
         <ng-container *ngFor="let funktion of service.contactFunctions | async">
           <mat-option [value]="funktion.id">

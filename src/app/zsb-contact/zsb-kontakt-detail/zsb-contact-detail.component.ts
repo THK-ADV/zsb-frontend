@@ -6,21 +6,21 @@ import {MatDialogRef} from '@angular/material/dialog'
 import {NotificationService} from '../../shared/notification.service'
 
 @Component({
-  selector: 'app-zsb-kontakt',
-  templateUrl: './zsb-kontakt-detail.component.html',
-  styleUrls: ['./zsb-kontakt-detail.component.css']
+  selector: 'app-zsb-contact',
+  templateUrl: './zsb-contact-detail.component.html',
+  styleUrls: ['./zsb-contact-detail.component.css']
 })
-export class ZsbKontaktDetailComponent implements OnInit {
+export class ZsbContactDetailComponent implements OnInit {
 
   constructor(
-    private dialogRef: MatDialogRef<ZsbKontaktDetailComponent>,
+    private dialogRef: MatDialogRef<ZsbContactDetailComponent>,
     private notificationService: NotificationService,
     private dbService: DatabaseService,
     public service: ContactsService) {
   }
 
   uuid: string = undefined
-  kontakt: Contact = undefined
+  contact: Contact = undefined
 
   ngOnInit(): void {
     this.service.contactForm.enable()
@@ -28,34 +28,34 @@ export class ZsbKontaktDetailComponent implements OnInit {
     // initialize form
     this.service.initializeContactForm()
 
-    // load existing kontakt, if available
+    // load existing contact, if available
     if (this.uuid !== undefined) {
-      console.log('load kontakt: ' + this.uuid)
+      console.log('load contact: ' + this.uuid)
       this.dbService.getContactById(this.uuid).subscribe(it => {
         this.service.populateContactForm(it)
-        this.kontakt = it
+        this.contact = it
       })
     }
   }
 
   onSubmit() {
-    // get possible modified kontakt from form
-    const editedKontakt = this.service.getContact()
+    // get possible modified contact from form
+    const editedContact = this.service.getContact()
 
     // check if anything changed
-    if (this.kontakt.uuid === editedKontakt.uuid
-      && this.kontakt.surname === editedKontakt.surname
-      && this.kontakt.firstname === editedKontakt.firstname
-      && this.kontakt.email === editedKontakt.email
-      && this.kontakt.function === editedKontakt.function
-      && this.kontakt.salutation === editedKontakt.salutation) {
+    if (this.contact.uuid === editedContact.uuid
+      && this.contact.surname === editedContact.surname
+      && this.contact.firstname === editedContact.firstname
+      && this.contact.email === editedContact.email
+      && this.contact.function === editedContact.function
+      && this.contact.salutation === editedContact.salutation) {
       // nothing has changed.
       this.onClose()
       return
     }
 
-    // save edited kontakt to db
-    this.dbService.updateOrCreateContact(editedKontakt).subscribe(it => {
+    // save edited contact to db
+    this.dbService.updateOrCreateContact(editedContact).subscribe(it => {
       // show success dialog and close detail view
       this.notificationService.success('Kontakt wurde erfolgreich aktualisiert.')
       this.onClose(it)

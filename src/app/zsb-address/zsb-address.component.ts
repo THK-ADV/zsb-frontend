@@ -9,7 +9,7 @@ import {MatDialogRef} from '@angular/material/dialog'
 import {filterDuplicates, filterOptions} from '../shared/functions'
 
 @Component({
-  selector: 'app-zsb-adresse',
+  selector: 'app-zsb-address',
   templateUrl: './zsb-address.component.html',
   styleUrls: ['./zsb-address.component.css']
 })
@@ -21,36 +21,36 @@ export class ZsbAddressComponent implements OnInit {
     public dialogRef: MatDialogRef<ZsbAddressComponent>) {
   }
 
-  schuleObservable: Observable<School>
-  orteObservable: Observable<City[]>
-  orte: City[]
-  adressenObservable: Observable<Address[]>
-  adressen: Address[]
+  schoolObservable: Observable<School>
+  citiesObservable: Observable<City[]>
+  cities: City[]
+  addressesObservable: Observable<Address[]>
+  addresses: Address[]
 
-  public adresseId: string // filled via dialog
-  private adresse: Address
+  public addressId: string // filled via dialog
+  private address: Address
 
   // options for all autocomplete inputs
-  regierungsbezirkOptions: string[] = []
-  filteredRegierungsbezirkOptions: Observable<string[]>
-  kreisOptions: string[] = []
-  filteredKreisOptions: Observable<string[]>
-  plzOptions: string[] = []
-  filteredPlzOptions: Observable<string[]>
-  bezeichnungOptions: string[] = []
-  filteredBezeichnungOptions: Observable<string[]>
-  strasseOptions: string[] = []
-  filteredStrasseOptions: Observable<string[]>
-  hausnummerOptions: string[] = []
-  filteredHausnummerOptions: Observable<string[]>
+  governmentDistrictOptions: string[] = []
+  filteredGovernmentDistrictOptions: Observable<string[]>
+  constituencyOptions: string[] = []
+  filteredConstituencyOptions: Observable<string[]>
+  postcodeOptions: string[] = []
+  filteredPostcodeOptions: Observable<string[]>
+  designationOptions: string[] = []
+  filteredDesignationOptions: Observable<string[]>
+  streetOptions: string[] = []
+  filteredStreetOptions: Observable<string[]>
+  houseNumberOptions: string[] = []
+  filteredHouseNumberOptions: Observable<string[]>
 
-  private static equalsWithoutId(adresseA: Address, adresseB: Address): boolean {
-    return adresseA.street === adresseB.street
-      && adresseA.houseNumber === adresseB.houseNumber
-      && adresseA.city.governmentDistrict === adresseB.city.governmentDistrict
-      && adresseA.city.constituency === adresseB.city.constituency
-      && adresseA.city.postcode === adresseB.city.postcode
-      && adresseA.city.designation === adresseB.city.designation
+  private static equalsWithoutId(addressA: Address, addressB: Address): boolean {
+    return addressA.street === addressB.street
+      && addressA.houseNumber === addressB.houseNumber
+      && addressA.city.governmentDistrict === addressB.city.governmentDistrict
+      && addressA.city.constituency === addressB.city.constituency
+      && addressA.city.postcode === addressB.city.postcode
+      && addressA.city.designation === addressB.city.designation
   }
 
   ngOnInit(): void {
@@ -59,7 +59,7 @@ export class ZsbAddressComponent implements OnInit {
     this.initAutocomplete()
 
     if (this.addressId === undefined) {
-      console.log('Adresse ID not given.')
+      console.log('Address ID not given.')
       return
     }
 
@@ -68,18 +68,18 @@ export class ZsbAddressComponent implements OnInit {
       return
     }
 
-    this.loadAdresseById(this.addressId)
+    this.loadAddressById(this.addressId)
   }
 
   initAutocomplete() {
-    this.adressenObservable.subscribe(adressen => {
+    this.addressesObservable.subscribe(adressen => {
       // get all values and filter duplicates
-      this.regierungsbezirkOptions = filterDuplicates(adressen.map(it => it.city.governmentDistrict.trim()))
-      this.kreisOptions = filterDuplicates(adressen.map(it => it.city.constituency.trim()))
-      this.plzOptions = filterDuplicates(adressen.map(it => it.city.postcode.toString().trim()))
-      this.bezeichnungOptions = filterDuplicates(adressen.map(it => it.city.designation.trim()))
-      this.strasseOptions = filterDuplicates(adressen.map(it => it.street.trim()))
-      this.hausnummerOptions = filterDuplicates(adressen.map(it => it.houseNumber.trim()))
+      this.governmentDistrictOptions = filterDuplicates(adressen.map(it => it.city.governmentDistrict.trim()))
+      this.constituencyOptions = filterDuplicates(adressen.map(it => it.city.constituency.trim()))
+      this.postcodeOptions = filterDuplicates(adressen.map(it => it.city.postcode.toString().trim()))
+      this.designationOptions = filterDuplicates(adressen.map(it => it.city.designation.trim()))
+      this.streetOptions = filterDuplicates(adressen.map(it => it.street.trim()))
+      this.houseNumberOptions = filterDuplicates(adressen.map(it => it.houseNumber.trim()))
 
       this.updateAutocomplete()
     })
@@ -87,42 +87,42 @@ export class ZsbAddressComponent implements OnInit {
 
 
   onSubmit() {
-    let adresseId = null
+    let addressId = null
     if (this.addressId !== null) {
-      adresseId = this.address.address_id
+      addressId = this.address.address_id
     }
 
-    // maybe save ort id if nothing has changed. Should be covered by backend but would be cleaner here
-    const newOrt: City = {
-      governmentDistrict: this.service.formGroup.value.regierungsbezirk,
-      constituency: this.service.formGroup.value.kreis,
-      designation: this.service.formGroup.value.bezeichnung,
-      postcode: this.service.formGroup.value.plz,
-      ort_id: undefined
+    // maybe save city id if nothing has changed. Should be covered by backend but would be cleaner here
+    const newCity: City = {
+      governmentDistrict: this.service.formGroup.value.governmentDistrict,
+      constituency: this.service.formGroup.value.constituency,
+      designation: this.service.formGroup.value.designation,
+      postcode: this.service.formGroup.value.postcode,
+      city_id: undefined
     }
 
-    const newAdresse = {
-      adress_id: adresseId,
-      street: this.service.formGroup.value.strasse,
-      houseNumber: this.service.formGroup.value.hausnummer,
-      ort_id: undefined,
-      city: newOrt
+    const newAddress = {
+      address_id: addressId,
+      street: this.service.formGroup.value.street,
+      houseNumber: this.service.formGroup.value.houseNumber,
+      city_id: undefined,
+      city: newCity
     }
 
-    if (this.address !== undefined && ZsbAddressComponent.equalsWithoutId(this.address, newAdresse)) {
+    if (this.address !== undefined && ZsbAddressComponent.equalsWithoutId(this.address, newAddress)) {
       console.log('Nothing changed here.')
-      this.dialogRef.close(new AddressResult(this.address, AdresseStatus.NO_CHANGES))
+      this.dialogRef.close(new AddressResult(this.address, AddressStatus.NO_CHANGES))
     } else {
-      console.log('return new/updated adresse')
-      this.dbService.updateOrCreateCity(newOrt).subscribe(ort => {
-        newAdresse.ort_id = ort.ort_id
-        this.dbService.updateOrCreateAddress(newAdresse)
+      console.log('return new/updated address')
+      this.dbService.updateOrCreateCity(newCity).subscribe(city => {
+        newAddress.city_id = city.city_id
+        this.dbService.updateOrCreateAddress(newAddress)
           .subscribe(result => {
             if (result === undefined) {
-              this.dialogRef.close(new AddressResult(null, AdresseStatus.FAILURE))
+              this.dialogRef.close(new AddressResult(null, AddressStatus.FAILURE))
             } else {
-              this.dbService.getAddressAtomicById(result.address_id).subscribe(atomicAdresse => {
-                this.dialogRef.close(new AddressResult(atomicAdresse, AdresseStatus.UPDATED))
+              this.dbService.getAddressAtomicById(result.address_id).subscribe(atomicAddress => {
+                this.dialogRef.close(new AddressResult(atomicAddress, AddressStatus.UPDATED))
               })
             }
           })
@@ -131,45 +131,45 @@ export class ZsbAddressComponent implements OnInit {
   }
 
   private loadDataFromDB() {
-    this.orteObservable = this.dbService.getCities()
-    this.orteObservable.subscribe(orte => this.orte = orte)
-    this.adressenObservable = this.dbService.getAddressesAtomic()
-    this.adressenObservable.subscribe(adressen => this.adressen = adressen)
+    this.citiesObservable = this.dbService.getCities()
+    this.citiesObservable.subscribe(cities => this.cities = cities)
+    this.addressesObservable = this.dbService.getAddressesAtomic()
+    this.addressesObservable.subscribe(addresses => this.addresses = addresses)
   }
 
   private updateAutocomplete() {
     const controls = this.service.formGroup.controls
 
-    this.filteredRegierungsbezirkOptions = filterOptions(controls.governmentDistrict, this.regierungsbezirkOptions)
-    this.filteredKreisOptions = filterOptions(controls.constituency, this.kreisOptions)
-    this.filteredPlzOptions = filterOptions(controls.postcode, this.plzOptions)
-    this.filteredBezeichnungOptions = filterOptions(controls.designation, this.bezeichnungOptions)
-    this.filteredStrasseOptions = filterOptions(controls.street, this.strasseOptions)
-    this.filteredHausnummerOptions = filterOptions(controls.houseNumber, this.hausnummerOptions)
+    this.filteredGovernmentDistrictOptions = filterOptions(controls.governmentDistrict, this.governmentDistrictOptions)
+    this.filteredConstituencyOptions = filterOptions(controls.constituency, this.constituencyOptions)
+    this.filteredPostcodeOptions = filterOptions(controls.postcode, this.postcodeOptions)
+    this.filteredDesignationOptions = filterOptions(controls.designation, this.designationOptions)
+    this.filteredStreetOptions = filterOptions(controls.street, this.streetOptions)
+    this.filteredHouseNumberOptions = filterOptions(controls.houseNumber, this.houseNumberOptions)
   }
 
 
-  private loadAdresseById(adresseId: string) {
-    this.dbService.getAddressAtomicById(adresseId)
-      .subscribe(adresse => {
-        this.adresse = adresse
-        this.service.loadAddress(adresse)
+  private loadAddressById(addressId: string) {
+    this.dbService.getAddressAtomicById(addressId)
+      .subscribe(address => {
+        this.address = address
+        this.service.loadAddress(address)
       })
   }
 
   onCancel() {
-    this.dialogRef.close(new AddressResult(null, AdresseStatus.CANCELLATION))
+    this.dialogRef.close(new AddressResult(null, AddressStatus.CANCELLATION))
   }
 }
 
 export class AddressResult {
-  adresse: Address
-  status: AdresseStatus
+  address: Address
+  status: AddressStatus
 
-  constructor(adresse: Address, status: AdresseStatus) {
-    this.adresse = adresse
+  constructor(address: Address, status: AddressStatus) {
+    this.address = address
     this.status = status
   }
 }
 
-export enum AdresseStatus { UPDATED, NO_CHANGES, CANCELLATION, FAILURE }
+export enum AddressStatus { UPDATED, NO_CHANGES, CANCELLATION, FAILURE }

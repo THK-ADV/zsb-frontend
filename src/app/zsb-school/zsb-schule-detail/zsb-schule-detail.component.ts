@@ -7,11 +7,11 @@ import {SchoolService} from '../../shared/school.service'
 import {NotificationService} from '../../shared/notification.service'
 import {SchoolType} from '../schoolType'
 import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog'
-import {AdresseStatus} from '../../zsb-address/zsb-address.component'
+import {AddressStatus} from '../../zsb-address/zsb-address.component'
 import {AddressService} from '../../shared/address.service'
 import {AmountStudents} from '../amount-students'
 import {Contact, ContactFunction} from '../../zsb-contact/contact'
-import {ZsbKontaktDetailComponent} from '../../zsb-contact/zsb-kontakt-detail/zsb-kontakt-detail.component'
+import {ZsbContactDetailComponent} from '../../zsb-contact/zsb-kontakt-detail/zsb-contact-detail.component'
 import {ZsbKontaktSearchComponent} from '../../zsb-contact/zsb-kontakt-search/zsb-kontakt-search.component'
 import {ValidationErrors} from '@angular/forms'
 import {CooperationPartner} from '../cooperationPartner'
@@ -117,7 +117,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
           return
         }
 
-        if (adresseResult.status === AdresseStatus.CANCELLATION) return
+        if (adresseResult.status === AddressStatus.CANCELLATION) return
 
         // adresse update
         this.adresse = adresseResult.address
@@ -146,7 +146,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
     const dialogConfig = new MatDialogConfig()
     dialogConfig.disableClose = true
     dialogConfig.width = '30%'
-    const dialogRef = this.dialog.open(ZsbKontaktDetailComponent, dialogConfig)
+    const dialogRef = this.dialog.open(ZsbContactDetailComponent, dialogConfig)
     dialogRef.componentInstance.uuid = kontaktId
 
     dialogRef.afterClosed().subscribe(result => {

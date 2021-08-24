@@ -36,7 +36,7 @@ export class AddressService {
     config: MatDialogConfig = this.getStandardDialogConfig()
   ): Observable<AddressResult> {
     const ref = dialog.open(ZsbAddressComponent, config)
-    ref.componentInstance.adresseId = uuid
+    ref.componentInstance.addressId = uuid
     return ref.afterClosed()
   }
 
