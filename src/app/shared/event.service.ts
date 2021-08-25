@@ -30,9 +30,9 @@ export class EventService {
     category: new FormControl(0, Validators.required),
     level: new FormControl(0, Validators.required),
     amountStudents: new FormControl(0, Validators.required),
-    sequence: new FormControl(''),
-    runs: new FormControl(''),
-    contactperson: new FormControl(''),
+    sequence: new FormControl(''), // Ablauf
+    runs: new FormControl(''), // Durchläufe
+    contactPerson: new FormControl(''),
     report_btn: new FormControl({value: '', disabled: true}),
     host_id: new FormControl(null)
   }, {validators: this.selectedHostRequired()})
@@ -67,7 +67,7 @@ export class EventService {
       amountStudents: 0,
       sequence: '',
       runs: '',
-      contactperson: '',
+      contactPerson: '',
       report_btn: {value: '', disabled: true},
       host_id: null
     })
@@ -89,7 +89,7 @@ export class EventService {
       amountStudents: event.amountStudents,
       sequence: event.sequence,
       runs: event.runs,
-      contactperson: event.contactperson,
+      contactPerson: event.contactPerson,
       report_btn: {value: '', disabled: true},
       host_id: event.host_id
     })

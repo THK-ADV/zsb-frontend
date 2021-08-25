@@ -23,7 +23,7 @@ export class SchoolService {
     school_id: new FormControl(null),
     surname: new FormControl('', Validators.required),
     schooltype: new FormControl('', Validators.required),
-    // schwerpunkt: new FormControl(null),
+    // focus: new FormControl(null),
     address: new FormControl({value: '', disabled: true}, Validators.required),
     city: new FormControl(0),
     contacts: new FormArray([]),

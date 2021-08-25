@@ -2,8 +2,8 @@ import {Event} from '../event'
 
 export interface Report {
   uuid: string
-  titel: string
+  title: string
   text: string
-  veranstaltung_id: string
-  veranstaltung?: Event
+  event_id: string
+  event?: Event
 }

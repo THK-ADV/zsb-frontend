@@ -1,21 +1,21 @@
-<form [formGroup]="berichtForm" class="bericht-form">
+<form [formGroup]="reportForm" class="report-form">
   <!-- uuid -->
   <input type="hidden" formControlName="uuid">
 
-  <!-- veranstaltung_id -->
-  <input type="hidden" formControlName="veranstaltung_id">
+  <!-- event_id -->
+  <input type="hidden" formControlName="event_id">
 
-  <!-- titel -->
+  <!-- title -->
   <mat-form-field>
     <label>
-      <input formControlName="titel" matInput placeholder="Titel*">
+      <input formControlName="title" matInput placeholder="Titel*">
     </label>
     <mat-error>Ihre Eingabe wird benötigt.</mat-error>
   </mat-form-field>
   <br>
 
   <!-- text -->
-  <mat-form-field class="bericht-field">
+  <mat-form-field class="report-field">
     <label>
       <textarea formControlName="text" matInput placeholder="Bericht*"></textarea>
     </label>
@@ -23,7 +23,7 @@
 
   <div class="btn-row">
     <button mat-raised-button color="primary" type="submit" (click)="onSubmit()"
-            [disabled]="berichtForm?.invalid">Speichern
+            [disabled]="reportForm?.invalid">Speichern
     </button>
     <button mat-raised-button color="warn" (click)="onClose()">Abbrechen</button>
   </div>

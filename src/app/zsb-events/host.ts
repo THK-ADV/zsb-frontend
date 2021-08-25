@@ -5,6 +5,6 @@ export interface Host {
   uuid: string
   university_id: string
   institution_id: string
-  hochschule?: School
+  university?: School
   institution?: Institution
 }

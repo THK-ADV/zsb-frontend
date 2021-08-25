@@ -8,13 +8,13 @@ export class Category {
     this.desc = desc
   }
 
-  static getKategorieWithId(id: number, list: Category[]): Category {
-    let kategorie = new Category(1, 'Unbekannt')
+  static getCategoryWithId(id: number, list: Category[]): Category {
+    let category = new Category(1, 'Unbekannt')
     list.forEach(it => {
       if (+it.id === +id) {
-        kategorie = it
+        category = it
       }
     })
-    return kategorie
+    return category
   }
 }

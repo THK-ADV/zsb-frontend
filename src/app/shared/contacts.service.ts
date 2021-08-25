@@ -23,7 +23,7 @@ export class ContactsService {
     firstname: new FormControl(''),
     salutation: new FormControl(0, Validators.required),
     email: new FormControl('', [Validators.required, Validators.email]),
-    function: new FormControl('', Validators.required)
+    feature: new FormControl('', Validators.required)
   })
 
   public searchForm: FormGroup = new FormGroup({
@@ -38,7 +38,7 @@ export class ContactsService {
       firstname: '',
       salutation: 0,
       email: '',
-      function: ''
+      feature: ''
     })
   }
 
@@ -49,7 +49,7 @@ export class ContactsService {
       firstname: contact.firstname,
       salutation: contact.salutation,
       email: contact.email,
-      function: contact.function
+      feature: contact.feature
     })
   }
 

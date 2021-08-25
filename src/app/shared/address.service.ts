@@ -18,7 +18,7 @@ export class AddressService {
     governmentDistrict: new FormControl('', Validators.required), // regierungsbezirk
     constituency: new FormControl('', Validators.required), // kreis
     postcode: new FormControl('', Validators.required),
-    designation: new FormControl('', Validators.required), // bezeichnung
+    designation: new FormControl('', Validators.required), // designation
     street: new FormControl('', Validators.required),
     houseNumber: new FormControl('', Validators.required)
   })

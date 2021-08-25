@@ -1,38 +1,38 @@
-<ng-container *ngIf="this.veranstaltungId === undefined; else edit">
+<ng-container *ngIf="this.eventId === undefined; else edit">
   <h1>Veranstaltung hinzufügen</h1>
 </ng-container>
 <ng-template #edit>
   <h1>Veranstaltung bearbeiten</h1>
 </ng-template>
 
-<form [formGroup]="service.getDetailForm()" class="veranstaltung-form">
+<form [formGroup]="service.getDetailForm()" class="event-form">
   <!-- uuid -->
   <input type="hidden" formControlName="uuid">
 
-  <!-- datum-->
+  <!-- date-->
   <mat-form-field appearance="">
     <mat-label>Datum</mat-label>
     <label>
-      <input matInput [matDatepicker]="picker" formControlName="datum" (click)="picker.open()" readonly>
+      <input matInput [matDatepicker]="picker" formControlName="date" (click)="picker.open()" readonly>
     </label>
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker disabled="false"></mat-datepicker>
   </mat-form-field>
   <br>
 
-  <!-- bezeichnung -->
+  <!-- designation -->
   <mat-form-field>
     <label>
-      <input formControlName="bezeichnung" matInput placeholder="Bezeichnung*">
+      <input formControlName="designation" matInput placeholder="Bezeichnung*">
     </label>
     <mat-error>Ihre Eingabe wird benötigt.</mat-error>
   </mat-form-field>
   <br>
 
-  <!-- thema -->
+  <!-- topic -->
   <mat-form-field>
     <label>
-      <input formControlName="thema" matInput placeholder="Thema*">
+      <input formControlName="topic" matInput placeholder="Thema*">
     </label>
     <mat-error>Ihre Eingabe wird benötigt.</mat-error>
   </mat-form-field>
@@ -40,15 +40,15 @@
 
 
   <!-- berichtBtn -->
-  <div *ngIf="this.veranstaltungId !== undefined">
-    <div *ngIf="bericht === undefined else berichtAnpassen">
+  <div *ngIf="this.eventId !== undefined">
+    <div *ngIf="report === undefined else adjustReport">
       <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
-              (click)="editBericht()">Bericht erstellen
+              (click)="editReport()">Bericht erstellen
       </button>
     </div>
-    <ng-template #berichtAnpassen>
+    <ng-template #adjustReport>
       <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
-              (click)="editBericht(this.bericht)">Bericht anpassen
+              (click)="editReport(this.report)">Bericht anpassen
       </button>
     </ng-template>
   </div>
@@ -56,17 +56,17 @@
   <br>
 
   <!-- veranstalterToggle -->
-  <mat-slide-toggle name="veranstalterToggle" formControlName="veranstalterToggle">
+  <mat-slide-toggle name="hostToggle" formControlName="hostToggle">
     Veranstalter ist Schule?
   </mat-slide-toggle>
   <br>
   <br>
 
-  <div *ngIf="veranstalterIsSchule">
+  <div *ngIf="hostIsSchool">
     <!-- schule -->
     <mat-form-field>
-      <mat-select formControlName="schule" placeholder="Schule">
-        <ng-container *ngFor="let it of schulen | async">
+      <mat-select formControlName="school" placeholder="Schule">
+        <ng-container *ngFor="let it of schools | async">
           <mat-option [value]="it.school_id">
             {{it.surname}} <br>
           </mat-option>
@@ -77,11 +77,11 @@
     <br>
   </div>
 
-  <div *ngIf="!veranstalterIsSchule">
+  <div *ngIf="!hostIsSchool">
     <!-- institution -->
     <mat-form-field>
       <mat-select formControlName="institution" placeholder="Institution*">
-        <ng-container *ngFor="let it of institutionen | async">
+        <ng-container *ngFor="let it of institutions | async">
           <mat-option [value]="it.uuid">
             {{it.designation}} <br>
           </mat-option>
@@ -93,10 +93,10 @@
   </div>
 
 
-  <!-- kategorie -->
+  <!-- category -->
   <mat-form-field>
-    <mat-select formControlName="kategorie" placeholder="Kategorie" multiple>
-      <ng-container *ngFor="let it of kategorien | async">
+    <mat-select formControlName="category" placeholder="Kategorie" multiple>
+      <ng-container *ngFor="let it of categories | async">
         <mat-option [value]="it.id">
           {{it.desc}} <br>
         </mat-option>
@@ -108,8 +108,8 @@
 
   <!-- stufe -->
   <mat-form-field>
-    <mat-select formControlName="stufe" placeholder="Stufe" multiple>
-      <ng-container *ngFor="let it of stufen | async">
+    <mat-select formControlName="level" placeholder="Stufe" multiple>
+      <ng-container *ngFor="let it of levels | async">
         <mat-option [value]="it.id">
           {{it.desc}} <br>
         </mat-option>
@@ -122,7 +122,7 @@
   <!-- anzahlSus -->
   <mat-form-field>
     <label>
-      <input formControlName="anzahlSus" matInput placeholder="Anzahl SuS">
+      <input formControlName="amountStudents" matInput placeholder="Anzahl SuS">
     </label>
   </mat-form-field>
   <br>
@@ -130,7 +130,7 @@
   <!-- ablaufUndBewertung -->
   <mat-form-field>
     <label>
-      <textarea formControlName="ablauf" matInput placeholder="Ablauf und Bewertung"></textarea>
+      <textarea formControlName="sequence" matInput placeholder="Ablauf und Bewertung"></textarea>
     </label>
   </mat-form-field>
   <br>
@@ -138,7 +138,7 @@
   <!-- durchlaeufe -->
   <mat-form-field>
     <label>
-      <input formControlName="durchlaeufe" matInput placeholder="Durchläufe">
+      <input formControlName="runs" matInput placeholder="Durchläufe">
     </label>
     <mat-error>Ihre Eingabe wird benötigt.</mat-error>
   </mat-form-field>
@@ -148,7 +148,7 @@
   <!-- ansprechpartner -->
   <mat-form-field>
     <label>
-      <input formControlName="ansprechpartner" matInput placeholder="Ansprechpartner">
+      <input formControlName="contactPerson" matInput placeholder="Ansprechpartner">
     </label>
   </mat-form-field>
   <br>

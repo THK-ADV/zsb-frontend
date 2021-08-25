@@ -1,12 +1,12 @@
-.veranstaltung-form {
+.event-form {
   min-width: 350px;
 }
 
-.veranstaltung-form mat-form-field {
+.event-form mat-form-field {
   width: 100%;
 }
 
-.veranstaltung-form mat-form-field textarea {
+.event-form mat-form-field textarea {
   min-height: max-content;
   height: 100px;
 }

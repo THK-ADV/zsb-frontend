@@ -50,7 +50,7 @@ export class ZsbInstitutionenDetailComponent implements OnInit {
   onSubmit() {
     const institutionFromForm = this.service.getInstForm().value
     this.institution.email = institutionFromForm.email
-    this.institution.bezeichnung = institutionFromForm.bezeichnung
+    this.institution.designation = institutionFromForm.bezeichnung
 
     let observer
     if (institutionFromForm.uuid == null) {
@@ -70,7 +70,7 @@ export class ZsbInstitutionenDetailComponent implements OnInit {
 
   changeAdresse() {
     let adresseId = null
-    if (this.institution !== undefined) adresseId = this.institution.adress_id
+    if (this.institution !== undefined) adresseId = this.institution.address_id
     AddressService.openAddressDialog(this.dialog, adresseId)
       .subscribe(adresseResult => {
         if (adresseResult === undefined) {
@@ -80,8 +80,8 @@ export class ZsbInstitutionenDetailComponent implements OnInit {
 
         if (adresseResult.status === AddressStatus.CANCELLATION) return
 
-        this.institution.adresse = adresseResult.address
-        this.institution.adress_id = adresseResult.address.address_id
+        this.institution.address = adresseResult.address
+        this.institution.address_id = adresseResult.address.address_id
         this.service.updateAdresseInForm(this.institution.address)
         this.notificationService.success('Adresse aktualisiert.')
       })

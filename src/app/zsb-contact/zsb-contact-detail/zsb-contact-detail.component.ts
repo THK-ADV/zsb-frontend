@@ -47,7 +47,7 @@ export class ZsbContactDetailComponent implements OnInit {
       && this.contact.surname === editedContact.surname
       && this.contact.firstname === editedContact.firstname
       && this.contact.email === editedContact.email
-      && this.contact.function === editedContact.function
+      && this.contact.feature === editedContact.feature
       && this.contact.salutation === editedContact.salutation) {
       // nothing has changed.
       this.onClose()
@@ -62,7 +62,7 @@ export class ZsbContactDetailComponent implements OnInit {
     }, error => {
       // show failure dialog and remain in dialog
       console.log(error)
-      this.notificationService.failure('Kontakt konnte nicht gesichert werden. Bitte versuchen sie es später nochmal.')
+      this.notificationService.failure('Kontakt konnte nicht gesichert werden. Bitte versuchen Sie es später nochmal.')
     })
   }
 

@@ -1,4 +1,34 @@
-<h1>Kontakt Verwaltung</h1>
+<h1>Kontakt hinzufügen</h1>
+
+<form [formGroup]="service.searchForm">
+  <div class="controls-container">
+    <!-- Search existing Kontakte -->
+    <mat-form-field class="full-width">
+    <input
+      name="name"
+      type="text"
+      placeholder="Suche"
+      aria-label="Number"
+      matInput
+      formControlName="searchKey"
+      [matAutocomplete]="ac_search">
+    <mat-autocomplete autoActiveFirstOption #ac_search="matAutocomplete">
+      <mat-option *ngFor="let option of filteredContactNames | async" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-autocomplete>
+    </mat-form-field>
+    <br>
+
+    <!-- checkbox -> create new -->
+    <mat-slide-toggle name="addToggle"  formControlName="enableEdit">
+      Neuen Kontakt hinzufügen?
+    </mat-slide-toggle>
+  </div>
+</form>
+
+<br>
+
 <form [formGroup]="service.contactForm" class="normal-form example-form">
   <div class="controls-container">
     <!-- UUID -->
@@ -46,11 +76,11 @@
 
     <!-- FUNKTION -->
     <mat-form-field class="full-width">
-      <mat-select formControlName="function" placeholder="Funktion*">
+      <mat-select formControlName="feature" placeholder="Funktion*">
         <mat-option value="-1">Keine</mat-option>
-        <ng-container *ngFor="let funktion of service.contactFunctions | async">
-          <mat-option [value]="funktion.id">
-            {{funktion.desc}} <br>
+        <ng-container *ngFor="let feature of service.contactFunctions | async">
+          <mat-option [value]="feature.id">
+            {{feature.desc}} <br>
           </mat-option>
         </ng-container>
       </mat-select>
@@ -60,7 +90,8 @@
 
     <!-- BUTTONS -->
     <div class="btn-row">
-      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="service.contactForm.invalid"> <!-- type="submit" -->
+      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="service.contactForm.invalid">
+        <!-- type="submit" -->
         Übernehmen
       </button>
       <button mat-raised-button color="warn" (click)="onClose()">Abbrechen</button>

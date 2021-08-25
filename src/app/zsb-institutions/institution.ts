@@ -2,8 +2,8 @@ import {Address} from '../zsb-address/address'
 
 export interface Institution {
   uuid: string
-  bezeichnung: string
+  designation: string
   email: string
-  adress_id: string
-  adresse?: Address
+  address_id: string
+  address?: Address
 }

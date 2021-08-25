@@ -4,7 +4,7 @@ export interface Contact {
   firstname: string
   salutation: number
   email: string
-  function: number
+  feature: number
 }
 
 export interface ContactFunction {

@@ -15,7 +15,7 @@ import {Level} from '../zsb-events/level'
 import {PresentationType} from '../zsb-events/presentationType'
 import {Institution} from '../zsb-institutions/institution'
 import {Host} from '../zsb-events/host'
-import {Report} from '../zsb-events/zsb-bericht/report'
+import {Report} from '../zsb-events/zsb-report/report'
 import {CooperationPartner} from '../zsb-school/cooperationPartner'
 import {Signature} from '../zsb-communication/zsb-letter/signature'
 import {Letter} from '../zsb-communication/zsb-letter/letter'
@@ -115,7 +115,7 @@ export class DatabaseService {
   }
 
   getContactFunctions() {
-    return this.httpClient.get<ContactFunction[]>(this.DB_URL + '/contacts/function')
+    return this.httpClient.get<ContactFunction[]>(this.DB_URL + '/contacts/feature')
   }
 
   getAddressFromArrayByAddressId(addresses: Address[], id: string): Address {
@@ -251,6 +251,6 @@ export class DatabaseService {
   }
 
   getInstitutionByIdAtomic(institutionId: string) {
-    return this.httpClient.get<Institution>(this.DB_URL + '/institutionen/' + institutionId + this.ATOMIC)
+    return this.httpClient.get<Institution>(this.DB_URL + '/institutions/' + institutionId + this.ATOMIC)
   }
 }

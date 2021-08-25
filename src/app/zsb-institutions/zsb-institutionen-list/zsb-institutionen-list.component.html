@@ -1,9 +1,9 @@
 <div class="search-div">
-  <button mat-raised-button [routerLink]="['/institutionen/new']" color="primary">
+  <button mat-raised-button [routerLink]="['/institutions/new']" color="primary">
     <mat-icon>add</mat-icon>
     Hinzufügen
   </button>
-  <!--  'datum', 'bezeichnung', 'kategorie', 'thema'-->
+  <!--  'date', 'designation', 'category', 'topic'-->
   <mat-form-field class="search-form-field" floatLabel="never" matTooltip="Suche ist hier noch nicht über mehrere Suchbegriffe möglich. Kommt aber noch.">
     <label>
       <input matInput [(ngModel)]="searchKey" placeholder="Suche" autocomplete="off" (keyup)="applyFilter()">
@@ -17,30 +17,30 @@
 <div class="mat-elevation-z8 data-table">
   <mat-table [dataSource]="listData" matSort>
 
-    <!--  'datum', 'bezeichnung', 'kategorie', 'thema'-->
-    <!-- datum Column -->
+    <!--  'date', 'designation', 'category', 'topic'-->
+    <!-- date Column -->
     <ng-container matColumnDef="bezeichnung">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Bezeichnung</mat-header-cell>
-      <mat-cell [routerLink]="['/institutionen', row.uuid]" *matCellDef="let row">{{row.bezeichnung}}</mat-cell>
+      <mat-cell [routerLink]="['/institutions', row.uuid]" *matCellDef="let row">{{row.bezeichnung}}</mat-cell>
     </ng-container>
 
-    <!-- bezeichnung Column -->
+    <!-- designation Column -->
     <ng-container matColumnDef="email">
       <mat-header-cell *matHeaderCellDef mat-sort-header>E-Mail</mat-header-cell>
-      <mat-cell [routerLink]="['/institutionen', row.uuid]" *matCellDef="let row">{{row.email}}</mat-cell>
+      <mat-cell [routerLink]="['/institutions', row.uuid]" *matCellDef="let row">{{row.email}}</mat-cell>
     </ng-container>
 
-    <!-- kategorie Column -->
+    <!-- category Column -->
     <ng-container matColumnDef="ort">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Ort</mat-header-cell>
-      <mat-cell [routerLink]="['/institutionen', row.uuid]" *matCellDef="let row">{{row.adresse.ort.bezeichnung}}</mat-cell>
+      <mat-cell [routerLink]="['/institutions', row.uuid]" *matCellDef="let row">{{row.adresse.ort.bezeichnung}}</mat-cell>
     </ng-container>
 
     <!-- edit and delete Column -->
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let row">
-        <button mat-icon-button [routerLink]="['/institutionen', row.uuid]" matTooltip="Veranstaltung editieren">
+        <button mat-icon-button [routerLink]="['/institutions', row.uuid]" matTooltip="Veranstaltung editieren">
           <mat-icon>edit</mat-icon> <!-- use launch or edit -->
         </button>
         <button mat-icon-button color="warn" matTooltip="Veranstaltung entfernen">

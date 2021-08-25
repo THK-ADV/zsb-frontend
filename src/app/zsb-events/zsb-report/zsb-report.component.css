@@ -1,4 +1,4 @@
-.bericht-form {
+.report-form {
   min-width: 256px;
   max-width: 512px;
   width: 100%;
@@ -8,15 +8,15 @@
   width: 100%;
 }
 
-.bericht-form {
+.report-form {
   min-width: 350px;
 }
 
-.bericht-form mat-form-field {
+.report-form mat-form-field {
   width: 100%;
 }
 
-.bericht-form mat-form-field textarea {
+.report-form mat-form-field textarea {
   min-height: max-content;
   height: 200px;
 }

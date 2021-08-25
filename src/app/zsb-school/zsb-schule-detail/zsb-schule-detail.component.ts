@@ -11,8 +11,8 @@ import {AddressStatus} from '../../zsb-address/zsb-address.component'
 import {AddressService} from '../../shared/address.service'
 import {AmountStudents} from '../amount-students'
 import {Contact, ContactFunction} from '../../zsb-contact/contact'
-import {ZsbContactDetailComponent} from '../../zsb-contact/zsb-kontakt-detail/zsb-contact-detail.component'
-import {ZsbKontaktSearchComponent} from '../../zsb-contact/zsb-kontakt-search/zsb-kontakt-search.component'
+import {ZsbContactDetailComponent} from '../../zsb-contact/zsb-contact-detail/zsb-contact-detail.component'
+import {ZsbContactSearchComponent} from '../../zsb-contact/zsb-contact-search/zsb-contact-search.component'
 import {ValidationErrors} from '@angular/forms'
 import {CooperationPartner} from '../cooperationPartner'
 
@@ -119,7 +119,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
 
         if (adresseResult.status === AddressStatus.CANCELLATION) return
 
-        // adresse update
+        // address update
         this.adresse = adresseResult.address
         this.notificationService.success('Adresse aktualisiert.')
         if (this.address !== undefined) {
@@ -186,7 +186,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
   }
 
   addKontakt() {
-    const dialogRef = this.createDialog(ZsbKontaktSearchComponent)
+    const dialogRef = this.createDialog(ZsbContactSearchComponent)
     dialogRef.afterClosed().subscribe(it => {
       // do nothing, if nothing got added
       if (it === undefined) {

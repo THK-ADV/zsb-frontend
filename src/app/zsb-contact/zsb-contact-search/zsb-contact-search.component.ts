@@ -8,17 +8,17 @@ import {Observable} from 'rxjs'
 import {filterOptions} from '../../shared/functions'
 
 @Component({
-  selector: 'app-zsb-kontakt-search',
-  templateUrl: './zsb-kontakt-search.component.html',
-  styleUrls: ['./zsb-kontakt-search.component.css']
+  selector: 'app-zsb-contact-search',
+  templateUrl: './zsb-contact-search.component.html',
+  styleUrls: ['./zsb-contact-search.component.css']
 })
-export class ZsbKontaktSearchComponent implements OnInit {
+export class ZsbContactSearchComponent implements OnInit {
 
-  currentKontakte: Contact[]
-  filteredKontakteNames: Observable<string[]>
+  currentContacts: Contact[]
+  filteredContactNames: Observable<string[]>
 
   constructor(
-    private dialogRef: MatDialogRef<ZsbKontaktSearchComponent>,
+    private dialogRef: MatDialogRef<ZsbContactSearchComponent>,
     private notificationService: NotificationService,
     private dbService: DatabaseService,
     public service: ContactsService) {
@@ -29,9 +29,9 @@ export class ZsbKontaktSearchComponent implements OnInit {
     this.service.initializeContactForm()
     this.service.contactForm.disable()
 
-    // get all kontakte from db
-    this.dbService.getContacts().subscribe(kontakte => {
-      this.currentKontakte = kontakte
+    // get all contacts from db
+    this.dbService.getContacts().subscribe(contacts => {
+      this.currentContacts = contacts
       this.updateSearchAutoComplete()
     })
 
@@ -50,29 +50,29 @@ export class ZsbKontaktSearchComponent implements OnInit {
 
     // update search
     this.service.searchForm.get('searchKey').valueChanges.subscribe(newSearchKey => {
-      this.updateKontaktBySearchKey(newSearchKey)
+      this.updateContactBySearchKey(newSearchKey)
     })
   }
 
   updateSearchAutoComplete() {
-    const unorderedNames = this.currentKontakte.map(it => combineContactName(it))
-    this.filteredKontakteNames = filterOptions(
+    const unorderedNames = this.currentContacts.map(it => combineContactName(it))
+    this.filteredContactNames = filterOptions(
       this.service.searchForm.controls.searchKey,
       this.sortArrayAlphabetically(unorderedNames)
     )
   }
 
   onSubmit() {
-    const isNewKontakt = this.service.searchForm.get('enableEdit').value as boolean
-    const kontakt = this.service.getContact()
-    if (isNewKontakt) {
+    const isNewContact = this.service.searchForm.get('enableEdit').value as boolean
+    const contact = this.service.getContact()
+    if (isNewContact) {
       // create in db and close dialog
-      this.dbService.updateOrCreateContact(kontakt).subscribe(createdKontakt => {
-        this.onClose(createdKontakt)
+      this.dbService.updateOrCreateContact(contact).subscribe(createdContact => {
+        this.onClose(createdContact)
       })
     } else {
-      // close dialog and provide selected kontakt
-      this.onClose(kontakt)
+      // close dialog and provide selected contact
+      this.onClose(contact)
     }
   }
 
@@ -80,10 +80,10 @@ export class ZsbKontaktSearchComponent implements OnInit {
     this.dialogRef.close(result)
   }
 
-  private updateKontaktBySearchKey(newSearchKey: string) {
-    const kontakt = this.currentKontakte.find(it => combineContactName(it) === newSearchKey)
-    if (kontakt !== undefined) {
-      this.service.populateContactForm(kontakt)
+  private updateContactBySearchKey(newSearchKey: string) {
+    const contact = this.currentContacts.find(it => combineContactName(it) === newSearchKey)
+    if (contact !== undefined) {
+      this.service.populateContactForm(contact)
     } else {
       this.service.initializeContactForm()
     }

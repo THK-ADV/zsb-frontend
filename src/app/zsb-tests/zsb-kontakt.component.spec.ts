@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing'
 
-import {ZsbContactDetailComponent} from '../zsb-contact/zsb-kontakt-detail/zsb-contact-detail.component'
+import {ZsbContactDetailComponent} from '../zsb-contact/zsb-contact-detail/zsb-contact-detail.component'
 
 describe('ZsbKontaktComponent', () => {
   let component: ZsbContactDetailComponent

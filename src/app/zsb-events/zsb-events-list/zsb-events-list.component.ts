@@ -10,26 +10,26 @@ import {NotificationService} from '../../shared/notification.service'
 import {DbTextResponse} from '../../shared/dbTextResponse'
 
 @Component({
-  selector: 'app-zsb-veranstaltungen-list',
-  templateUrl: './zsb-veranstaltungen-list.component.html',
-  styleUrls: ['./zsb-veranstaltungen-list.component.css']
+  selector: 'app-zsb-events-list',
+  templateUrl: './zsb-events-list.component.html',
+  styleUrls: ['./zsb-events-list.component.css']
 })
-export class ZsbVeranstaltungenListComponent implements OnInit {
+export class ZsbEventsListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
   searchKey: string
-  listData: MatTableDataSource<VeranstaltungenListDisplay>
+  listData: MatTableDataSource<EventsListDisplay>
 
   // order here represents the order in the displayed table
-  displayedColumns: Array<string> = ['datum', 'bezeichnung', 'kategorie', 'thema', 'actions']
+  displayedColumns: Array<string> = ['date', 'designation', 'category', 'topic', 'actions']
 
   constructor(private service: EventService, private datePipe: DatePipe, private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
-    this.service.getEvents().subscribe(veranstaltungen => {
-      const mappedVeranstaltungen = veranstaltungen.map(it => new VeranstaltungenListDisplay(it, this.service.getCategories()))
-      this.listData = new MatTableDataSource<VeranstaltungenListDisplay>(mappedVeranstaltungen)
+    this.service.getEvents().subscribe(events => {
+      const mappedEvents = events.map(it => new EventsListDisplay(it, this.service.getCategories()))
+      this.listData = new MatTableDataSource<EventsListDisplay>(mappedEvents)
       this.listData.sort = this.sort
       this.listData.paginator = this.paginator
     })
@@ -44,13 +44,13 @@ export class ZsbVeranstaltungenListComponent implements OnInit {
     this.listData.filter = this.searchKey.trim().toLowerCase()
   }
 
-  deleteVeranstaltung(bezeichnung: string, uuid: string) {
-    if (confirm('Seid ihr sicher, dass ihr "' + bezeichnung + '" löschen möchtet? \n Hinweis: Zugehörige Berichte werden ebenfalls gelöscht!')) {
+  deleteEvent(designation: string, uuid: string) {
+    if (confirm('Seid ihr sicher, dass ihr "' + designation + '" löschen möchtet? \n Hinweis: Zugehörige Berichte werden ebenfalls gelöscht!')) {
       this.service.deleteEvent(uuid).subscribe(it => {
         const response = it as DbTextResponse
         if (+response.status === 200) {
           this.notificationService.success(':: Veranstaltung wurde erfolgreich entfernt.')
-          // remove veranstaltung from table
+          // remove event from table
           this.ngOnInit()
         } else {
           console.log(response.msg + '(' + response.status + ')')
@@ -66,22 +66,22 @@ export class ZsbVeranstaltungenListComponent implements OnInit {
   }
 }
 
-export class VeranstaltungenListDisplay {
+export class EventsListDisplay {
   uuid: string
-  datum: string
-  bezeichnung: string
-  kategorie: string
-  thema: string
+  date: string
+  designation: string
+  category: string
+  topic: string
 
-  constructor(veranstaltung: Event, kategorien: Category[]) {
-    let kategorienAsString = ''
-    veranstaltung.category.forEach(it => {
-      kategorienAsString = Category.getKategorieWithId(it, kategorien).desc + ' ' + kategorienAsString
+  constructor(event: Event, categories: Category[]) {
+    let categoriesAsString = ''
+    event.category.forEach(it => {
+      categoriesAsString = Category.getCategoryWithId(it, categories).desc + ' ' + categoriesAsString
     })
-    this.uuid = veranstaltung.uuid
-    this.datum = veranstaltung.date
-    this.bezeichnung = veranstaltung.designation
-    this.kategorie = kategorienAsString
-    this.thema = veranstaltung.topic
+    this.uuid = event.uuid
+    this.date = event.date
+    this.designation = event.designation
+    this.category = categoriesAsString
+    this.topic = event.topic
   }
 }

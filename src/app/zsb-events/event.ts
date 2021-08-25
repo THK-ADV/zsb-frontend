@@ -11,6 +11,6 @@ export interface Event {
   level: number[]
   sequence: string
   runs: string
-  contactperson: string
+  contactPerson: string
   host?: Host
 }
