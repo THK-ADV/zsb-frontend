@@ -51,10 +51,10 @@ const appRoutes: Routes = [
   {path: '', component: ZsbSchoolComponent},
   {path: 'schools/:schoolId', component: ZsbSchoolDetailComponent},
   {path: 'schools/:schoolId/address/:addressId', component: ZsbAddressComponent},
-  {path: 'schulen', component: ZsbSchoolDetailComponent},
-  {path: 'veranstaltungen', component: ZsbEventsComponent},
-  {path: 'veranstaltungen/:eventId', component: ZsbEventsDetailComponent},
-  {path: 'institutionen', component: ZsbInstitutionsComponent},
+  {path: 'schools', component: ZsbSchoolDetailComponent},
+  {path: 'events', component: ZsbEventsComponent},
+  {path: 'events/:eventId', component: ZsbEventsDetailComponent},
+  {path: 'institutions', component: ZsbInstitutionsComponent},
   {path: 'institutions/:institutionId', component: ZsbInstitutionsDetailComponent},
 ]
 
