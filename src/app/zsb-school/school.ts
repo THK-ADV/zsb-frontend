@@ -1,7 +1,7 @@
 import {Address} from '../zsb-address/address'
 import {Contact} from '../zsb-contact/contact'
-import {SchoolType, schulformDescById} from './schoolType'
-import {AmountStudents, anzahlSusTextById} from './amount-students'
+import {SchoolType, schoolTypeDescById} from './schoolType'
+import {AmountStudents, amountStudentsTextById} from './amount-students'
 
 export interface School {
   school_id: string
@@ -20,13 +20,13 @@ export interface School {
   address: Address
 }
 
-export function completeSchuleAsString(school: School, schoolTypes: SchoolType[], amountStudentsList: AmountStudents[]): string {
+export function completeSchoolAsString(school: School, schoolTypes: SchoolType[], amountStudentsList: AmountStudents[]): string {
   let concatenatedString = school.surname
-  concatenatedString += schulformDescById(school.schooltype, schoolTypes)
+  concatenatedString += schoolTypeDescById(school.schooltype, schoolTypes)
   if (school.cooperationcontract) concatenatedString += 'Kooperationsvertrag'
   if (school.kaoa_university) concatenatedString += 'kaoa'
   if (school.talentscouting) concatenatedString += 'Talentscouting'
-  concatenatedString += anzahlSusTextById(school.amount_students, amountStudentsList)
+  concatenatedString += amountStudentsTextById(school.amount_students, amountStudentsList)
   concatenatedString += school.address.city.postcode
   concatenatedString += school.address.city.designation
   concatenatedString += school.address.city.governmentDistrict

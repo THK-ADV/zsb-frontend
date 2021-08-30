@@ -5,18 +5,18 @@ import {DatabaseService} from '../shared/database.service'
 import {MatDialog} from '@angular/material/dialog'
 
 @Component({
-  selector: 'app-zsb-schule',
-  templateUrl: './zsb-schule.component.html',
-  styleUrls: ['./zsb-schule.component.css']
+  selector: 'app-zsb-school',
+  templateUrl: './zsb-school.component.html',
+  styleUrls: ['./zsb-school.component.css']
 })
-export class ZsbSchuleComponent implements OnInit {
-  schulen: Observable<School[]>
+export class ZsbSchoolComponent implements OnInit {
+  schools: Observable<School[]>
 
   constructor(private databaseService: DatabaseService, private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
-    this.schulen = this.databaseService.getSchoolsAtomic()
+    this.schools = this.databaseService.getSchoolsAtomic()
   }
 
   filterList() {
@@ -26,9 +26,9 @@ export class ZsbSchuleComponent implements OnInit {
     // this.dialog.open(E)
   }
 
-  editSchule(id: number) {
+  editSchool(id: number) {
   }
 
-  deleteSchule(id: number) {
+  deleteSchool(id: number) {
   }
 }

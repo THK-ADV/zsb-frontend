@@ -4,15 +4,15 @@ import {MatPaginatorModule} from '@angular/material/paginator'
 import {MatSortModule} from '@angular/material/sort'
 import {MatTableModule} from '@angular/material/table'
 
-import {ZsbSchuleListComponent} from '../zsb-school/zsb-schule-list/zsb-schule-list.component'
+import {ZsbSchoolListComponent} from '../zsb-school/zsb-school-list/zsb-school-list.component'
 
 describe('DataTableComponent', () => {
-  let component: ZsbSchuleListComponent
-  let fixture: ComponentFixture<ZsbSchuleListComponent>
+  let component: ZsbSchoolListComponent
+  let fixture: ComponentFixture<ZsbSchoolListComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ZsbSchuleListComponent],
+      declarations: [ZsbSchoolListComponent],
       imports: [
         NoopAnimationsModule,
         MatPaginatorModule,
@@ -23,7 +23,7 @@ describe('DataTableComponent', () => {
   }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ZsbSchuleListComponent)
+    fixture = TestBed.createComponent(ZsbSchoolListComponent)
     component = fixture.componentInstance
     fixture.detectChanges()
   })

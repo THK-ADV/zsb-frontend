@@ -8,7 +8,7 @@ import {getReadableAddress} from '../shared/functions'
 @Injectable({
   providedIn: 'root'
 })
-export class InstitutionenService {
+export class InstitutionsService {
 
   constructor(public dbService: DatabaseService) {
   }
@@ -38,9 +38,9 @@ export class InstitutionenService {
     })
   }
 
-  updateAdresseInForm(newAdresse: Address) {
+  updateAddressInForm(newAddress: Address) {
     this.instForm.patchValue({
-      address: getReadableAddress(newAdresse, newAdresse.city)
+      address: getReadableAddress(newAddress, newAddress.city)
     })
   }
 
@@ -52,7 +52,7 @@ export class InstitutionenService {
     return this.dbService.deleteInstitution(uuid)
   }
 
-  getInstitutionen() {
+  getInstitutions() {
     return this.dbService.getAllInstitutions()
   }
 }

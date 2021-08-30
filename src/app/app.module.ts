@@ -7,7 +7,7 @@ import {MatToolbarModule} from '@angular/material/toolbar'
 import {MatSliderModule} from '@angular/material/slider'
 import {HttpClientModule} from '@angular/common/http'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
-import {ZsbSchuleComponent} from './zsb-school/zsb-schule.component'
+import {ZsbSchoolComponent} from './zsb-school/zsb-school.component'
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 import {MatButtonModule} from '@angular/material/button'
 import {MatTableModule} from '@angular/material/table'
@@ -16,8 +16,8 @@ import {MatIconModule} from '@angular/material/icon'
 import {MatPaginatorModule} from '@angular/material/paginator'
 import {MatSortModule} from '@angular/material/sort'
 import {MatDialogModule} from '@angular/material/dialog'
-import {ZsbSchuleListComponent} from './zsb-school/zsb-schule-list/zsb-schule-list.component'
-import {ZsbSchuleDetailComponent} from './zsb-school/zsb-schule-detail/zsb-schule-detail.component'
+import {ZsbSchoolListComponent} from './zsb-school/zsb-school-list/zsb-school-list.component'
+import {ZsbSchoolDetailComponent} from './zsb-school/zsb-school-detail/zsb-school-detail.component'
 import {MatFormFieldModule} from '@angular/material/form-field'
 import {MatSelectModule} from '@angular/material/select'
 import {MatInputModule} from '@angular/material/input'
@@ -41,29 +41,29 @@ import {MatDatepickerModule} from '@angular/material/datepicker'
 import {MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core'
 import {MatTooltipModule} from '@angular/material/tooltip'
 import {ZsbReportComponent} from './zsb-events/zsb-report/zsb-report.component'
-import {ZsbInstitutionenComponent} from './zsb-institutions/zsb-institutionen.component'
-import {ZsbInstitutionenListComponent} from './zsb-institutions/zsb-institutionen-list/zsb-institutionen-list.component'
-import {ZsbInstitutionenDetailComponent} from './zsb-institutions/zsb-institutionen-detail/zsb-institutionen-detail.component'
+import {ZsbInstitutionsComponent} from './zsb-institutions/zsb-institutions.component'
+import {ZsbInstitutionsListComponent} from './zsb-institutions/zsb-institutionen-list/zsb-institutions-list.component'
+import {ZsbInstitutionsDetailComponent} from './zsb-institutions/zsb-institutionen-detail/zsb-institutions-detail.component'
 import {ZsbLetterComponent} from './zsb-communication/zsb-letter/zsb-letter.component'
 import {ZsbEmailComponent} from './zsb-communication/zsb-email/zsb-email.component'
 
 const appRoutes: Routes = [
-  {path: '', component: ZsbSchuleComponent},
-  {path: 'schools/:schuleId', component: ZsbSchuleDetailComponent},
-  {path: 'schools/:schuleId/address/:adresseId', component: ZsbAddressComponent},
-  {path: 'schulen', component: ZsbSchuleDetailComponent},
+  {path: '', component: ZsbSchoolComponent},
+  {path: 'schools/:schoolId', component: ZsbSchoolDetailComponent},
+  {path: 'schools/:schoolId/address/:addressId', component: ZsbAddressComponent},
+  {path: 'schulen', component: ZsbSchoolDetailComponent},
   {path: 'veranstaltungen', component: ZsbEventsComponent},
   {path: 'veranstaltungen/:eventId', component: ZsbEventsDetailComponent},
-  {path: 'institutionen', component: ZsbInstitutionenComponent},
-  {path: 'institutions/:institutionId', component: ZsbInstitutionenDetailComponent},
+  {path: 'institutionen', component: ZsbInstitutionsComponent},
+  {path: 'institutions/:institutionId', component: ZsbInstitutionsDetailComponent},
 ]
 
 @NgModule({
   declarations: [
     AppComponent,
-    ZsbSchuleComponent,
-    ZsbSchuleListComponent,
-    ZsbSchuleDetailComponent,
+    ZsbSchoolComponent,
+    ZsbSchoolListComponent,
+    ZsbSchoolDetailComponent,
     ZsbAddressComponent,
     ZsbContactDetailComponent,
     ZsbContactSearchComponent,
@@ -71,9 +71,9 @@ const appRoutes: Routes = [
     ZsbEventsListComponent,
     ZsbEventsDetailComponent,
     ZsbReportComponent,
-    ZsbInstitutionenComponent,
-    ZsbInstitutionenListComponent,
-    ZsbInstitutionenDetailComponent,
+    ZsbInstitutionsComponent,
+    ZsbInstitutionsListComponent,
+    ZsbInstitutionsDetailComponent,
     ZsbLetterComponent,
     ZsbEmailComponent
   ],
@@ -127,7 +127,7 @@ const appRoutes: Routes = [
     // }
   ],
   bootstrap: [AppComponent]
-  // entryComponents: [ZsbSchuleDetailComponent]
+  // entryComponents: [ZsbSchoolDetailComponent]
 })
 export class AppModule {
 }

@@ -1,4 +1,4 @@
-<ng-container *ngIf="this.schuleId != null; else newSchule">
+<ng-container *ngIf="this.schoolId != null; else newSchule">
   <h1>Schule bearbeiten</h1>
 </ng-container>
 <ng-template #newSchule>
@@ -21,7 +21,7 @@
         <mat-form-field>
           <mat-select formControlName="schulform" placeholder="Schulform*">
             <mat-option value="-1">Keine</mat-option>
-            <ng-container *ngFor="let schulform of schulformen | async">
+            <ng-container *ngFor="let schulform of schoolTypes | async">
               <mat-option [value]="schulform.id">
                 {{schulform.desc}} <br>
               </mat-option>
@@ -33,7 +33,7 @@
         <mat-form-field>
           <mat-select formControlName="anzahl_sus" placeholder="Anzahl SuS*">
             <mat-option value="-1">Keine</mat-option>
-            <ng-container *ngFor="let sus of anzahlSusRanges | async">
+            <ng-container *ngFor="let sus of amountStudentsRanges | async">
               <mat-option [value]="sus.id">
                 {{sus.range}} <br>
               </mat-option>
@@ -46,7 +46,7 @@
         <div formArrayName="kontakte">
           <h3>Kontakte</h3>
 
-          <table class="kontakt-table">
+          <table class="contact-table">
             <tr class="header-row">
               <th>Name</th>
               <th>Funktion</th>
@@ -72,11 +72,11 @@
                   </ng-container>
                 </td>
                 <td>
-                  {{getKontaktFunktionDescById(kontakt.value.funktion)}}
+                  {{getContactFunctionDescById(kontakt.value.funktion)}}
                 </td>
                 <td>
                   <!-- go to details for this kontakt-->
-                  <button mat-icon-button (click)="showKontaktDetail(kontakt.value.uuid)"
+                  <button mat-icon-button (click)="showContactDetail(kontakt.value.uuid)"
                           matTooltip="Kontakt editieren">
                     <mat-icon>edit</mat-icon>
                   </button>
@@ -91,7 +91,7 @@
             <!-- ADD Kontakt (Button) -->
             <tr>
               <td [attr.colspan]="3">
-                <button class="btn-span-full-table" mat-stroked-button (click)="addKontakt()">
+                <button class="btn-span-full-table" mat-stroked-button (click)="addContact()">
                   <mat-icon>add</mat-icon>
                   Hinzufügen
                 </button>
@@ -112,7 +112,7 @@
 
         <div class="single-btn-row">
           <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
-                  (click)="changeAdresse()">Standort verwalten
+                  (click)="changeAddress()">Standort verwalten
           </button>
         </div>
         <br><br>
@@ -126,7 +126,7 @@
 
             <mat-form-field>
               <mat-select formControlName="kaoa_partner" placeholder="Partner*">
-                <ng-container *ngFor="let option of kooperationspartner">
+                <ng-container *ngFor="let option of cooperationPartners">
                   <mat-option [value]="option.id">
                     {{option.desc}} <br>
                   </mat-option>
@@ -142,7 +142,7 @@
 
             <mat-form-field>
               <mat-select formControlName="talentscouting_partner" placeholder="Partner*">
-                <ng-container *ngFor="let option of kooperationspartner">
+                <ng-container *ngFor="let option of cooperationPartners">
                   <mat-option [value]="option.id">
                     {{option.desc}} <br>
                   </mat-option>
@@ -153,10 +153,10 @@
           </div>
         </div>
 
-        <ng-container *ngIf="this.schuleId != null">
+        <ng-container *ngIf="this.schoolId != null">
           <div class="btn-row">
             <button mat-flat-button color="" [routerLink]="['../../veranstaltungen/new']"
-                    [queryParams]="{school_id: schuleId}" matTooltip="Schule editieren">
+                    [queryParams]="{school_id: schoolId}" matTooltip="Schule editieren">
               Veranstaltung erstellen
             </button>
           </div>

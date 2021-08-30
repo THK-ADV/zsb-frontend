@@ -6,27 +6,27 @@ import {Institution} from '../institution'
 import {DbTextResponse} from '../../shared/dbTextResponse'
 import {DatePipe} from '@angular/common'
 import {NotificationService} from '../../shared/notification.service'
-import {InstitutionenService} from '../institutionen.service'
+import {InstitutionsService} from '../institutions.service'
 
 @Component({
-  selector: 'app-zsb-institutionen-list',
-  templateUrl: './zsb-institutionen-list.component.html',
-  styleUrls: ['./zsb-institutionen-list.component.css']
+  selector: 'app-zsb-institutions-list',
+  templateUrl: './zsb-institutions-list.component.html',
+  styleUrls: ['./zsb-institutions-list.component.css']
 })
-export class ZsbInstitutionenListComponent implements OnInit {
+export class ZsbInstitutionsListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
   searchKey: string
   listData: MatTableDataSource<Institution>
 
-  displayedColumns: Array<string> = ['bezeichnung', 'email', 'ort', 'actions']
+  displayedColumns: Array<string> = ['designation', 'email', 'city', 'actions']
 
-  constructor(private service: InstitutionenService, private datePipe: DatePipe, private notificationService: NotificationService) {
+  constructor(private service: InstitutionsService, private datePipe: DatePipe, private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
-    this.service.getInstitutionen().subscribe(institutionen => {
-      this.listData = new MatTableDataSource<Institution>(institutionen)
+    this.service.getInstitutions().subscribe(institutions => {
+      this.listData = new MatTableDataSource<Institution>(institutions)
       this.listData.sort = this.sort
       this.listData.paginator = this.paginator
     })
@@ -41,8 +41,8 @@ export class ZsbInstitutionenListComponent implements OnInit {
     this.listData.filter = this.searchKey.trim().toLowerCase()
   }
 
-  deleteInstitution(bezeichnung: string, uuid: string) {
-    if (confirm('Seid ihr sicher, dass ihr die Institution "' + bezeichnung + '" löschen möchtet? ' +
+  deleteInstitution(designation: string, uuid: string) {
+    if (confirm('Seid ihr sicher, dass ihr die Institution "' + designation + '" löschen möchtet? ' +
       '\nHinweis: Zugehörige VERANSTALTUNGEN werden ebenfalls gelöscht!')) {
       this.service.deleteInstitution(uuid).subscribe(it => {
         const response = it as DbTextResponse

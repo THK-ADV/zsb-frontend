@@ -17,27 +17,27 @@ import {ValidationErrors} from '@angular/forms'
 import {CooperationPartner} from '../cooperationPartner'
 
 @Component({
-  selector: 'app-zsb-schule-detail',
-  templateUrl: './zsb-schule-detail.component.html',
-  styleUrls: ['./zsb-schule-detail.component.css']
+  selector: 'app-zsb-school-detail',
+  templateUrl: './zsb-school-detail.component.html',
+  styleUrls: ['./zsb-school-detail.component.css']
 })
-export class ZsbSchuleDetailComponent implements OnInit {
+export class ZsbSchoolDetailComponent implements OnInit {
 
-  private adresse: Address
-  schuleId: string
-  adressenObservable: Observable<Address[]>
-  schulformen: Observable<SchoolType[]>
-  anzahlSusRanges: Observable<AmountStudents[]>
-  kontaktFunktionen: ContactFunction[]
-  kooperationspartner: CooperationPartner[]
+  private address: Address
+  schoolId: string
+  addressObservable: Observable<Address[]>
+  schoolTypes: Observable<SchoolType[]>
+  amountStudentsRanges: Observable<AmountStudents[]>
+  contactFunctions: ContactFunction[]
+  cooperationPartners: CooperationPartner[]
 
-  adresseId: string
-  ortId: string
+  addressId: string
+  cityId: string
 
   constructor(
     private route: ActivatedRoute,
     private dbService: DatabaseService,
-    private adresseService: AddressService,
+    private addressService: AddressService,
     public service: SchoolService,
     private notificationService: NotificationService,
     private dialog: MatDialog
@@ -46,31 +46,31 @@ export class ZsbSchuleDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.service.initializeFormGroup()
-    this.adressenObservable = this.dbService.getAddresses()
+    this.addressObservable = this.dbService.getAddresses()
 
-    this.schulformen = this.dbService.getSchoolType()
-    this.anzahlSusRanges = this.dbService.getAmountStudents()
+    this.schoolTypes = this.dbService.getSchoolType()
+    this.amountStudentsRanges = this.dbService.getAmountStudents()
 
     // fill kontakt funktionen
-    this.dbService.getContactFunctions().subscribe(funktionen => {
-      this.kontaktFunktionen = funktionen
+    this.dbService.getContactFunctions().subscribe(functions => {
+      this.contactFunctions = functions
     })
 
     this.dbService.getCooperationPartner().subscribe(partner => {
-      this.kooperationspartner = partner
+      this.cooperationPartners = partner
     })
 
     this.route.paramMap.subscribe(params => {
-      this.schuleId = params.get('schuleId')
+      this.schoolId = params.get('schoolId')
 
-      if (this.schuleId != null) {
+      if (this.schoolId != null) {
         // load existing schule
-        this.dbService.getSchoolByIdAtomic(this.schuleId).subscribe(schule => {
-          this.service.loadFormData(schule)
-          this.adresseId = schule.address_id
-          this.adressenObservable.subscribe(it => {
-            const adresse = this.dbService.getAddressFromArrayByAddressId(it, this.addressId)
-            this.ortId = adresse.city_id
+        this.dbService.getSchoolByIdAtomic(this.schoolId).subscribe(school => {
+          this.service.loadFormData(school)
+          this.addressId = school.address_id
+          this.addressObservable.subscribe(it => {
+            const address = this.dbService.getAddressFromArrayByAddressId(it, this.addressId)
+            this.cityId = address.city_id
           })
         })
       }
@@ -78,24 +78,24 @@ export class ZsbSchuleDetailComponent implements OnInit {
   }
 
   onSubmit() {
-    const schule = this.service.formGroup.value
+    const school = this.service.formGroup.value
 
-    // remove nulls from kontakte-array
-    const cleanedKontakte = []
-    schule.kontakte.forEach(it => {
+    // remove nulls from contacts-array
+    const cleanedContacts = []
+    school.contacts.forEach(it => {
       if (it != null) {
-        cleanedKontakte.push(it)
+        cleanedContacts.push(it)
       }
     })
-    schule.kontakte = cleanedKontakte
+    school.contacts = cleanedContacts
 
     if (this.address !== undefined) {
-      schule.ort = this.address.city
-      schule.adresse = this.address
-      this.service.insertOrUpdateSchool(schule, this.notificationService)
+      school.city = this.address.city
+      school.address = this.address
+      this.service.insertOrUpdateSchool(school, this.notificationService)
     } else {
-      schule.adress_id = this.addressId
-      this.service.updateSchoolWithoutNewAddress(schule, this.notificationService)
+      school.address_id = this.addressId
+      this.service.updateSchoolWithoutNewAddress(school, this.notificationService)
     }
   }
 
@@ -107,20 +107,20 @@ export class ZsbSchuleDetailComponent implements OnInit {
     this.notificationService.success(':: Formular zurückgesetzt.')
   }
 
-  changeAdresse() {
-    if (this.addressId === undefined) this.adresseId = null
+  changeAddress() {
+    if (this.addressId === undefined) this.addressId = null
 
     AddressService.openAddressDialog(this.dialog, this.addressId)
-      .subscribe(adresseResult => {
-        if (adresseResult === undefined) {
+      .subscribe(addressResult => {
+        if (addressResult === undefined) {
           this.notificationService.failure('Adresse konnte nicht aktualisiert werden.')
           return
         }
 
-        if (adresseResult.status === AddressStatus.CANCELLATION) return
+        if (addressResult.status === AddressStatus.CANCELLATION) return
 
         // address update
-        this.adresse = adresseResult.address
+        this.address = addressResult.address
         this.notificationService.success('Adresse aktualisiert.')
         if (this.address !== undefined) {
           this.service.formGroup.patchValue(
@@ -142,30 +142,30 @@ export class ZsbSchuleDetailComponent implements OnInit {
     })
   }
 
-  showKontaktDetail(kontaktId: string) {
+  showContactDetail(contactId: string) {
     const dialogConfig = new MatDialogConfig()
     dialogConfig.disableClose = true
     dialogConfig.width = '30%'
     const dialogRef = this.dialog.open(ZsbContactDetailComponent, dialogConfig)
-    dialogRef.componentInstance.uuid = kontaktId
+    dialogRef.componentInstance.uuid = contactId
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === undefined) {
         return
       }
 
-      const kontakt = result as Contact
-      console.log('new name: ' + kontakt?.surname)
+      const contact = result as Contact
+      console.log('new name: ' + contact?.surname)
 
-      this.service.updateContact(kontakt)
+      this.service.updateContact(contact)
     })
   }
 
-  getKontaktFunktionDescById(id: number) {
+  getContactFunctionDescById(id: number) {
     let desc = 'Unbekannt'
 
-    if (this.kontaktFunktionen !== undefined && this.kontaktFunktionen !== null) {
-      this.kontaktFunktionen.forEach(it => {
+    if (this.contactFunctions !== undefined && this.contactFunctions !== null) {
+      this.contactFunctions.forEach(it => {
         if (desc === 'Unbekannt') {
           if (it.id === id) {
             desc = it.desc
@@ -185,7 +185,7 @@ export class ZsbSchuleDetailComponent implements OnInit {
     return this.dialog.open(component, dialogConfig)
   }
 
-  addKontakt() {
+  addContact() {
     const dialogRef = this.createDialog(ZsbContactSearchComponent)
     dialogRef.afterClosed().subscribe(it => {
       // do nothing, if nothing got added
@@ -193,10 +193,10 @@ export class ZsbSchuleDetailComponent implements OnInit {
         return
       }
 
-      const newKontakt = it as Contact
-      this.service.addContact(newKontakt)
+      const newContact = it as Contact
+      this.service.addContact(newContact)
     })
 
-    console.log('Add kontakt')
+    console.log('Add contact')
   }
 }

@@ -1,20 +1,20 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing'
 
-import {ZsbInstitutionenListComponent} from '../zsb-institutions/zsb-institutionen-list/zsb-institutionen-list.component'
+import {ZsbInstitutionsListComponent} from '../zsb-institutions/zsb-institutionen-list/zsb-institutions-list.component'
 
 describe('ZsbInstitutionenListComponent', () => {
-  let component: ZsbInstitutionenListComponent;
-  let fixture: ComponentFixture<ZsbInstitutionenListComponent>;
+  let component: ZsbInstitutionsListComponent;
+  let fixture: ComponentFixture<ZsbInstitutionsListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ZsbInstitutionenListComponent ]
+      declarations: [ ZsbInstitutionsListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ZsbInstitutionenListComponent);
+    fixture = TestBed.createComponent(ZsbInstitutionsListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

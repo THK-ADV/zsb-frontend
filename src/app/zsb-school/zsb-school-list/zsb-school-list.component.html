@@ -23,22 +23,22 @@
     <ng-container matColumnDef="select">
       <mat-header-cell *matHeaderCellDef [ngClass]="'w-02'"></mat-header-cell>
       <mat-cell *matCellDef="let row" class="actions-col" [ngClass]="'w-02'">
-        <mat-checkbox [checked]="this.shouldRowBeSelected(row.schule_id)"
-                      (change)="toggleSelectedSchule(row.schule_id)"></mat-checkbox>
+        <mat-checkbox [checked]="this.shouldRowBeSelected(row.school_id)"
+                      (change)="toggleSelectedSchool(row.school_id)"></mat-checkbox>
       </mat-cell>
     </ng-container>
 
     <!-- schulname Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
-      <mat-cell [routerLink]="['/schools', row.schule_id]" *matCellDef="let row">{{row.name}}</mat-cell>
+      <mat-cell [routerLink]="['/schools', row.school_id]" *matCellDef="let row">{{row.name}}</mat-cell>
     </ng-container>
 
     <!-- schulform Column -->
-    <ng-container matColumnDef="schulform">
+    <ng-container matColumnDef="schoolType">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Schulform</mat-header-cell>
-      <mat-cell [routerLink]="['/schools', row.schule_id]"
-                *matCellDef="let row">{{ getSchulformById(row.schulform) }}</mat-cell>
+      <mat-cell [routerLink]="['/schools', row.school_id]"
+                *matCellDef="let row">{{ getSchoolTypeById(row.schoolType) }}</mat-cell>
     </ng-container>
 
     <!-- schwerpunkt column -->
@@ -48,37 +48,37 @@
     <!--    </ng-container>-->
 
     <!-- address column -->
-    <ng-container matColumnDef="adresse">
+    <ng-container matColumnDef="address">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Adresse</mat-header-cell>
-      <mat-cell [routerLink]="['/schools', row.schule_id]" *matCellDef="let row">{{row.adresse.strasse}}
-        , {{row.adresse.hausnummer}}</mat-cell>
+      <mat-cell [routerLink]="['/schools', row.school_id]" *matCellDef="let row">{{row.address.street}}
+        , {{row.address.houseNumber}}</mat-cell>
     </ng-container>
 
-    <!-- ort column column -->
-    <ng-container matColumnDef="ort">
+    <!-- city column column -->
+    <ng-container matColumnDef="city">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Ort</mat-header-cell>
-      <mat-cell [routerLink]="['/schools', row.schule_id]" *matCellDef="let row">{{row.adresse.ort.plz}},
-        {{row.adresse.ort.bezeichnung}}</mat-cell>
+      <mat-cell [routerLink]="['/schools', row.school_id]" *matCellDef="let row">{{row.address.city.postcode}},
+        {{row.address.city.designation}}</mat-cell>
     </ng-container>
 
     <!-- schueleranzahl column -->
-    <ng-container matColumnDef="schueleranzahl">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Schühleranzahl</mat-header-cell>
-      <mat-cell [routerLink]="['/schools', row.schule_id]" *matCellDef="let row">{{row.schueleranzahl}}</mat-cell>
+    <ng-container matColumnDef="amountStudents">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Schüleranzahl</mat-header-cell>
+      <mat-cell [routerLink]="['/schools', row.school_id]" *matCellDef="let row">{{row.amountStudents}}</mat-cell>
     </ng-container>
 
     <!-- kooperationsvertrag column -->
-    <ng-container matColumnDef="kooperationsvertrag">
+    <ng-container matColumnDef="cooperationContract">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Kooperationsvertrag</mat-header-cell>
-      <mat-cell [routerLink]="['/schools', row.schule_id]" *matCellDef="let row">
-        <mat-checkbox [disabled]="true" [checked]="row.kooperationsvertrag"></mat-checkbox>
+      <mat-cell [routerLink]="['/schools', row.school_id]" *matCellDef="let row">
+        <mat-checkbox [disabled]="true" [checked]="row.cooperationcontract"></mat-checkbox>
       </mat-cell>
     </ng-container>
 
     <!-- kaoa_hochschule Column -->
-    <ng-container matColumnDef="kaoa_hochschule">
+    <ng-container matColumnDef="kaoa_university">
       <mat-header-cell *matHeaderCellDef mat-sort-header>kaoa Hochschule</mat-header-cell>
-      <mat-cell [routerLink]="['/schools', row.schule_id]" *matCellDef="let row">
+      <mat-cell [routerLink]="['/schools', row.school_id]" *matCellDef="let row">
         <mat-checkbox [disabled]="true" [checked]="row.talenscouting"></mat-checkbox>
       </mat-cell>
     </ng-container>
@@ -86,7 +86,7 @@
     <!-- Talent scouting Column -->
     <ng-container matColumnDef="talent">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Talentscouting</mat-header-cell>
-      <mat-cell [routerLink]="['/schools', row.schule_id]" *matCellDef="let row">
+      <mat-cell [routerLink]="['/schools', row.school_id]" *matCellDef="let row">
         <mat-checkbox [disabled]="true" [checked]="row.talenscouting"></mat-checkbox>
       </mat-cell>
     </ng-container>
@@ -95,11 +95,11 @@
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let row" class="actions-col">
-        <button mat-icon-button [routerLink]="['/schools', row.schule_id]" matTooltip="Schule editieren">
+        <button mat-icon-button [routerLink]="['/schools', row.school_id]" matTooltip="Schule editieren">
           <mat-icon>edit</mat-icon> <!-- use launch or edit -->
         </button>
         <button mat-icon-button color="warn" matTooltip="Schule entfernen">
-          <mat-icon (click)="deleteSchule(row.name, row.schule_id)">delete_outline</mat-icon>
+          <mat-icon (click)="deleteSchool(row.name, row.school_id)">delete_outline</mat-icon>
         </button>
       </mat-cell>
     </ng-container>

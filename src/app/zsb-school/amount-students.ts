@@ -3,10 +3,10 @@ export interface AmountStudents {
   range: string
 }
 
-export function anzahlSusTextById(id: number, anzahlSusList: AmountStudents[]) {
+export function amountStudentsTextById(id: number, amountStudentsList: AmountStudents[]) {
   let range = ''
 
-  anzahlSusList.forEach(it => {
+  amountStudentsList.forEach(it => {
     if (it.id === id) {
       range = it.range
       return

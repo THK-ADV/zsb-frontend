@@ -16,7 +16,7 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy()
   })
 
-  it(`should have as title 'zsb-frontend'`, () => {
+  it(`should have the title 'zsb-frontend'`, () => {
     const fixture = TestBed.createComponent(AppComponent)
     const app = fixture.componentInstance
     expect(app.title).toEqual('zsb-frontend')

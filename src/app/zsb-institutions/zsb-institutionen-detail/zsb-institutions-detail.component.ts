@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core'
 import {ActivatedRoute} from '@angular/router'
-import {InstitutionenService} from '../institutionen.service'
+import {InstitutionsService} from '../institutions.service'
 import {NotificationService} from '../../shared/notification.service'
 import {MatDialog} from '@angular/material/dialog'
 import {Institution} from '../institution'
@@ -9,11 +9,11 @@ import {AddressStatus} from '../../zsb-address/zsb-address.component'
 
 
 @Component({
-  selector: 'app-zsb-institutionen-detail',
-  templateUrl: './zsb-institutionen-detail.component.html',
-  styleUrls: ['./zsb-institutionen-detail.component.css']
+  selector: 'app-zsb-institutions-detail',
+  templateUrl: './zsb-institutions-detail.component.html',
+  styleUrls: ['./zsb-institutions-detail.component.css']
 })
-export class ZsbInstitutionenDetailComponent implements OnInit {
+export class ZsbInstitutionsDetailComponent implements OnInit {
 
   private institutionId: string
   private institution: Institution
@@ -21,7 +21,7 @@ export class ZsbInstitutionenDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    public service: InstitutionenService,
+    public service: InstitutionsService,
     private notificationService: NotificationService,
     private dialog: MatDialog) {
   }
@@ -34,7 +34,7 @@ export class ZsbInstitutionenDetailComponent implements OnInit {
         this.service.dbService.getInstitutionAtomic(this.institutionId).subscribe(it => {
           this.institution = it as Institution
           this.service.loadFormData(this.institution)
-          this.service.updateAdresseInForm(this.institution.address)
+          this.service.updateAddressInForm(this.institution.address)
         })
       } else {
         this.institution = {
@@ -50,7 +50,7 @@ export class ZsbInstitutionenDetailComponent implements OnInit {
   onSubmit() {
     const institutionFromForm = this.service.getInstForm().value
     this.institution.email = institutionFromForm.email
-    this.institution.designation = institutionFromForm.bezeichnung
+    this.institution.designation = institutionFromForm.designation
 
     let observer
     if (institutionFromForm.uuid == null) {
@@ -68,21 +68,21 @@ export class ZsbInstitutionenDetailComponent implements OnInit {
     })
   }
 
-  changeAdresse() {
-    let adresseId = null
-    if (this.institution !== undefined) adresseId = this.institution.address_id
-    AddressService.openAddressDialog(this.dialog, adresseId)
-      .subscribe(adresseResult => {
-        if (adresseResult === undefined) {
+  changeAddress() {
+    let addressId = null
+    if (this.institution !== undefined) addressId = this.institution.address_id
+    AddressService.openAddressDialog(this.dialog, addressId)
+      .subscribe(addressResult => {
+        if (addressResult === undefined) {
           this.notificationService.failure('Adresse konnte nicht aktualisiert werden.')
           return
         }
 
-        if (adresseResult.status === AddressStatus.CANCELLATION) return
+        if (addressResult.status === AddressStatus.CANCELLATION) return
 
-        this.institution.address = adresseResult.address
-        this.institution.address_id = adresseResult.address.address_id
-        this.service.updateAdresseInForm(this.institution.address)
+        this.institution.address = addressResult.address
+        this.institution.address_id = addressResult.address.address_id
+        this.service.updateAddressInForm(this.institution.address)
         this.notificationService.success('Adresse aktualisiert.')
       })
   }

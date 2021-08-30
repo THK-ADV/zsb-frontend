@@ -5,34 +5,34 @@ import {MatTableDataSource} from '@angular/material/table'
 import {DatabaseService} from '../../shared/database.service'
 import {SchoolType} from '../schoolType'
 import {NotificationService} from '../../shared/notification.service'
-import {completeSchuleAsString, School} from '../school'
+import {completeSchoolAsString, School} from '../school'
 import {AmountStudents} from '../amount-students'
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
 import {ZsbLetterComponent} from '../../zsb-communication/zsb-letter/zsb-letter.component'
 
 @Component({
-  selector: 'app-zsb-schule-list',
-  templateUrl: './zsb-schule-list.component.html',
-  styleUrls: ['./zsb-schule-list.component.css']
+  selector: 'app-zsb-school-list',
+  templateUrl: './zsb-school-list.component.html',
+  styleUrls: ['./zsb-school-list.component.css']
 })
-export class ZsbSchuleListComponent implements OnInit {
+export class ZsbSchoolListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
   searchKey: string
 
   listData: MatTableDataSource<any>
-  schulformen: SchoolType[]
-  anzahlSus: AmountStudents[]
-  private selectedSchulenIds: string[] = []
+  schoolTypes: SchoolType[]
+  amountStudents: AmountStudents[]
+  private selectedSchoolsIds: string[] = []
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns: Array<string> = [
     'select',
     'name',
-    'schulform',
-    // 'schwerpunkt',
-    'adresse',
-    'ort',
+    'schoolType',
+    // 'focus',
+    'address',
+    'city',
     // 'schulleitung_mail',
     // 'stubo_mail',
     // 'schueleranzahl',
@@ -62,9 +62,9 @@ export class ZsbSchuleListComponent implements OnInit {
         this.buildCustomFilter()
       })
 
-    this.service.getSchoolType().subscribe(schulformen => this.schulformen = schulformen)
-    this.service.getAmountStudents().subscribe(anzahlSus => this.anzahlSus = anzahlSus)
-    this.selectedSchulenIds = []
+    this.service.getSchoolType().subscribe(schoolTypes => this.schoolTypes = schoolTypes)
+    this.service.getAmountStudents().subscribe(amountStudents => this.amountStudents = amountStudents)
+    this.selectedSchoolsIds = []
   }
 
   onSearchClear() {
@@ -77,14 +77,14 @@ export class ZsbSchuleListComponent implements OnInit {
   }
 
   buildCustomFilter() {
-    this.listData.filterPredicate = (schule: School, filter: string) => {
+    this.listData.filterPredicate = (school: School, filter: string) => {
       // split keyword by comma ,
       const keywords = filter.split(',').map(it => it.trim())
 
       // filter data for every keyword -> loop through keywords
       let keywordsFound = true
       keywords.forEach(keyword => {
-        if (!completeSchuleAsString(schule, this.schulformen, this.amountStudents).toLowerCase().includes(keyword)) {
+        if (!completeSchoolAsString(school, this.schoolTypes, this.amountStudents).toLowerCase().includes(keyword)) {
           keywordsFound = false
         }
       })
@@ -94,15 +94,15 @@ export class ZsbSchuleListComponent implements OnInit {
     }
   }
 
-  getSchulformById(id: number) {
-    if (id === undefined || this.schulformen === undefined) {
+  getSchoolTypeById(id: number) {
+    if (id === undefined || this.schoolTypes === undefined) {
       return ''
     }
-    return this.schulformen.find(it => it.id === id).desc
+    return this.schoolTypes.find(it => it.id === id).desc
   }
 
-  deleteSchule(schulName: string, uuid: string) {
-    if (confirm('Seid ihr sicher, dass ihr "' + schulName + '" löschen möchtet?')) {
+  deleteSchool(schoolName: string, uuid: string) {
+    if (confirm('Seid ihr sicher, dass ihr "' + schoolName + '" löschen möchtet?')) {
       this.service.deleteSchool(uuid).subscribe(it => {
         if (it !== undefined) {
           this.notificationService.success(':: Schule wurde erfolgreich entfernt.')
@@ -115,37 +115,37 @@ export class ZsbSchuleListComponent implements OnInit {
     }
   }
 
-  toggleSelectedSchule(schuleId: string) {
-    if (this.shouldRowBeSelected(schuleId)) {
-      this.selectedSchulenIds = this.selectedSchulenIds.filter(id => id !== schuleId)
+  toggleSelectedSchool(schoolId: string) {
+    if (this.shouldRowBeSelected(schoolId)) {
+      this.selectedSchoolsIds = this.selectedSchoolsIds.filter(id => id !== schoolId)
     } else {
-      this.selectedSchulenIds.push(schuleId)
+      this.selectedSchoolsIds.push(schoolId)
     }
   }
 
-  shouldRowBeSelected(schuleId: string): boolean {
-    return this.selectedSchulenIds.some(id => id === schuleId)
+  shouldRowBeSelected(schoolId: string): boolean {
+    return this.selectedSchoolsIds.some(id => id === schoolId)
   }
 
-  warnIfSelectedSchulenIsEmpty(): boolean {
-    if (this.selectedSchulenIds.length === 0) {
-      alert('Bitte wählen Sie zuerst mind. eine Schule aus.')
+  warnIfSelectedSchoolsIsEmpty(): boolean {
+    if (this.selectedSchoolsIds.length === 0) {
+      alert('Bitte wählen Sie zuerst min. eine Schule aus.')
       return true
     }
     return false
   }
 
   openLetterDialog() {
-    if (this.warnIfSelectedSchulenIsEmpty()) return
+    if (this.warnIfSelectedSchoolsIsEmpty()) return
     const dialogConfig = new MatDialogConfig()
     dialogConfig.disableClose = true
     dialogConfig.width = '30%'
     const dialogRef = this.dialog.open(ZsbLetterComponent, dialogConfig)
-    dialogRef.componentInstance.addresseesIds = this.selectedSchulenIds
+    dialogRef.componentInstance.addresseesIds = this.selectedSchoolsIds
   }
 
   openEmailDialog() {
-    if (this.warnIfSelectedSchulenIsEmpty()) return
+    if (this.warnIfSelectedSchoolsIsEmpty()) return
     alert('Funktionalität ist noch in Arbeit. Folgt in Kürze.')
   }
 }

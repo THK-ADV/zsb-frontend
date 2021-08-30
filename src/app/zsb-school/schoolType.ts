@@ -3,10 +3,10 @@ export interface SchoolType {
   desc: string
 }
 
-export function schulformDescById(id: number, schulformen: SchoolType[]) {
+export function schoolTypeDescById(id: number, schoolTypes: SchoolType[]) {
   let desc = ''
 
-  schulformen.forEach(it => {
+  schoolTypes.forEach(it => {
     if (it.id === id) {
       desc = it.desc
       return

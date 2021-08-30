@@ -9,7 +9,7 @@
   <input type="hidden" formControlName="uuid">
   <mat-form-field>
     <label>
-      <input formControlName="bezeichnung" matInput placeholder="Bezeichnung*">
+      <input formControlName="designation" matInput placeholder="Bezeichnung*">
     </label>
     <mat-error>Ihre Eingabe wird benötigt.</mat-error>
   </mat-form-field>
@@ -26,13 +26,13 @@
   <!-- Adresse -->
   <mat-form-field>
     <label>
-      <input formControlName="adresse" matInput placeholder="Standort*">
+      <input formControlName="address" matInput placeholder="Standort*">
     </label>
   </mat-form-field>
 
   <ng-container *ngIf="this.getInstitutionId() != null">
     <div class="btn-row">
-      <button mat-flat-button color="" [routerLink]="['../../veranstaltungen/new']"
+      <button mat-flat-button color="" [routerLink]="['../../events/new']"
               [queryParams]="{institution_id: this.getInstitutionId()}" matTooltip="Schule editieren">
         Veranstaltung erstellen
       </button>
@@ -43,7 +43,7 @@
 
   <div class="single-btn-row">
     <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
-            (click)="changeAdresse()">Standort verwalten
+            (click)="changeAddress()">Standort verwalten
     </button>
   </div>
   <br><br>

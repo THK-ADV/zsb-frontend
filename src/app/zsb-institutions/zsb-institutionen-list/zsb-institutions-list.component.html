@@ -19,9 +19,9 @@
 
     <!--  'date', 'designation', 'category', 'topic'-->
     <!-- date Column -->
-    <ng-container matColumnDef="bezeichnung">
+    <ng-container matColumnDef="designation">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Bezeichnung</mat-header-cell>
-      <mat-cell [routerLink]="['/institutions', row.uuid]" *matCellDef="let row">{{row.bezeichnung}}</mat-cell>
+      <mat-cell [routerLink]="['/institutions', row.uuid]" *matCellDef="let row">{{row.designation}}</mat-cell>
     </ng-container>
 
     <!-- designation Column -->
@@ -33,7 +33,7 @@
     <!-- category Column -->
     <ng-container matColumnDef="ort">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Ort</mat-header-cell>
-      <mat-cell [routerLink]="['/institutions', row.uuid]" *matCellDef="let row">{{row.adresse.ort.bezeichnung}}</mat-cell>
+      <mat-cell [routerLink]="['/institutions', row.uuid]" *matCellDef="let row">{{row.address.city.designation}}</mat-cell>
     </ng-container>
 
     <!-- edit and delete Column -->
@@ -44,7 +44,7 @@
           <mat-icon>edit</mat-icon> <!-- use launch or edit -->
         </button>
         <button mat-icon-button color="warn" matTooltip="Veranstaltung entfernen">
-          <mat-icon (click)="deleteInstitution(row.bezeichnung, row.uuid)">delete_outline</mat-icon>
+          <mat-icon (click)="deleteInstitution(row.designation, row.uuid)">delete_outline</mat-icon>
         </button>
       </mat-cell>
     </ng-container>
