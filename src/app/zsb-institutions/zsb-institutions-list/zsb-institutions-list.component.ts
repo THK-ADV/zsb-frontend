@@ -17,16 +17,18 @@ export class ZsbInstitutionsListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
   searchKey: string
-  listData: MatTableDataSource<Institution>
+  listData: MatTableDataSource<Institution> = new MatTableDataSource<Institution>([])
 
   displayedColumns: Array<string> = ['designation', 'email', 'city', 'actions']
+
+  tableColumns: Array<string> = this.displayedColumns.filter(d => d !== 'actions')
 
   constructor(private service: InstitutionsService, private datePipe: DatePipe, private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
     this.service.getInstitutions().subscribe(institutions => {
-      this.listData = new MatTableDataSource<Institution>(institutions)
+      this.listData.data = institutions
       this.listData.sort = this.sort
       this.listData.paginator = this.paginator
     })
@@ -39,6 +41,32 @@ export class ZsbInstitutionsListComponent implements OnInit {
 
   applyFilter() {
     this.listData.filter = this.searchKey.trim().toLowerCase()
+  }
+
+  labelForTableColumn = (tableColumns): string => {
+    switch (tableColumns) {
+      case 'designation':
+        return 'Bezeichnung'
+      case 'email':
+        return 'E-Mail'
+      case 'city':
+        return 'Ort'
+      default:
+        return '???'
+    }
+  }
+
+  tableContentForRow = (inst: Institution, column: string): string => {
+    switch (column) {
+      case 'designation':
+        return inst.designation
+      case 'email':
+        return inst.email
+      case 'city':
+        return inst.address?.city?.designation ?? inst.address_id
+      default:
+        return '???'
+    }
   }
 
   deleteInstitution(designation: string, uuid: string) {

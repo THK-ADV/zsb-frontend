@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing'
 
-import {ZsbInstitutionsDetailComponent} from '../zsb-institutions/zsb-institutionen-detail/zsb-institutions-detail.component'
+import {ZsbInstitutionsDetailComponent} from '../zsb-institutions/zsb-institutions-detail/zsb-institutions-detail.component'
 
 describe('ZsbInstitutionsDetailComponent', () => {
   let component: ZsbInstitutionsDetailComponent;

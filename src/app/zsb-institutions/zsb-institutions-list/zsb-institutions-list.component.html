@@ -19,21 +19,10 @@
 
     <!--  'date', 'designation', 'category', 'topic'-->
     <!-- date Column -->
-    <ng-container matColumnDef="designation">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Bezeichnung</mat-header-cell>
-      <mat-cell [routerLink]="['/institutions', row.uuid]" *matCellDef="let row">{{row.designation}}</mat-cell>
-    </ng-container>
 
-    <!-- designation Column -->
-    <ng-container matColumnDef="email">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>E-Mail</mat-header-cell>
-      <mat-cell [routerLink]="['/institutions', row.uuid]" *matCellDef="let row">{{row.email}}</mat-cell>
-    </ng-container>
-
-    <!-- category Column -->
-    <ng-container matColumnDef="ort">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Ort</mat-header-cell>
-      <mat-cell [routerLink]="['/institutions', row.uuid]" *matCellDef="let row">{{row.address.city.designation}}</mat-cell>
+    <ng-container *ngFor="let c of tableColumns" [matColumnDef]="c">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{labelForTableColumn(c)}}</mat-header-cell>
+      <mat-cell [routerLink]="['/institutions', row.uuid]" *matCellDef="let row">{{tableContentForRow(row, c)}}</mat-cell>
     </ng-container>
 
     <!-- edit and delete Column -->
