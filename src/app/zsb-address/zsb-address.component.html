@@ -3,7 +3,7 @@
 <form [formGroup]="service.formGroup" class="normal-form example-form"> <!--  (submit)="onSubmit()" -->
 
   <div class="controls-container">
-    <input type="hidden" formControlName="addresseId">
+    <input type="hidden" formControlName="addressId">
 
     <div class="" fxLayout="row" fxLayout.xs="column" fxFlexFill>
       <!-- left side -->
@@ -84,7 +84,7 @@
             placeholder="Ort"
             aria-label="Text"
             matInput
-            formControlName="city"
+            formControlName="designation"
             [matAutocomplete]="autoOrt">
           <mat-autocomplete autoActiveFirstOption #autoOrt="matAutocomplete" >
             <mat-option *ngFor="let option of filteredDesignationOptions | async" [value]="option">
@@ -101,7 +101,7 @@
             placeholder="Hausnummer"
             aria-label="Text"
             matInput
-            formControlName="housenumber"
+            formControlName="houseNumber"
             [matAutocomplete]="autoHousenumber">
           <mat-autocomplete autoActiveFirstOption #autoHousenumber="matAutocomplete" >
             <mat-option *ngFor="let option of filteredHouseNumberOptions | async" [value]="option">
