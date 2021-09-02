@@ -68,7 +68,7 @@
       <mat-select formControlName="school" placeholder="Schule">
         <ng-container *ngFor="let it of schools | async">
           <mat-option [value]="it.school_id">
-            {{it.surname}} <br>
+            {{it.name}} <br>
           </mat-option>
         </ng-container>
       </mat-select>

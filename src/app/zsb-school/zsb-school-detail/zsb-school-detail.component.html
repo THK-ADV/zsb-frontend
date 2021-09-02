@@ -4,12 +4,13 @@
 <ng-template #newSchule>
   <h1>Schule hinzufügen</h1>
 </ng-template>
+
 <form [formGroup]="service.formGroup" class="normal-form"> <!-- (submit)="onSubmit()" -->
 
   <div class="" fxLayout="row" fxLayout.xs="column" fxFlexFill>
     <div class="sec1" fxFlex="100" fxFlex.xs="55">
       <div class="controls-container">
-        <input type="hidden" formControlName="schule_id">
+        <input type="hidden" formControlName="school_id">
 
         <mat-form-field>
           <label>
@@ -19,7 +20,7 @@
         </mat-form-field>
 
         <mat-form-field>
-          <mat-select formControlName="schulform" placeholder="Schulform*">
+          <mat-select formControlName="schooltype" placeholder="Schulform*">
             <mat-option value="-1">Keine</mat-option>
             <ng-container *ngFor="let schulform of schoolTypes | async">
               <mat-option [value]="schulform.id">
@@ -31,7 +32,7 @@
         </mat-form-field>
 
         <mat-form-field>
-          <mat-select formControlName="anzahl_sus" placeholder="Anzahl SuS*">
+          <mat-select formControlName="amount_students" placeholder="Anzahl SuS*">
             <mat-option value="-1">Keine</mat-option>
             <ng-container *ngFor="let sus of amountStudentsRanges | async">
               <mat-option [value]="sus.id">
@@ -43,7 +44,7 @@
         </mat-form-field>
 
         <!-- Kontakte -->
-        <div formArrayName="kontakte">
+        <div formArrayName="contacts">
           <h3>Kontakte</h3>
 
           <table class="contact-table">
@@ -57,31 +58,31 @@
                 <td [attr.colspan]="3">Keine Kontakte vorhanden.</td>
               </tr>
             </ng-container>
-            <tr *ngFor="let kontakt of service.contacts.controls; let i = index" class="border_bottom">
-              <ng-container *ngIf="kontakt != null && kontakt.value != null">
+            <tr *ngFor="let contact of service.contacts.controls; let i = index" class="border_bottom">
+              <ng-container *ngIf="contact != null && contact.value != null">
                 <td>
                   <label>
                     <input type="text" [formControlName]="i" hidden>
                   </label>
-                  <ng-container *ngIf="kontakt.value.name !== ''; else elseNoName">
-                    {{kontakt.value.name}}
+                  <ng-container *ngIf="contact.value.name !== ''; else elseNoName">
+                    {{contact.value.name}}
                   </ng-container>
-                  <ng-template #elseNoName>{{kontakt.value.email}}</ng-template>
-                  <ng-container *ngIf="kontakt.value.vorname !== undefined && kontakt.value.vorname.length > 0">
-                    , {{kontakt.value.vorname}}
+                  <ng-template #elseNoName>{{contact.value.email}}</ng-template>
+                  <ng-container *ngIf="contact.value.firstname !== undefined && contact.value.firstname.length > 0">
+                    , {{contact.value.firstname}}
                   </ng-container>
                 </td>
                 <td>
-                  {{getContactFunctionDescById(kontakt.value.funktion)}}
+                  {{getContactFunctionDescById(contact.value.feature)}}
                 </td>
                 <td>
                   <!-- go to details for this kontakt-->
-                  <button mat-icon-button (click)="showContactDetail(kontakt.value.uuid)"
+                  <button mat-icon-button (click)="showContactDetail(contact.value.uuid)"
                           matTooltip="Kontakt editieren">
                     <mat-icon>edit</mat-icon>
                   </button>
                   <!-- delete icon -> trigger delete connection between this kontakt and schule-->
-                  <button mat-icon-button color="warn" (click)="service.removeContact(kontakt.value.uuid)"
+                  <button mat-icon-button color="warn" (click)="service.removeContact(contact.value.uuid)"
                           matTooltip="Kontakt entfernen">
                     <mat-icon>delete_outline</mat-icon>
                   </button>
@@ -106,7 +107,7 @@
         <!-- Adresse -->
         <mat-form-field>
           <label>
-            <input formControlName="adresse" matInput placeholder="Standort*">
+            <input formControlName="address" matInput placeholder="Standort*">
           </label>
         </mat-form-field>
 
@@ -118,10 +119,10 @@
         <br><br>
 
         <div class="add-bottom-padding">
-          <mat-checkbox formControlName="kooperationsvertrag">Kooperationsvertrag</mat-checkbox>
+          <mat-checkbox formControlName="cooperationcontract">Kooperationsvertrag</mat-checkbox>
         </div>
         <div class="add-bottom-padding">
-          <mat-checkbox #kaoa_cb formControlName="kaoa_hochschule">kaoa Hochschule</mat-checkbox>
+          <mat-checkbox #kaoa_cb formControlName="kaoa_university">kaoa Hochschule</mat-checkbox>
           <div *ngIf="kaoa_cb.checked">
 
             <mat-form-field>

@@ -5,7 +5,7 @@ import {AmountStudents, amountStudentsTextById} from './amount-students'
 
 export interface School {
   school_id: string
-  surname: string
+  name: string
   schooltype: number
   focus: string
   cooperationcontract: boolean
@@ -21,7 +21,7 @@ export interface School {
 }
 
 export function completeSchoolAsString(school: School, schoolTypes: SchoolType[], amountStudentsList: AmountStudents[]): string {
-  let concatenatedString = school.surname
+  let concatenatedString = school.name
   concatenatedString += schoolTypeDescById(school.schooltype, schoolTypes)
   if (school.cooperationcontract) concatenatedString += 'Kooperationsvertrag'
   if (school.kaoa_university) concatenatedString += 'kaoa'

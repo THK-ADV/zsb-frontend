@@ -21,7 +21,7 @@ export class SchoolService {
 
   formGroup: FormGroup = new FormGroup({
     school_id: new FormControl(null),
-    surname: new FormControl('', Validators.required),
+    name: new FormControl('', Validators.required),
     schooltype: new FormControl('', Validators.required),
     // focus: new FormControl(null),
     address: new FormControl({value: '', disabled: true}, Validators.required),
@@ -45,7 +45,7 @@ export class SchoolService {
     this.contacts.push(new FormControl())
     this.formGroup.setValue({
       school_id: null,
-      surname: '',
+      name: '',
       schooltype: '',
       // focus: '',
       address: null,
@@ -67,7 +67,7 @@ export class SchoolService {
 
     this.formGroup.setValue({
       school_id: school.school_id,
-      surname: school.surname,
+      name: school.name,
       schooltype: school.schooltype,
       // focus: school.focus,
       address: this.getReadableAddress(school.address, school.address.city),
@@ -142,7 +142,7 @@ export class SchoolService {
   updateSchoolWithoutNewAddress(school: School, notificationService: NotificationService) {
     const newSchool = {
       school_id: school.school_id,
-      surname: school.surname,
+      name: school.name,
       schooltype: school.schooltype,
       focus: 'unbekannt',
       address_id: school.address_id,

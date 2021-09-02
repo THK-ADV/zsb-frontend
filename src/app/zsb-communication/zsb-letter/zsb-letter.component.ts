@@ -89,7 +89,7 @@ export class ZsbLetterComponent implements OnInit {
       return 'Serienbrief-' + addressees.length + '_' + currentDateString + '.doc'
     }
 
-    const schoolName = addressees.pop().surname
+    const schoolName = addressees.pop().name
     return schoolName + '_' + currentDateString + '.doc'
   }
 
