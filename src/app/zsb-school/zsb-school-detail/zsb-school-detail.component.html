@@ -64,8 +64,8 @@
                   <label>
                     <input type="text" [formControlName]="i" hidden>
                   </label>
-                  <ng-container *ngIf="contact.value.name !== ''; else elseNoName">
-                    {{contact.value.name}}
+                  <ng-container *ngIf="contact.value.surname !== ''; else elseNoName">
+                    {{contact.value.surname}}
                   </ng-container>
                   <ng-template #elseNoName>{{contact.value.email}}</ng-template>
                   <ng-container *ngIf="contact.value.firstname !== undefined && contact.value.firstname.length > 0">
