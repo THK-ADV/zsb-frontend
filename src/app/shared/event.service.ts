@@ -97,7 +97,7 @@ export class EventService {
 
   insertOrUpdateCurrentEvent(notificationService: NotificationService) {
     const eventForm = this.detailForm.value
-    eventForm.datum = new Date(eventForm.datum).toISOString()
+    eventForm.date = new Date(eventForm.date).toISOString()
 
     const isUniversityHost = eventForm.hostToggle as boolean
     let host: Host
