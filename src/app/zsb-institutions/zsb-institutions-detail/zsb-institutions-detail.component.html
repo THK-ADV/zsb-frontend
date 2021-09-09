@@ -1,4 +1,4 @@
-<ng-container *ngIf="this.getInstitutionId() != null; else newInstitution">
+<ng-container *ngIf="editMode(); else newInstitution">
   <h1>Institution bearbeiten</h1>
 </ng-container>
 <ng-template #newInstitution>
@@ -28,8 +28,9 @@
     <label>
       <input formControlName="address" matInput placeholder="Standort*">
     </label>
+    <mat-error>Ihre Eingabe wird benötigt.</mat-error>
   </mat-form-field>
-
+<!--
   <ng-container *ngIf="this.getInstitutionId() != null">
     <div class="btn-row">
       <button mat-flat-button color="" [routerLink]="['../../events/new']"
@@ -39,7 +40,7 @@
     </div>
     <br>
     <br>
-  </ng-container>
+  </ng-container>-->
 
   <div class="single-btn-row">
     <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
@@ -50,7 +51,7 @@
 
   <div class="btn-row">
     <button mat-raised-button color="primary" type="submit" (click)="onSubmit()"
-            [disabled]="service.getInstForm().invalid">Speichern
+            [disabled]="service.getInstForm().invalid || addressUndefined">Speichern
     </button>
     <button mat-raised-button color="warn" (click)="onClear()">Zurücksetzen</button>
   </div>

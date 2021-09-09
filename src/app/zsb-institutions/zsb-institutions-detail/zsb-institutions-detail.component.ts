@@ -18,6 +18,8 @@ export class ZsbInstitutionsDetailComponent implements OnInit {
   private institutionId: string
   private institution: Institution
 
+  addressUndefined: boolean
+
 
   constructor(
     private route: ActivatedRoute,
@@ -30,11 +32,12 @@ export class ZsbInstitutionsDetailComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.institutionId = params.get('institutionId')
 
-      if (this.institutionId != null && this.institutionId !== 'new') {
+      if (this.institutionId != null && this.editMode()) {
         this.service.dbService.getInstitutionAtomic(this.institutionId).subscribe(it => {
           this.institution = it as Institution
           this.service.loadFormData(this.institution)
           this.service.updateAddressInForm(this.institution.address)
+          this.addressUndefined = false
         })
       } else {
         this.institution = {
@@ -43,8 +46,13 @@ export class ZsbInstitutionsDetailComponent implements OnInit {
           email: null,
           address_id: null
         }
+        this.addressUndefined = true
       }
     })
+  }
+
+  editMode() {
+    return this.institutionId !== 'new'
   }
 
   onSubmit() {
@@ -70,7 +78,10 @@ export class ZsbInstitutionsDetailComponent implements OnInit {
 
   changeAddress() {
     let addressId = null
-    if (this.institution !== undefined) addressId = this.institution.address_id
+    if (this.institution !== undefined) {
+      addressId = this.institution.address_id
+    }
+    this.addressUndefined = addressId == null
     AddressService.openAddressDialog(this.dialog, addressId)
       .subscribe(addressResult => {
         if (addressResult === undefined) {
@@ -84,10 +95,12 @@ export class ZsbInstitutionsDetailComponent implements OnInit {
         this.institution.address_id = addressResult.address.address_id
         this.service.updateAddressInForm(this.institution.address)
         this.notificationService.success('Adresse aktualisiert.')
+        this.addressUndefined = false
       })
   }
 
   onClear() {
+    this.addressUndefined = true
     this.service.getInstForm().reset()
     this.service.initializeInstForm()
     this.ngOnInit()
