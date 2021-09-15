@@ -194,11 +194,11 @@ export class DatabaseService {
   }
 
   createHost(host: Host) {
-    return this.httpClient.post<Host>(this.DB_URL + '/host', host)
+    return this.httpClient.post<Host>(this.DB_URL + '/hosts', host)
   }
 
   updateHost(host: Host) {
-    return this.httpClient.put<Host>(this.DB_URL + '/host', host)
+    return this.httpClient.put<Host>(this.DB_URL + '/hosts', host)
   }
 
   getAllReports() {
