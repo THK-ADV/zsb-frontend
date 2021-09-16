@@ -103,7 +103,7 @@ export class ZsbEventsDetailComponent implements OnInit {
 
   onSubmit() {
     console.log('submit')
-    this.service.insertOrUpdateCurrentEvent(this.notificationService)
+    this.service.insertOrUpdateCurrentEvent()
   }
 
   onClear() {
