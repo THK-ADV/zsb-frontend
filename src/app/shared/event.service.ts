@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core'
 import {DatabaseService} from './database.service'
-import {Observable} from 'rxjs'
+import {iif, Observable} from 'rxjs'
 import {Event} from '../zsb-events/event'
 import {Category} from '../zsb-events/category'
 import {FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms'
@@ -8,17 +8,17 @@ import {NotificationService} from './notification.service'
 import {Host} from '../zsb-events/host'
 import {Institution} from '../zsb-institutions/institution'
 import {School} from '../zsb-school/school'
+import {mergeMap, tap} from 'rxjs/operators'
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventService {
 
-  constructor(public dbService: DatabaseService) {
-    this.dbService.getCategories().subscribe(it => this.categories = it)
+  constructor(public dbService: DatabaseService,
+              private notificationService: NotificationService) {
   }
 
-  private categories: Category[] = []
   private detailForm: FormGroup = new FormGroup({
     uuid: new FormControl(null),
     date: new FormControl(new Date(), Validators.required),
@@ -27,8 +27,8 @@ export class EventService {
     hostToggle: new FormControl(true),
     school: new FormControl(null),
     institution: new FormControl(null),
-    category: new FormControl(0, Validators.required),
-    level: new FormControl(0, Validators.required),
+    category: new FormControl([0], Validators.required),
+    level: new FormControl([0], Validators.required),
     amountStudents: new FormControl(0, Validators.required),
     sequence: new FormControl(''), // Ablauf
     runs: new FormControl(''), // Durchläufe
@@ -39,10 +39,6 @@ export class EventService {
 
   getEvents(): Observable<Event[]> {
     return this.dbService.getAllEvents()
-  }
-
-  getCategories(): Category[] {
-    return this.categories
   }
 
   deleteEvent(uuid: string) {
@@ -62,8 +58,8 @@ export class EventService {
       hostToggle: true,
       school: null,
       institution: null,
-      category: 0,
-      level: 0,
+      category: [0],
+      level: [0],
       amountStudents: 0,
       sequence: '',
       runs: '',
@@ -95,7 +91,7 @@ export class EventService {
     })
   }
 
-  insertOrUpdateCurrentEvent(notificationService: NotificationService) {
+  insertOrUpdateCurrentEvent() {
     const eventForm = this.detailForm.value
     eventForm.date = new Date(eventForm.date).toISOString()
 
@@ -127,26 +123,38 @@ export class EventService {
       updatedHostObservable = this.dbService.updateHost(host)
     }
 
-    updatedHostObservable.subscribe(hostWithId => {
-      eventForm.host_id = hostWithId.uuid
-      if (eventForm.uuid === undefined || eventForm.uuid === null) {
-        this.dbService.createEvent(eventForm).subscribe(it => {
-          if (it.uuid !== undefined) {
-            notificationService.success(':: Veranstaltung erfolgreich erstellt.')
-          } else {
-            notificationService.failure('-- Veranstaltung konnte nicht erstellt werden.')
-          }
+    updatedHostObservable
+      .pipe(
+        mergeMap(hostWithId => {
+          eventForm.host_id = hostWithId.uuid
+          return iif(
+            () => eventForm.uuid === null || eventForm.uuid === undefined,
+            this.dbService.createEvent(eventForm)
+              .pipe(
+                tap(it => {
+                  if (it.uuid !== undefined) {
+                    this.notificationService.success(':: Veranstaltung erfolgreich erstellt.')
+                  } else {
+                    this.notificationService.failure('-- Veranstaltung konnte nicht erstellt werden.')
+                  }
+                })
+              ),
+
+            this.dbService.updateEvent(eventForm)
+              .pipe(
+                tap(
+                  it => {
+                    if (it.uuid !== undefined) {
+                      this.notificationService.success(':: Veranstaltung erfolgreich aktualisiert.')
+                    } else {
+                      this.notificationService.failure('-- Veranstaltung konnte nicht aktualisiert werden.')
+                    }
+                  })
+              )
+          )
         })
-      } else {
-        this.dbService.updateEvent(eventForm).subscribe(it => {
-          if (it.uuid !== undefined) {
-            notificationService.success(':: Veranstaltung erfolgreich aktualisiert.')
-          } else {
-            notificationService.failure('-- Veranstaltung konnte nicht aktualisiert werden.')
-          }
-        })
-      }
-    })
+      )
+      .subscribe()
   }
 
   selectedHostRequired() {
