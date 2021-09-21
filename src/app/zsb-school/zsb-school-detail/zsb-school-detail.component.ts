@@ -34,6 +34,8 @@ export class ZsbSchoolDetailComponent implements OnInit {
   addressId: string
   cityId: string
 
+  addressUndefined = true
+
   constructor(
     private route: ActivatedRoute,
     private dbService: DatabaseService,
@@ -72,6 +74,7 @@ export class ZsbSchoolDetailComponent implements OnInit {
             const address = this.dbService.getAddressFromArrayByAddressId(it, this.addressId)
             this.cityId = address.city_id
           })
+          this.addressUndefined = false
         })
       }
     })
@@ -126,6 +129,7 @@ export class ZsbSchoolDetailComponent implements OnInit {
           this.service.formGroup.patchValue(
             {address: this.service.getReadableAddress(this.address, this.address.city)}
           )
+          this.addressUndefined = false
         }
       })
   }
