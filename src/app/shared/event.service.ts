@@ -2,13 +2,13 @@ import {Injectable} from '@angular/core'
 import {DatabaseService} from './database.service'
 import {iif, Observable} from 'rxjs'
 import {Event} from '../zsb-events/event'
-import {Category} from '../zsb-events/category'
 import {FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms'
 import {NotificationService} from './notification.service'
 import {Host} from '../zsb-events/host'
 import {Institution} from '../zsb-institutions/institution'
 import {School} from '../zsb-school/school'
 import {mergeMap, tap} from 'rxjs/operators'
+import {Router} from '@angular/router'
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,8 @@ import {mergeMap, tap} from 'rxjs/operators'
 export class EventService {
 
   constructor(public dbService: DatabaseService,
-              private notificationService: NotificationService) {
+              private notificationService: NotificationService,
+              private router: Router) {
   }
 
   private detailForm: FormGroup = new FormGroup({
@@ -134,6 +135,7 @@ export class EventService {
                 tap(it => {
                   if (it.uuid !== undefined) {
                     this.notificationService.success(':: Veranstaltung erfolgreich erstellt.')
+                    this.router.navigate(['/'])
                   } else {
                     this.notificationService.failure('-- Veranstaltung konnte nicht erstellt werden.')
                   }
@@ -146,6 +148,7 @@ export class EventService {
                   it => {
                     if (it.uuid !== undefined) {
                       this.notificationService.success(':: Veranstaltung erfolgreich aktualisiert.')
+                      this.router.navigate(['/'])
                     } else {
                       this.notificationService.failure('-- Veranstaltung konnte nicht aktualisiert werden.')
                     }

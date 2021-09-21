@@ -168,6 +168,7 @@ export class SchoolService {
     this.newSchool.subscribe(it => {
       if (it.school_id !== undefined) {
         notificationService.success(':: Schule erfolgreich aktualisiert.')
+        this.router.navigate(['/'])
       } else {
         notificationService.failure('-- Schule konnte nicht aktualisiert werden.')
       }
@@ -214,6 +215,7 @@ export class SchoolService {
           result.subscribe(it => {
             if (it.school_id !== undefined) {
               notificationService.success(':: Schule erfolgreich aktualisiert.')
+              this.router.navigate(['/'])
             } else {
               notificationService.failure('-- Schule konnte nicht aktualisiert werden.')
             }

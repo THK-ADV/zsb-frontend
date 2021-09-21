@@ -1,12 +1,11 @@
 import {Component, OnInit} from '@angular/core'
-import {ActivatedRoute} from '@angular/router'
+import {ActivatedRoute, Router} from '@angular/router'
 import {InstitutionsService} from '../institutions.service'
 import {NotificationService} from '../../shared/notification.service'
 import {MatDialog} from '@angular/material/dialog'
 import {Institution} from '../institution'
 import {AddressService} from '../../shared/address.service'
 import {AddressStatus} from '../../zsb-address/zsb-address.component'
-
 
 @Component({
   selector: 'app-zsb-institutions-detail',
@@ -23,12 +22,14 @@ export class ZsbInstitutionsDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     public service: InstitutionsService,
     private notificationService: NotificationService,
     private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
+    this.service.initializeInstForm()
     this.route.paramMap.subscribe(params => {
       this.institutionId = params.get('institutionId')
 
@@ -100,16 +101,16 @@ export class ZsbInstitutionsDetailComponent implements OnInit {
   }
 
   onClear() {
-    this.addressUndefined = true
     this.service.getInstForm().reset()
-    this.service.initializeInstForm()
     this.ngOnInit()
     this.notificationService.success('Formular zurückgesetzt')
+    this.addressUndefined = true
   }
 
   notifyInsert(success: boolean) {
     if (success) {
       this.notificationService.success('Institution erfolgreich erstellt.')
+      this.router.navigate(['/institutions'])
     } else {
       this.notificationService.failure('Institution konnte nicht erstellt werden.')
     }
@@ -118,6 +119,7 @@ export class ZsbInstitutionsDetailComponent implements OnInit {
   notifyUpdate(success: boolean) {
     if (success) {
       this.notificationService.success('Institution erfolgreich aktualisiert.')
+      this.router.navigate(['/institutions'])
     } else {
       this.notificationService.failure('Institution konnte nicht aktualisiert werden.')
     }
