@@ -2,8 +2,9 @@ import {Injectable} from '@angular/core'
 import {FormControl, FormGroup, Validators} from '@angular/forms'
 import {Address} from '../zsb-address/address'
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
-import {AddressResult, ZsbAddressComponent} from '../zsb-address/zsb-address.component'
+import {AddressResult, AddressStatus, ZsbAddressComponent} from '../zsb-address/zsb-address.component'
 import {Observable} from 'rxjs'
+import {tap} from 'rxjs/operators'
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class AddressService {
 
   static getStandardDialogConfig(): MatDialogConfig {
     const config = new MatDialogConfig()
-    config.disableClose = true
+    config.disableClose = false
     config.width = '40%'
     return config
   }
@@ -36,8 +37,9 @@ export class AddressService {
     config: MatDialogConfig = this.getStandardDialogConfig()
   ): Observable<AddressResult> {
     const ref = dialog.open(ZsbAddressComponent, config)
+    const s = ref.backdropClick().subscribe(() => ref.close(new AddressResult(null, AddressStatus.CANCELLATION)))
     ref.componentInstance.addressId = uuid
-    return ref.afterClosed()
+    return ref.afterClosed().pipe(tap(() => s.unsubscribe()))
   }
 
   initializeFormGroup() {

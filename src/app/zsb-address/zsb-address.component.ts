@@ -158,6 +158,7 @@ export class ZsbAddressComponent implements OnInit {
   }
 
   onCancel() {
+    console.log('cancel')
     this.dialogRef.close(new AddressResult(null, AddressStatus.CANCELLATION))
   }
 }
