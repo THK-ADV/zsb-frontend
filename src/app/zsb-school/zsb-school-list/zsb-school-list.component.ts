@@ -20,7 +20,7 @@ export class ZsbSchoolListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort
   searchKey: string
 
-  listData: MatTableDataSource<any>
+  listData: MatTableDataSource<School>
   schoolTypes: SchoolType[]
   amountStudents: AmountStudents[]
   private selectedSchoolsIds: string[] = []
@@ -28,7 +28,7 @@ export class ZsbSchoolListComponent implements OnInit {
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns: Array<string> = [
     'select',
-    'name',
+    'label',
     'schoolType',
     // 'focus',
     'address',
@@ -51,15 +51,12 @@ export class ZsbSchoolListComponent implements OnInit {
   ngOnInit() {
     this.service.getSchoolsAtomic().subscribe(
       list => {
-        const array = list.map(item => {
-          return {
-            ...item
-          }
-        })
+        const array = [...list]
         this.listData = new MatTableDataSource(array)
         this.listData.sort = this.sort
         this.listData.paginator = this.paginator
         this.buildCustomFilter()
+        this.buildCustomSorting()
       })
 
     this.service.getSchoolType().subscribe(schoolTypes => this.schoolTypes = schoolTypes)
@@ -147,5 +144,20 @@ export class ZsbSchoolListComponent implements OnInit {
   openEmailDialog() {
     if (this.warnIfSelectedSchoolsIsEmpty()) return
     alert('Funktionalität ist noch in Arbeit. Folgt in Kürze.')
+  }
+
+  name = (s: School) => s.name
+
+  private buildCustomSorting() {
+    this.listData.sortingDataAccessor = (s, id) => {
+      switch (id) {
+        case 'label': return this.name(s)
+        case 'schoolType': return this.getSchoolTypeById(s.schooltype)
+        case 'city': return `${s.address.city.postcode}, ${s.address.city.designation}`
+        case 'address': return  `${s.address.street}, ${s.address.houseNumber}`
+        case 'amountStudents': return s.amount_students
+        default: throw Error(id)
+      }
+    }
   }
 }
