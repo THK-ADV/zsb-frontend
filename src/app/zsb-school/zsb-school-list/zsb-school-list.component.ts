@@ -28,7 +28,7 @@ export class ZsbSchoolListComponent implements OnInit {
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns: Array<string> = [
     'select',
-    'label',
+    'name',
     'schoolType',
     // 'focus',
     'address',
@@ -146,15 +146,13 @@ export class ZsbSchoolListComponent implements OnInit {
     alert('Funktionalität ist noch in Arbeit. Folgt in Kürze.')
   }
 
-  name = (s: School) => s.name
-
   private buildCustomSorting() {
     this.listData.sortingDataAccessor = (s, id) => {
       switch (id) {
-        case 'label': return this.name(s)
-        case 'schoolType': return this.getSchoolTypeById(s.schooltype)
-        case 'city': return `${s.address.city.postcode}, ${s.address.city.designation}`
-        case 'address': return  `${s.address.street}, ${s.address.houseNumber}`
+        case 'name': return s.name.toLocaleLowerCase()
+        case 'schoolType': return this.getSchoolTypeById(s.schooltype).toLocaleLowerCase()
+        case 'city': return `${s.address.city.postcode}, ${s.address.city.designation}`.toLocaleLowerCase()
+        case 'address': return  `${s.address.street}, ${s.address.houseNumber}`.toLocaleLowerCase()
         case 'amountStudents': return s.amount_students
         default: throw Error(id)
       }

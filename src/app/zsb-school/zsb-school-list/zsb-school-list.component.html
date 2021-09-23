@@ -29,9 +29,9 @@
     </ng-container>
 
     <!-- schulname Column -->
-    <ng-container matColumnDef="label">
+    <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
-      <mat-cell [routerLink]="['/schools', row.school_id]" *matCellDef="let row">{{name(row)}}</mat-cell>
+      <mat-cell [routerLink]="['/schools', row.school_id]" *matCellDef="let row">{{row.name}}</mat-cell>
     </ng-container>
 
     <!-- schulform Column -->
