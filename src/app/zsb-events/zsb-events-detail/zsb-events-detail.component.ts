@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core'
+import {Component, OnDestroy, OnInit} from '@angular/core'
 import {EventService} from '../../shared/event.service'
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
 import {ActivatedRoute} from '@angular/router'
-import {Observable} from 'rxjs'
+import {Observable, Subscription} from 'rxjs'
 import {Category} from '../category'
 import {Level} from '../level'
 import {School} from '../../zsb-school/school'
@@ -11,20 +11,25 @@ import {NotificationService} from '../../shared/notification.service'
 import {Report} from '../zsb-report/report'
 import {ZsbReportComponent} from '../zsb-report/zsb-report.component'
 import {DatabaseService} from '../../shared/database.service'
+import {FormControl} from '@angular/forms'
+import {filter, map, startWith} from 'rxjs/operators'
 
 @Component({
   selector: 'app-zsb-events-detail',
   templateUrl: './zsb-events-detail.component.html',
   styleUrls: ['./zsb-events-detail.component.css']
 })
-export class ZsbEventsDetailComponent implements OnInit {
+export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
   public categories: Observable<Category[]>
   public levels: Observable<Level[]>
-  public schools: Observable<School[]>
+  public schools: School[] = []
   public institutions: Observable<Institution[]>
   public eventId: string = undefined
   public report: Report = undefined
   public hostIsSchool = true
+  schoolControl = new FormControl()
+  filteredSchools: Observable<School[]>
+  sub: Subscription
 
   constructor(
     public service: EventService,
@@ -35,6 +40,10 @@ export class ZsbEventsDetailComponent implements OnInit {
   ) {
   }
 
+  ngOnDestroy(): void {
+        this.sub.unsubscribe()
+    }
+
   ngOnInit(): void {
     this.service.initializeDetailForm()
     this.initHostToggle()
@@ -42,9 +51,8 @@ export class ZsbEventsDetailComponent implements OnInit {
     // initialize lists for all dropdowns
     this.categories = this.service.dbService.getCategories()
     this.levels = this.service.dbService.getLevels()
-    this.schools = this.service.dbService.getSchoolsAtomic()
+    this.sub = this.service.dbService.getSchoolsAtomic().subscribe(schools => this.schools = schools)
     this.institutions = this.service.dbService.getAllInstitutions()
-
 
     // check routeParam
     this.route.paramMap.subscribe(paramMap => {
@@ -56,6 +64,21 @@ export class ZsbEventsDetailComponent implements OnInit {
         this.loadEvent(parameter)
       }
     })
+    this.filteredSchools = this.schoolControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : this.displayFn(value)),
+        map(name => name ? this._filter(name) : this.schools.slice())
+      )
+  }
+
+  displayFn(school: School): string {
+    return school && school.name ? school.name : ''
+  }
+
+  private _filter(value: string): School[] {
+    const filterValue = value.toLowerCase()
+    return this.schools.filter(school => school.name.toLowerCase().includes(filterValue))
   }
 
   private checkQueryParametersAndPreloadAvailableData() {
@@ -110,6 +133,7 @@ export class ZsbEventsDetailComponent implements OnInit {
     console.log('CLEAR')
     this.service.getDetailForm().reset()
     this.service.initializeDetailForm()
+    this.schoolControl.reset(undefined, {emitEvent: false})
     this.ngOnInit()
     this.notificationService.success(':: Formular zurückgesetzt.')
   }
@@ -141,4 +165,6 @@ export class ZsbEventsDetailComponent implements OnInit {
       this.service.initFormWithInstitution(institution)
     })
   }
+
+  schoolIsSelected = () => typeof this.schoolControl.value !== 'string'
 }

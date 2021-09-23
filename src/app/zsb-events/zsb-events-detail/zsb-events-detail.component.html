@@ -62,20 +62,23 @@
   <br>
   <br>
 
-  <div *ngIf="hostIsSchool">
+  <mat-form-field *ngIf="hostIsSchool">
     <!-- schule -->
-    <mat-form-field>
-      <mat-select formControlName="school" placeholder="Schule*">
-        <ng-container *ngFor="let it of schools | async">
-          <mat-option [value]="it.school_id">
-            {{it.name}} <br>
-          </mat-option>
-        </ng-container>
-      </mat-select>
-      <mat-error>Bitte wählen Sie eine Schule aus.</mat-error>
-    </mat-form-field>
-    <br>
-  </div>
+    <mat-label>Schule*</mat-label>
+    <input type="text"
+           placeholder="Schule*"
+           aria-label="Schule*"
+           matInput
+           [formControl]="schoolControl"
+           [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let it of filteredSchools | async" [value]="it">
+        {{displayFn(it)}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-error *ngIf="!schoolIsSelected()">Bitte wählen Sie eine Schule aus.</mat-error> <!-- expand check to school only -->
+
 
   <div *ngIf="!hostIsSchool">
     <!-- institution -->
@@ -87,7 +90,7 @@
           </mat-option>
         </ng-container>
       </mat-select>
-      <mat-error>Bitte wählen Sie eine Schule aus.</mat-error>
+      <mat-error>Bitte wählen Sie eine Institution aus.</mat-error>
     </mat-form-field>
     <br>
   </div>
