@@ -1,0 +1,166 @@
+<ng-container *ngIf="this.eventId === undefined; else edit">
+  <h1>Veranstaltung hinzufügen</h1>
+</ng-container>
+<ng-template #edit>
+  <h1>Veranstaltung bearbeiten</h1>
+</ng-template>
+
+<form [formGroup]="service.getDetailForm()" class="event-form">
+  <!-- uuid -->
+  <input type="hidden" formControlName="uuid">
+
+  <!-- date-->
+  <mat-form-field appearance="">
+    <mat-label>Datum</mat-label>
+    <label>
+      <input matInput [matDatepicker]="picker" formControlName="date" (click)="picker.open()" readonly>
+    </label>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker disabled="false"></mat-datepicker>
+  </mat-form-field>
+  <br>
+
+  <!-- designation -->
+  <mat-form-field>
+    <label>
+      <input formControlName="designation" matInput placeholder="Bezeichnung*">
+    </label>
+    <mat-error>Ihre Eingabe wird benötigt.</mat-error>
+  </mat-form-field>
+  <br>
+
+  <!-- topic -->
+  <mat-form-field>
+    <label>
+      <input formControlName="topic" matInput placeholder="Thema*">
+    </label>
+    <mat-error>Ihre Eingabe wird benötigt.</mat-error>
+  </mat-form-field>
+  <br>
+
+
+  <!-- berichtBtn -->
+  <div *ngIf="this.eventId !== undefined">
+    <div *ngIf="report === undefined else adjustReport">
+      <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
+              (click)="editReport()">Bericht erstellen
+      </button>
+    </div>
+    <ng-template #adjustReport>
+      <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
+              (click)="editReport(this.report)">Bericht anpassen
+      </button>
+    </ng-template>
+  </div>
+  <br>
+  <br>
+
+  <!-- veranstalterToggle -->
+  <mat-slide-toggle name="hostToggle" formControlName="hostToggle">
+    Veranstalter ist Schule?
+  </mat-slide-toggle>
+  <br>
+  <br>
+
+  <mat-form-field *ngIf="hostIsSchool">
+    <!-- schule -->
+    <mat-label>Schule*</mat-label>
+    <input type="text"
+           placeholder="Schule*"
+           aria-label="Schule*"
+           matInput
+           [formControl]="schoolControl"
+           [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let it of filteredSchools | async" [value]="it">
+        {{displayFn(it)}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-error *ngIf="!schoolIsSelected()">Bitte wählen Sie eine Schule aus.</mat-error> <!-- expand check to school only -->
+
+
+  <div *ngIf="!hostIsSchool">
+    <!-- institution -->
+    <mat-form-field>
+      <mat-select formControlName="institution" placeholder="Institution*">
+        <ng-container *ngFor="let it of institutions | async">
+          <mat-option [value]="it.uuid">
+            {{it.designation}} <br>
+          </mat-option>
+        </ng-container>
+      </mat-select>
+      <mat-error>Bitte wählen Sie eine Institution aus.</mat-error>
+    </mat-form-field>
+    <br>
+  </div>
+
+
+  <!-- category -->
+  <mat-form-field>
+    <mat-select formControlName="category" placeholder="Kategorie" multiple>
+      <ng-container *ngFor="let it of categories | async">
+        <mat-option [value]="it.id">
+          {{it.desc}} <br>
+        </mat-option>
+      </ng-container>
+    </mat-select>
+    <mat-error>Bitte wählen Sie eine Kategorie aus.</mat-error>
+  </mat-form-field>
+  <br>
+
+  <!-- stufe -->
+  <mat-form-field>
+    <mat-select formControlName="level" placeholder="Stufe" multiple>
+      <ng-container *ngFor="let it of levels | async">
+        <mat-option [value]="it.id">
+          {{it.desc}} <br>
+        </mat-option>
+      </ng-container>
+    </mat-select>
+    <mat-error>Bitte wählen Sie eine Stufe aus.</mat-error>
+  </mat-form-field>
+  <br>
+
+  <!-- amountStudents -->
+  <mat-form-field>
+    <label>
+      <input formControlName="amountStudents" matInput placeholder="Anzahl SuS">
+    </label>
+  </mat-form-field>
+  <br>
+
+  <!-- ablaufUndBewertung -->
+  <mat-form-field>
+    <label>
+      <textarea formControlName="sequence" matInput placeholder="Ablauf und Bewertung"></textarea>
+    </label>
+  </mat-form-field>
+  <br>
+
+  <!-- durchlaeufe -->
+  <mat-form-field>
+    <label>
+      <input formControlName="runs" matInput placeholder="Durchläufe">
+    </label>
+    <mat-error>Ihre Eingabe wird benötigt.</mat-error>
+  </mat-form-field>
+  <br>
+  <br>
+
+  <!-- ansprechpartner -->
+  <mat-form-field>
+    <label>
+      <input formControlName="contactPerson" matInput placeholder="Ansprechpartner">
+    </label>
+  </mat-form-field>
+  <br>
+  <br>
+
+  <div class="btn-row">
+    <button mat-raised-button color="primary" type="submit" (click)="onSubmit()"
+            [disabled]="service.getDetailForm().invalid">Speichern
+    </button>
+    <button mat-raised-button color="warn" (click)="onClear()">Zurücksetzen</button>
+  </div>
+</form>

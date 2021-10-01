@@ -5,7 +5,7 @@ import {Signature} from './signature'
 import {Observable} from 'rxjs'
 import {FormControl, FormGroup, Validators} from '@angular/forms'
 import {Letter} from './letter'
-import {Schule} from '../../zsb-schule/schule'
+import {School} from '../../zsb-school/school'
 import {DatePipe} from '@angular/common'
 
 @Component({
@@ -16,7 +16,7 @@ import {DatePipe} from '@angular/common'
 export class ZsbLetterComponent implements OnInit {
 
   public addresseesIds: string[] = []
-  private addressees: Schule[] = []
+  private addressees: School[] = []
   public signatures: Observable<Signature[]>
   public formGroup: FormGroup = new FormGroup({
     msg: new FormControl('', Validators.required),
@@ -28,17 +28,17 @@ export class ZsbLetterComponent implements OnInit {
 
   ngOnInit(): void {
     this.signatures = this.dbService.getSignatures()
-    this.dbService.getSchulenAtomic().subscribe(schulen => {
-      this.resolveAddresses(schulen)
+    this.dbService.getSchoolsAtomic().subscribe(schools => {
+      this.resolveAddresses(schools)
     })
 
-    console.log('send stuff to schulen with id:')
+    console.log('send stuff to schools with id:')
     console.log(this.addresseesIds)
   }
 
-  resolveAddresses(schulen: Schule[]) {
-    schulen.forEach(it => {
-      if (this.addresseesIds.some(id => id === it.schule_id)) {
+  resolveAddresses(schools: School[]) {
+    schools.forEach(it => {
+      if (this.addresseesIds.some(id => id === it.school_id)) {
         this.addressees.push(it)
       }
     })
@@ -80,7 +80,7 @@ export class ZsbLetterComponent implements OnInit {
     }, 100)
   }
 
-  generateDocumentTitle(addressees: Schule[]): string {
+  generateDocumentTitle(addressees: School[]): string {
     const currentDate = new Date()
     const currentDateString = this.datePipe.transform(currentDate, 'yyyy-MM-dd')
 
@@ -89,8 +89,8 @@ export class ZsbLetterComponent implements OnInit {
       return 'Serienbrief-' + addressees.length + '_' + currentDateString + '.doc'
     }
 
-    const schulName = addressees.pop().name
-    return schulName + '_' + currentDateString + '.doc'
+    const schoolName = addressees.pop().name
+    return schoolName + '_' + currentDateString + '.doc'
   }
 
   onCancel() {
