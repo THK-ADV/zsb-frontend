@@ -2,11 +2,13 @@ import {Component, OnInit, ViewChild} from '@angular/core'
 import {MatPaginator} from '@angular/material/paginator'
 import {MatSort} from '@angular/material/sort'
 import {MatTableDataSource} from '@angular/material/table'
-import {Institution} from '../institution'
 import {DbTextResponse} from '../../shared/dbTextResponse'
 import {DatePipe} from '@angular/common'
 import {NotificationService} from '../../shared/notification.service'
 import {InstitutionsService} from '../institutions.service'
+import {completeInstitutionAsString, Institution} from '../institution'
+import {buildCustomFilter} from '../../shared/keywordsearch'
+
 
 @Component({
   selector: 'app-zsb-institutions-list',
@@ -31,6 +33,7 @@ export class ZsbInstitutionsListComponent implements OnInit {
       this.listData.data = institutions
       this.listData.sort = this.sort
       this.listData.paginator = this.paginator
+      this.listData.filterPredicate = buildCustomFilter<Institution>(i => completeInstitutionAsString(i))
     })
   }
 

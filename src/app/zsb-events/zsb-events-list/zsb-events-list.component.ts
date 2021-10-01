@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core'
 import {EventService} from '../../shared/event.service'
 import {MatTableDataSource} from '@angular/material/table'
-import {Event} from '../event'
+import {completeEventAsString, Event} from '../event'
 import {MatSort} from '@angular/material/sort'
 import {MatPaginator} from '@angular/material/paginator'
 import {DatePipe} from '@angular/common'
@@ -9,6 +9,7 @@ import {NotificationService} from '../../shared/notification.service'
 import {DbTextResponse} from '../../shared/dbTextResponse'
 import {DatabaseService} from '../../shared/database.service'
 import {zip} from 'rxjs'
+import {buildCustomFilter} from "../../shared/keywordsearch";
 
 @Component({
   selector: 'app-zsb-events-list',
@@ -50,6 +51,7 @@ export class ZsbEventsListComponent implements OnInit {
         )
         this.listData.sort = this.sort
         this.listData.paginator = this.paginator
+        this.listData.filter = buildCustomFilter<Event>(e => completeEventAsString(e))
 
         this.changeDetectorRef.markForCheck()
       })
