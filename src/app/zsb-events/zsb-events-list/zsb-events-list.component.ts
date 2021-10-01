@@ -9,7 +9,7 @@ import {NotificationService} from '../../shared/notification.service'
 import {DbTextResponse} from '../../shared/dbTextResponse'
 import {DatabaseService} from '../../shared/database.service'
 import {zip} from 'rxjs'
-import {buildCustomFilter} from "../../shared/keywordsearch";
+import {buildCustomFilter} from '../../shared/keywordsearch'
 
 @Component({
   selector: 'app-zsb-events-list',
@@ -51,7 +51,7 @@ export class ZsbEventsListComponent implements OnInit {
         )
         this.listData.sort = this.sort
         this.listData.paginator = this.paginator
-        this.listData.filter = buildCustomFilter<Event>(e => completeEventAsString(e))
+        this.listData.filterPredicate = buildCustomFilter<EventsListDisplay>(e => completeEventAsString(e))
 
         this.changeDetectorRef.markForCheck()
       })
