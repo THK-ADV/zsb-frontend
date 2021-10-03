@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core'
+import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core'
 import {MatPaginator} from '@angular/material/paginator'
 import {MatSort} from '@angular/material/sort'
 import {MatTableDataSource} from '@angular/material/table'
@@ -9,13 +9,15 @@ import {completeSchoolAsString, School} from '../school'
 import {AmountStudents} from '../amount-students'
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
 import {ZsbLetterComponent} from '../../zsb-communication/zsb-letter/zsb-letter.component'
+import {Subscription, zip} from 'rxjs'
+import {buildCustomFilter} from '../../shared/keywordsearch'
 
 @Component({
   selector: 'app-zsb-school-list',
   templateUrl: './zsb-school-list.component.html',
   styleUrls: ['./zsb-school-list.component.css']
 })
-export class ZsbSchoolListComponent implements OnInit {
+export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
   searchKey: string
@@ -24,6 +26,7 @@ export class ZsbSchoolListComponent implements OnInit {
   schoolTypes: SchoolType[]
   amountStudents: AmountStudents[]
   private selectedSchoolsIds: string[] = []
+  private sub: Subscription
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns: Array<string> = [
@@ -49,19 +52,31 @@ export class ZsbSchoolListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.service.getSchoolsAtomic().subscribe(
-      list => {
-        const array = [...list]
-        this.listData = new MatTableDataSource(array)
-        this.listData.sort = this.sort
-        this.listData.paginator = this.paginator
-        this.buildCustomFilter()
-        this.buildCustomSorting()
-      })
 
-    this.service.getSchoolType().subscribe(schoolTypes => this.schoolTypes = schoolTypes)
-    this.service.getAmountStudents().subscribe(amountStudents => this.amountStudents = amountStudents)
+    this.sub = zip(
+      this.service.getSchoolsAtomic(),
+      this.service.getSchoolType(),
+      this.service.getAmountStudents()
+    ).subscribe(([list, schoolTypes, amountStudents]) => {
+      this.listData = new MatTableDataSource([...list])
+      this.listData.sort = this.sort
+      this.listData.paginator = this.paginator
+      this.listData.filterPredicate = buildCustomFilter(s =>
+        completeSchoolAsString(
+          s,
+          schoolTypes,
+          amountStudents
+        ))
+      this.buildCustomSorting()
+
+      this.schoolTypes = schoolTypes
+      this.amountStudents = amountStudents
+    })
     this.selectedSchoolsIds = []
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe()
   }
 
   onSearchClear() {
@@ -71,24 +86,6 @@ export class ZsbSchoolListComponent implements OnInit {
 
   applyFilter() {
     this.listData.filter = this.searchKey.trim().toLowerCase()
-  }
-
-  buildCustomFilter() {
-    this.listData.filterPredicate = (school: School, filter: string) => {
-      // split keyword by comma ,
-      const keywords = filter.split(',').map(it => it.trim())
-
-      // filter data for every keyword -> loop through keywords
-      let keywordsFound = true
-      keywords.forEach(keyword => {
-        if (!completeSchoolAsString(school, this.schoolTypes, this.amountStudents).toLowerCase().includes(keyword)) {
-          keywordsFound = false
-        }
-      })
-
-      // found all keywords
-      return keywordsFound
-    }
   }
 
   getSchoolTypeById(id: number) {
@@ -149,12 +146,18 @@ export class ZsbSchoolListComponent implements OnInit {
   private buildCustomSorting() {
     this.listData.sortingDataAccessor = (s, id) => {
       switch (id) {
-        case 'name': return s.name.toLocaleLowerCase()
-        case 'schoolType': return this.getSchoolTypeById(s.schooltype).toLocaleLowerCase()
-        case 'city': return `${s.address.city.postcode}, ${s.address.city.designation}`.toLocaleLowerCase()
-        case 'address': return  `${s.address.street}, ${s.address.houseNumber}`.toLocaleLowerCase()
-        case 'amountStudents': return s.amount_students
-        default: throw Error(id)
+        case 'name':
+          return s.name.toLocaleLowerCase()
+        case 'schoolType':
+          return this.getSchoolTypeById(s.schooltype).toLocaleLowerCase()
+        case 'city':
+          return `${s.address.city.postcode}, ${s.address.city.designation}`.toLocaleLowerCase()
+        case 'address':
+          return `${s.address.street}, ${s.address.houseNumber}`.toLocaleLowerCase()
+        case 'amountStudents':
+          return s.amount_students
+        default:
+          throw Error(id)
       }
     }
   }

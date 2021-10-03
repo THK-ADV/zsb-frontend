@@ -14,3 +14,17 @@ export interface Event {
   contactPerson: string
   host?: Host
 }
+
+export function completeEventAsString(event: Event): string {
+  let concatenatedString = event.designation
+  concatenatedString += event.category
+  concatenatedString += event.topic
+  concatenatedString += event.amountStudents
+  concatenatedString += event.level
+  concatenatedString += event.sequence
+  concatenatedString += event.runs
+  concatenatedString += event.contactPerson
+  concatenatedString += event.host
+
+  return concatenatedString
+}

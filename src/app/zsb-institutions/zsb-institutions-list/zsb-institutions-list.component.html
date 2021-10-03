@@ -4,9 +4,9 @@
     Hinzufügen
   </button>
   <!--  'date', 'designation', 'category', 'topic'-->
-  <mat-form-field class="search-form-field" floatLabel="never" matTooltip="Suche ist hier noch nicht über mehrere Suchbegriffe möglich. Kommt aber noch.">
+  <mat-form-field class="search-form-field" floatLabel="never" matTooltipPosition="above" matTooltip="Mehrere Suchbegriffe können durch Komma getrennt eingegeben werden. Dabei werden nicht nur die derzeit in der Tabelle visualisierten Werte berücksichtigt, sondern alle zur Schule gehörigen Attribute.">
     <label>
-      <input matInput [(ngModel)]="searchKey" placeholder="Suche" autocomplete="off" (keyup)="applyFilter()">
+      <input matInput [(ngModel)]="searchKey" placeholder="Suchbegriffe getrennt durch Komma" autocomplete="off" (keyup)="applyFilter()">
     </label>
     <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
       <mat-icon>close</mat-icon>
