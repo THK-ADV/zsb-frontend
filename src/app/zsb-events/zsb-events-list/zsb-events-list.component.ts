@@ -10,6 +10,7 @@ import {DbTextResponse} from '../../shared/dbTextResponse'
 import {DatabaseService} from '../../shared/database.service'
 import {zip} from 'rxjs'
 import {buildCustomFilter} from '../../shared/keywordsearch'
+import {Host} from "../host";
 
 @Component({
   selector: 'app-zsb-events-list',
@@ -107,5 +108,13 @@ export class EventsListDisplay {
 
   get topic(): string {
     return this.event.topic
+  }
+
+  get contactPerson(): string {
+    return this.event.contactPerson
+  }
+
+  get host(): Host {
+    return this.event.host
   }
 }
