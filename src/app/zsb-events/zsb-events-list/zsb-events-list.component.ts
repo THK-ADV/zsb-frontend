@@ -21,7 +21,7 @@ export class ZsbEventsListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
   searchKey: string
-  listData: MatTableDataSource<EventsListDisplay>
+  listData: MatTableDataSource<Event>
 
   // order here represents the order in the displayed table
   displayedColumns: Array<string> = ['date', 'designation', 'category', 'topic', 'actions']
@@ -47,11 +47,14 @@ export class ZsbEventsListComponent implements OnInit {
         categories.forEach(c => categoryLookup.set(c.id, c.desc))
 
         this.listData = new MatTableDataSource(
-          events.map(e => new EventsListDisplay(e, e.category.map(id => categoryLookup.get(id) ?? 'Unbekannt').join(' ')))
+          events.map(e => ({
+            ...e,
+            categoryNames: e.categoryNames = e.category.map(id => categoryLookup.get(id) ?? 'Unbekannt').join(' '),
+          }))
         )
         this.listData.sort = this.sort
         this.listData.paginator = this.paginator
-        this.listData.filterPredicate = buildCustomFilter<EventsListDisplay>(e => completeEventAsString(e))
+        this.listData.filterPredicate = buildCustomFilter(e => completeEventAsString(e))
 
         this.changeDetectorRef.markForCheck()
       })
@@ -85,27 +88,5 @@ export class ZsbEventsListComponent implements OnInit {
   toReadableDate(isoDate: string): string {
     const date = Date.parse(isoDate)
     return this.datePipe.transform(date, 'dd.MM.yyyy')
-  }
-}
-
-export class EventsListDisplay {
-  constructor(private readonly event: Event,
-              public readonly category: string) {
-  }
-
-  get uuid(): string {
-    return this.event.uuid
-  }
-
-  get date(): string {
-    return this.event.date
-  }
-
-  get designation(): string {
-    return this.event.designation
-  }
-
-  get topic(): string {
-    return this.event.topic
   }
 }

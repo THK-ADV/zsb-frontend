@@ -13,11 +13,12 @@ export interface Event {
   runs: string
   contactPerson: string
   host?: Host
+  categoryNames?: string
 }
 
 export function completeEventAsString(event: Event): string {
   let concatenatedString = event.designation
-  concatenatedString += event.category
+  concatenatedString += event.categoryNames
   concatenatedString += event.topic
   concatenatedString += event.amountStudents
   concatenatedString += event.level
