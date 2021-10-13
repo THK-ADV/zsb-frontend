@@ -33,7 +33,7 @@
     <!-- category Column -->
     <ng-container matColumnDef="category">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Kategorie</mat-header-cell>
-      <mat-cell [routerLink]="['/events', row.uuid]" *matCellDef="let row">{{row.category}}</mat-cell>
+      <mat-cell [routerLink]="['/events', row.uuid]" *matCellDef="let row">{{row.categoryNames}}</mat-cell>
     </ng-container>
 
     <!-- topic Column -->
