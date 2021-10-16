@@ -135,7 +135,7 @@ export class EventService {
                 tap(it => {
                   if (it.uuid !== undefined) {
                     this.notificationService.success(':: Veranstaltung erfolgreich erstellt.')
-                    this.router.navigate(['/'])
+                    this.router.navigate(['/', 'events'])
                   } else {
                     this.notificationService.failure('-- Veranstaltung konnte nicht erstellt werden.')
                   }
@@ -148,7 +148,7 @@ export class EventService {
                   it => {
                     if (it.uuid !== undefined) {
                       this.notificationService.success(':: Veranstaltung erfolgreich aktualisiert.')
-                      this.router.navigate(['/'])
+                      this.router.navigate(['/', 'events'])
                     } else {
                       this.notificationService.failure('-- Veranstaltung konnte nicht aktualisiert werden.')
                     }

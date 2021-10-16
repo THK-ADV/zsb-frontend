@@ -110,7 +110,7 @@ export class ZsbInstitutionsDetailComponent implements OnInit {
   notifyInsert(success: boolean) {
     if (success) {
       this.notificationService.success('Institution erfolgreich erstellt.')
-      this.router.navigate(['/institutions'])
+      this.router.navigate(['/', 'institutions'])
     } else {
       this.notificationService.failure('Institution konnte nicht erstellt werden.')
     }
@@ -119,7 +119,7 @@ export class ZsbInstitutionsDetailComponent implements OnInit {
   notifyUpdate(success: boolean) {
     if (success) {
       this.notificationService.success('Institution erfolgreich aktualisiert.')
-      this.router.navigate(['/institutions'])
+      this.router.navigate(['/', 'institutions'])
     } else {
       this.notificationService.failure('Institution konnte nicht aktualisiert werden.')
     }
