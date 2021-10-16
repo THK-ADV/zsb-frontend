@@ -21,7 +21,9 @@
 
     <!-- schulname Column -->
     <ng-container matColumnDef="select">
-      <mat-header-cell *matHeaderCellDef [ngClass]="'w-02'"></mat-header-cell>
+      <mat-header-cell *matHeaderCellDef [ngClass]="'w-02'">
+        <mat-checkbox (click)="toggleSelectAll($event)"></mat-checkbox>
+      </mat-header-cell>
       <mat-cell *matCellDef="let row" class="actions-col" [ngClass]="'w-02'">
         <mat-checkbox [checked]="this.shouldRowBeSelected(row.school_id)"
                       (change)="toggleSelectedSchool(row.school_id)"></mat-checkbox>

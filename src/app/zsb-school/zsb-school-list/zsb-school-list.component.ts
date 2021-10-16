@@ -25,7 +25,7 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   listData: MatTableDataSource<School>
   schoolTypes: SchoolType[]
   amountStudents: AmountStudents[]
-  private selectedSchoolsIds: string[] = []
+  selectedSchoolsIds: string[] = []
   private sub: Subscription
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
@@ -82,6 +82,15 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   onSearchClear() {
     this.searchKey = ''
     this.applyFilter()
+  }
+
+  toggleSelectAll(event: Event) {
+    if (this.selectedSchoolsIds.length !== this.listData.data.length) {
+      this.selectedSchoolsIds.splice(0)
+      this.listData.data.forEach(s => this.selectedSchoolsIds.push(s.school_id))
+    } else {
+      this.selectedSchoolsIds.splice(0)
+    }
   }
 
   applyFilter() {
