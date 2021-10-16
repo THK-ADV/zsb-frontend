@@ -11,7 +11,6 @@ import {NotificationService} from '../../shared/notification.service'
 import {Report} from '../zsb-report/report'
 import {ZsbReportComponent} from '../zsb-report/zsb-report.component'
 import {DatabaseService} from '../../shared/database.service'
-import {FormControl} from '@angular/forms'
 import {map, startWith} from 'rxjs/operators'
 
 @Component({
@@ -27,8 +26,6 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
   public eventId: string = undefined
   public report: Report = undefined
   public hostIsSchool = true
-  schoolControl = new FormControl()
-  institutionControl = new FormControl()
   filteredSchools: Observable<School[]>
   filteredInstitutions: Observable<Institution[]>
   schoolSub: Subscription
@@ -67,13 +64,13 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
         this.loadEvent(parameter)
       }
     })
-    this.filteredSchools = this.schoolControl.valueChanges
+    this.filteredSchools = this.service.getDetailForm().get('school').valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : this.displayFnSchool(value)),
         map(name => name ? this.schoolFilter(name) : this.schools.slice())
       )
-    this.filteredInstitutions = this.institutionControl.valueChanges
+    this.filteredInstitutions = this.service.getDetailForm().get('institution').valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : this.displayFnInstitution(value)),
@@ -82,11 +79,11 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
   }
 
   displayFnSchool(school: School): string {
-    return school && school.name ? school.name : ''
+    return school?.name ?? ''
   }
 
   displayFnInstitution(institution: Institution): string {
-    return institution && institution.designation ? institution.designation : ''
+    return institution?.designation ?? ''
   }
 
   private schoolFilter(value: string): School[] {
@@ -151,7 +148,7 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
     console.log('CLEAR')
     this.service.getDetailForm().reset()
     this.service.initializeDetailForm()
-    this.schoolControl.reset(undefined, {emitEvent: false})
+    this.service.getDetailForm().get('school').reset(undefined, {emitEvent: false})
     this.ngOnInit()
     this.notificationService.success(':: Formular zurückgesetzt.')
   }
@@ -184,7 +181,7 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
     })
   }
 
-  schoolIsSelected = () => typeof this.schoolControl.value !== 'string'
+  schoolIsSelected = () => typeof this.service.getDetailForm().get('school').value !== 'string'
 
-  institutionIsSelected = () => typeof this.institutionControl.value !== 'string'
+  institutionIsSelected = () => typeof this.service.getDetailForm().get('institution').value !== 'string'
 }

@@ -102,14 +102,14 @@ export class EventService {
     if (isUniversityHost) {
       host = {
         uuid: eventForm.host_id,
-        university_id: eventForm.school ? eventForm.school : null,
+        university_id: eventForm.school.school_id ?? null,
         institution_id: null
       }
     } else {
       host = {
         uuid: eventForm.host_id,
         university_id: null,
-        institution_id: eventForm.institution ? eventForm.institution : null
+        institution_id: eventForm.institution.uuid ?? null
       }
     }
 
