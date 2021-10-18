@@ -1,5 +1,4 @@
 import {Host} from './host'
-import {EventsListDisplay} from "./zsb-events-list/zsb-events-list.component";
 
 export interface Event {
   uuid: string
@@ -17,7 +16,7 @@ export interface Event {
   categoryNames?: string
 }
 
-export function completeEventAsString(event: EventsListDisplay): string {
+export function completeEventAsString(event: Event): string {
   let concatenatedString = event.designation
   concatenatedString += event.categoryNames
   concatenatedString += event.topic
