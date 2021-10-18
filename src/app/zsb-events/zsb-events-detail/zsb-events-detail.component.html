@@ -71,29 +71,31 @@
            matInput
            [formControl]="schoolControl"
            [matAutocomplete]="auto">
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFnSchool">
       <mat-option *ngFor="let it of filteredSchools | async" [value]="it">
-        {{displayFn(it)}}
+        {{displayFnSchool(it)}}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
   <mat-error *ngIf="!schoolIsSelected()">Bitte wählen Sie eine Schule aus.</mat-error> <!-- expand check to school only -->
 
 
-  <div *ngIf="!hostIsSchool">
+  <mat-form-field *ngIf="!hostIsSchool">
     <!-- institution -->
-    <mat-form-field>
-      <mat-select formControlName="institution" placeholder="Institution*">
-        <ng-container *ngFor="let it of institutions | async">
-          <mat-option [value]="it.uuid">
-            {{it.designation}} <br>
-          </mat-option>
-        </ng-container>
-      </mat-select>
-      <mat-error>Bitte wählen Sie eine Institution aus.</mat-error>
-    </mat-form-field>
-    <br>
-  </div>
+    <mat-label>Institution*</mat-label>
+      <input type="text"
+      placeholder="Institution*"
+      aria-label="Institution*"
+      matInput
+      [formControl]="institutionControl"
+      [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFnInstitution">
+      <mat-option *ngFor="let it of filteredInstitutions | async" [value]="it">
+        {{displayFnInstitution(it)}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-error *ngIf="!institutionIsSelected()">Bitte wählen Sie eine Institution aus.</mat-error>
 
 
   <!-- category -->

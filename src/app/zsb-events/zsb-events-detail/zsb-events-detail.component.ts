@@ -12,7 +12,7 @@ import {Report} from '../zsb-report/report'
 import {ZsbReportComponent} from '../zsb-report/zsb-report.component'
 import {DatabaseService} from '../../shared/database.service'
 import {FormControl} from '@angular/forms'
-import {filter, map, startWith} from 'rxjs/operators'
+import {map, startWith} from 'rxjs/operators'
 
 @Component({
   selector: 'app-zsb-events-detail',
@@ -23,13 +23,16 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
   public categories: Observable<Category[]>
   public levels: Observable<Level[]>
   public schools: School[] = []
-  public institutions: Observable<Institution[]>
+  public institutions: Institution[] = []
   public eventId: string = undefined
   public report: Report = undefined
   public hostIsSchool = true
   schoolControl = new FormControl()
+  institutionControl = new FormControl()
   filteredSchools: Observable<School[]>
-  sub: Subscription
+  filteredInstitutions: Observable<Institution[]>
+  schoolSub: Subscription
+  institutionSub: Subscription
 
   constructor(
     public service: EventService,
@@ -41,7 +44,7 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-        this.sub.unsubscribe()
+        this.schoolSub.unsubscribe()
     }
 
   ngOnInit(): void {
@@ -51,8 +54,8 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
     // initialize lists for all dropdowns
     this.categories = this.service.dbService.getCategories()
     this.levels = this.service.dbService.getLevels()
-    this.sub = this.service.dbService.getSchoolsAtomic().subscribe(schools => this.schools = schools)
-    this.institutions = this.service.dbService.getAllInstitutions()
+    this.schoolSub = this.service.dbService.getSchoolsAtomic().subscribe(schools => this.schools = schools)
+    this.institutionSub = this.service.dbService.getAllInstitutions().subscribe(institutions => this.institutions = institutions)
 
     // check routeParam
     this.route.paramMap.subscribe(paramMap => {
@@ -67,18 +70,33 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
     this.filteredSchools = this.schoolControl.valueChanges
       .pipe(
         startWith(''),
-        map(value => typeof value === 'string' ? value : this.displayFn(value)),
-        map(name => name ? this._filter(name) : this.schools.slice())
+        map(value => typeof value === 'string' ? value : this.displayFnSchool(value)),
+        map(name => name ? this.schoolFilter(name) : this.schools.slice())
+      )
+    this.filteredInstitutions = this.institutionControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : this.displayFnInstitution(value)),
+        map(designation => designation ? this.institutionFilter(designation) : this.institutions)
       )
   }
 
-  displayFn(school: School): string {
+  displayFnSchool(school: School): string {
     return school && school.name ? school.name : ''
   }
 
-  private _filter(value: string): School[] {
+  displayFnInstitution(institution: Institution): string {
+    return institution && institution.designation ? institution.designation : ''
+  }
+
+  private schoolFilter(value: string): School[] {
     const filterValue = value.toLowerCase()
     return this.schools.filter(school => school.name.toLowerCase().includes(filterValue))
+  }
+
+  private institutionFilter(value: string): Institution[] {
+    const filterValue = value.toLowerCase()
+    return this.institutions.filter(institution => institution.designation.toLowerCase().includes(filterValue))
   }
 
   private checkQueryParametersAndPreloadAvailableData() {
@@ -167,4 +185,6 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
   }
 
   schoolIsSelected = () => typeof this.schoolControl.value !== 'string'
+
+  institutionIsSelected = () => typeof this.institutionControl.value !== 'string'
 }
