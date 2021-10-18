@@ -11,6 +11,7 @@ import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
 import {ZsbLetterComponent} from '../../zsb-communication/zsb-letter/zsb-letter.component'
 import {Subscription, zip} from 'rxjs'
 import {buildCustomFilter} from '../../shared/keywordsearch'
+import {SelectionModel} from '@angular/cdk/collections'
 
 @Component({
   selector: 'app-zsb-school-list',
@@ -25,8 +26,9 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   listData: MatTableDataSource<School>
   schoolTypes: SchoolType[]
   amountStudents: AmountStudents[]
-  private selectedSchoolsIds: string[] = []
+  selectedSchoolsIds: string[] = []
   private sub: Subscription
+  selection = new SelectionModel(true, [])
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns: Array<string> = [
@@ -84,6 +86,21 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
     this.applyFilter()
   }
 
+  toggleSelectAll() {
+    if (this.selectedSchoolsIds.length !== this.listData.data.length) {
+      this.selectedSchoolsIds.splice(0)
+      this.listData.data.forEach(s => this.selectedSchoolsIds.push(s.school_id))
+    } else {
+      this.selectedSchoolsIds.splice(0)
+    }
+  }
+
+  isAllSelected() {
+    const numSelected = this.selectedSchoolsIds.length
+    const numRows = this.listData.data.length
+    return numSelected === numRows
+  }
+
   applyFilter() {
     this.listData.filter = this.searchKey.trim().toLowerCase()
   }
@@ -110,6 +127,7 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   }
 
   toggleSelectedSchool(schoolId: string) {
+    this.selection.toggle(schoolId)
     if (this.shouldRowBeSelected(schoolId)) {
       this.selectedSchoolsIds = this.selectedSchoolsIds.filter(id => id !== schoolId)
     } else {
@@ -118,6 +136,7 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   }
 
   shouldRowBeSelected(schoolId: string): boolean {
+    this.selection.isSelected(schoolId)
     return this.selectedSchoolsIds.some(id => id === schoolId)
   }
 

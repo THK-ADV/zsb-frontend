@@ -10,6 +10,7 @@ import {DbTextResponse} from '../../shared/dbTextResponse'
 import {DatabaseService} from '../../shared/database.service'
 import {zip} from 'rxjs'
 import {buildCustomFilter} from '../../shared/keywordsearch'
+import {Host} from "../host";
 
 @Component({
   selector: 'app-zsb-events-list',
@@ -88,5 +89,35 @@ export class ZsbEventsListComponent implements OnInit {
   toReadableDate(isoDate: string): string {
     const date = Date.parse(isoDate)
     return this.datePipe.transform(date, 'dd.MM.yyyy')
+  }
+}
+
+export class EventsListDisplay {
+  constructor(private readonly event: Event,
+              public readonly category: string) {
+  }
+
+  get uuid(): string {
+    return this.event.uuid
+  }
+
+  get date(): string {
+    return this.event.date
+  }
+
+  get designation(): string {
+    return this.event.designation
+  }
+
+  get topic(): string {
+    return this.event.topic
+  }
+
+  get contactPerson(): string {
+    return this.event.contactPerson
+  }
+
+  get host(): Host {
+    return this.event.host
   }
 }
