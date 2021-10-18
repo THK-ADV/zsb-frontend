@@ -22,11 +22,14 @@
     <!-- schulname Column -->
     <ng-container matColumnDef="select">
       <mat-header-cell *matHeaderCellDef [ngClass]="'w-02'">
-        <mat-checkbox (click)="toggleSelectAll($event)"></mat-checkbox>
+        <mat-checkbox (change)="$event ? toggleSelectAll() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()"></mat-checkbox>
       </mat-header-cell>
       <mat-cell *matCellDef="let row" class="actions-col" [ngClass]="'w-02'">
-        <mat-checkbox [checked]="this.shouldRowBeSelected(row.school_id)"
-                      (change)="toggleSelectedSchool(row.school_id)"></mat-checkbox>
+        <mat-checkbox (click)="$event.stopPropagation()"
+                      (change)="$event ? toggleSelectedSchool(row.school_id) : null"
+                      [checked]="this.shouldRowBeSelected(row.school_id)"></mat-checkbox>
       </mat-cell>
     </ng-container>
 
