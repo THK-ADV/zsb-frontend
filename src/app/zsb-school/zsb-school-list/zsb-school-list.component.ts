@@ -101,6 +101,10 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
     return numSelected === numRows
   }
 
+  checkIndeterminedState = () => {
+    return this.selection.hasValue() && !this.isAllSelected() && (this.selectedSchoolsIds.length !== 0)
+  }
+
   applyFilter() {
     this.listData.filter = this.searchKey.trim().toLowerCase()
   }
