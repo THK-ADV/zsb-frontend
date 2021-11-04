@@ -168,6 +168,7 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
 
   exportAddresses() {
     if (this.warnIfSelectedSchoolsIsEmpty()) return
+    this.service.createSheet(this.selectedSchoolsIds.map(id => this.getSchoolById(id)).filter())
   }
 
   private buildCustomSorting() {
@@ -187,5 +188,10 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
           throw Error(id)
       }
     }
+  }
+
+  private getSchoolById(id: string): School | null
+  {
+    return this.listData.data.find(s => s.school_id === id) ?? null
   }
 }
