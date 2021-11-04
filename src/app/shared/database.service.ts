@@ -250,6 +250,15 @@ export class DatabaseService {
     )
   }
 
+  createSheet(schools: School[]) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8')
+    return this.httpClient.post(
+      this.DB_URL + '/downloadsheet',
+      schools,
+      {headers}
+    )
+  }
+
   getInstitutionByIdAtomic(institutionId: string) {
     return this.httpClient.get<Institution>(this.DB_URL + '/institutions/' + institutionId + this.ATOMIC)
   }

@@ -166,6 +166,10 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
     alert('Funktionalität ist noch in Arbeit. Folgt in Kürze.')
   }
 
+  exportAddresses() {
+    if (this.warnIfSelectedSchoolsIsEmpty()) return
+  }
+
   private buildCustomSorting() {
     this.listData.sortingDataAccessor = (s, id) => {
       switch (id) {
