@@ -168,7 +168,8 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
 
   exportAddresses() {
     if (this.warnIfSelectedSchoolsIsEmpty()) return
-    this.service.createSheet(this.selectedSchoolsIds.map(id => this.getSchoolById(id)).filter())
+    this.service.createSheet(this.selectedSchoolsIds.map(id => this.getSchoolById(id)).filter(s => s !== null))
+      .subscribe(blob => window.navigator.msSaveOrOpenBlob(blob))
   }
 
   private buildCustomSorting() {

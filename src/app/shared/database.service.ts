@@ -250,12 +250,12 @@ export class DatabaseService {
     )
   }
 
-  createSheet(schools: School[]) {
+  createSheet(schools: School[]): Observable<Blob> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8')
     return this.httpClient.post(
       this.DB_URL + '/downloadsheet',
       schools.map(school => school.school_id),
-      {headers}
+      {headers, responseType: 'blob'}
     )
   }
 
