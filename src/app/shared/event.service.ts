@@ -102,14 +102,14 @@ export class EventService {
     if (isUniversityHost) {
       host = {
         uuid: eventForm.host_id,
-        university_id: eventForm.school ? eventForm.school : null,
+        university_id: eventForm.school.school_id ?? null,
         institution_id: null
       }
     } else {
       host = {
         uuid: eventForm.host_id,
         university_id: null,
-        institution_id: eventForm.institution ? eventForm.institution : null
+        institution_id: eventForm.institution.uuid ?? null
       }
     }
 
@@ -135,7 +135,7 @@ export class EventService {
                 tap(it => {
                   if (it.uuid !== undefined) {
                     this.notificationService.success(':: Veranstaltung erfolgreich erstellt.')
-                    this.router.navigate(['/'])
+                    this.router.navigate(['/', 'events'])
                   } else {
                     this.notificationService.failure('-- Veranstaltung konnte nicht erstellt werden.')
                   }
@@ -148,7 +148,7 @@ export class EventService {
                   it => {
                     if (it.uuid !== undefined) {
                       this.notificationService.success(':: Veranstaltung erfolgreich aktualisiert.')
-                      this.router.navigate(['/'])
+                      this.router.navigate(['/', 'events'])
                     } else {
                       this.notificationService.failure('-- Veranstaltung konnte nicht aktualisiert werden.')
                     }

@@ -69,7 +69,7 @@
            placeholder="Schule*"
            aria-label="Schule*"
            matInput
-           [formControl]="schoolControl"
+           formControlName="school"
            [matAutocomplete]="auto">
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFnSchool">
       <mat-option *ngFor="let it of filteredSchools | async" [value]="it">
@@ -87,7 +87,7 @@
       placeholder="Institution*"
       aria-label="Institution*"
       matInput
-      [formControl]="institutionControl"
+      formControlName="institution"
       [matAutocomplete]="auto">
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFnInstitution">
       <mat-option *ngFor="let it of filteredInstitutions | async" [value]="it">
