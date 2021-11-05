@@ -12,6 +12,8 @@ import {ZsbLetterComponent} from '../../zsb-communication/zsb-letter/zsb-letter.
 import {Subscription, zip} from 'rxjs'
 import {buildCustomFilter} from '../../shared/keywordsearch'
 import {SelectionModel} from '@angular/cdk/collections'
+import {saveBlobAsFile, generateTitle} from '../../shared/downloads'
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-zsb-school-list',
@@ -49,7 +51,8 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
 
   constructor(private service: DatabaseService,
               private notificationService: NotificationService,
-              private dialog: MatDialog
+              private dialog: MatDialog,
+              private datePipe: DatePipe
   ) {
   }
 
@@ -169,7 +172,15 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   exportAddresses() {
     if (this.warnIfSelectedSchoolsIsEmpty()) return
     this.service.createSheet(this.selectedSchoolsIds.map(id => this.getSchoolById(id)).filter(s => s !== null))
-      .subscribe(blob => window.navigator.msSaveOrOpenBlob(blob))
+      .subscribe(result => saveBlobAsFile(
+        result,
+        generateTitle(
+          this.selectedSchoolsIds,
+          'adressen',
+          '.xlsx',
+          this.datePipe
+        )
+      ))
   }
 
   private buildCustomSorting() {

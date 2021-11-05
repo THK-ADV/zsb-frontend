@@ -254,7 +254,7 @@ export class DatabaseService {
     const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8')
     return this.httpClient.post(
       this.DB_URL + '/downloadsheet',
-      schools.map(school => school.school_id),
+      schools,
       {headers, responseType: 'blob'}
     )
   }
