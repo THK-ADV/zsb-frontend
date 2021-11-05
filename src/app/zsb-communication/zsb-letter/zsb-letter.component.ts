@@ -6,6 +6,7 @@ import {Observable} from 'rxjs'
 import {FormControl, FormGroup, Validators} from '@angular/forms'
 import {Letter} from './letter'
 import {School} from '../../zsb-school/school'
+import {saveBlobAsFile, generateTitle} from '../../shared/downloads'
 import {DatePipe} from '@angular/common'
 
 @Component({
@@ -52,45 +53,10 @@ export class ZsbLetterComponent implements OnInit {
     console.log(letter)
 
     this.dbService.createLetter(letter).subscribe(result => {
-      this.saveBlobAsMsWordDoc(result)
+      saveBlobAsFile(result, generateTitle(this.addresseesIds, 'serienbrief', '.doc', this.datePipe))
     })
 
     this.dialogRef.close()
-  }
-
-  // further details on https://stackoverflow.com/questions/52154874/angular-6-downloading-file-from-rest-api
-  saveBlobAsMsWordDoc(blob: Blob) {
-    const newBlob = new Blob([blob], { type: 'application/msword' })
-
-    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-      window.navigator.msSaveOrOpenBlob(newBlob)
-      return
-    }
-
-    const data = window.URL.createObjectURL(newBlob)
-
-    const link = document.createElement('a')
-    link.href = data
-    link.download = this.generateDocumentTitle(this.addressees)
-    link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }))
-
-    setTimeout(_ => {
-      window.URL.revokeObjectURL(data)
-      link.remove()
-    }, 100)
-  }
-
-  generateDocumentTitle(addressees: School[]): string {
-    const currentDate = new Date()
-    const currentDateString = this.datePipe.transform(currentDate, 'yyyy-MM-dd')
-
-    if (addressees.length === 0) return ''
-    if (addressees.length > 1) {
-      return 'Serienbrief-' + addressees.length + '_' + currentDateString + '.doc'
-    }
-
-    const schoolName = addressees.pop().name
-    return schoolName + '_' + currentDateString + '.doc'
   }
 
   onCancel() {

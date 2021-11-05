@@ -12,6 +12,8 @@ import {ZsbLetterComponent} from '../../zsb-communication/zsb-letter/zsb-letter.
 import {Subscription, zip} from 'rxjs'
 import {buildCustomFilter} from '../../shared/keywordsearch'
 import {SelectionModel} from '@angular/cdk/collections'
+import {saveBlobAsFile, generateTitle} from '../../shared/downloads'
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-zsb-school-list',
@@ -49,7 +51,8 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
 
   constructor(private service: DatabaseService,
               private notificationService: NotificationService,
-              private dialog: MatDialog
+              private dialog: MatDialog,
+              private datePipe: DatePipe
   ) {
   }
 
@@ -166,6 +169,20 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
     alert('Funktionalität ist noch in Arbeit. Folgt in Kürze.')
   }
 
+  exportAddresses() {
+    if (this.warnIfSelectedSchoolsIsEmpty()) return
+    this.service.createSheet(this.selectedSchoolsIds.map(id => this.getSchoolById(id)).filter(s => s !== null))
+      .subscribe(result => saveBlobAsFile(
+        result,
+        generateTitle(
+          this.selectedSchoolsIds,
+          'adressen',
+          '.xlsx',
+          this.datePipe
+        )
+      ))
+  }
+
   private buildCustomSorting() {
     this.listData.sortingDataAccessor = (s, id) => {
       switch (id) {
@@ -183,5 +200,10 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
           throw Error(id)
       }
     }
+  }
+
+  private getSchoolById(id: string): School | null
+  {
+    return this.listData.data.find(s => s.school_id === id) ?? null
   }
 }
