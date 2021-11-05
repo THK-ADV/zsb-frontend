@@ -26,7 +26,6 @@ export function generateTitle(selection: string[], topic: string, extension: str
     const currentDate = new Date()
     const currentDateString = datePipe.transform(currentDate, 'yyyy-MM-dd')
     const title = topic + '-' + selection.length + '_' + currentDateString + extension
-    console.log(title)
     return title
 
 }
