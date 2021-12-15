@@ -1,1 +1,25 @@
-<p>zsb-email works!</p>
+<!--p>zsb-email works!</p-->
+<h1>E-Mail versenden</h1>
+<form [formGroup]="formGroup" class="mail-form">
+
+  <div class="controls-container">
+    <mat-form-field class="full-width">
+      <mat-label>Betreff</mat-label>
+        <input formControlName="subject" matInput placeholder="Betreff">
+    </mat-form-field>
+  </div>
+  <div class="controls-container">
+    <mat-form-field class="full-width">
+      <label>
+        <textarea formControlName="msg" matInput placeholder="Nachricht"></textarea>
+      </label>
+    </mat-form-field>
+
+    <div class="btn-row">
+      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="formGroup.invalid">
+        E-Mail(s) senden
+      </button>
+      <button mat-raised-button color="warn" (click)="onCancel()">Abbrechen</button>
+    </div>
+  </div>
+</form>

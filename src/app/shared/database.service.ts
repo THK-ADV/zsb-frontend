@@ -19,6 +19,7 @@ import {Report} from '../zsb-events/zsb-report/report'
 import {CooperationPartner} from '../zsb-school/cooperationPartner'
 import {Signature} from '../zsb-communication/zsb-letter/signature'
 import {Letter} from '../zsb-communication/zsb-letter/letter'
+import {Email} from "../zsb-communication/zsb-email/email";
 
 @Injectable({
   providedIn: 'root'
@@ -257,6 +258,10 @@ export class DatabaseService {
       schools,
       {headers, responseType: 'blob'}
     )
+  }
+
+  createEmail(email: Email) {
+    return this.httpClient.post<Email>(this.DB_URL + '/email', email)
   }
 
   getInstitutionByIdAtomic(institutionId: string) {
