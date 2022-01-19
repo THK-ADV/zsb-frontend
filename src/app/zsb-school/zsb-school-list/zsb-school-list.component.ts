@@ -14,6 +14,7 @@ import {buildCustomFilter} from '../../shared/keywordsearch'
 import {SelectionModel} from '@angular/cdk/collections'
 import {saveBlobAsFile, generateTitle} from '../../shared/downloads'
 import {DatePipe} from "@angular/common";
+import {ZsbEmailComponent} from "../../zsb-communication/zsb-email/zsb-email.component";
 
 @Component({
   selector: 'app-zsb-school-list',
@@ -166,7 +167,11 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
 
   openEmailDialog() {
     if (this.warnIfSelectedSchoolsIsEmpty()) return
-    alert('Funktionalität ist noch in Arbeit. Folgt in Kürze.')
+    const dialogConfig = new MatDialogConfig()
+    dialogConfig.disableClose = true
+    dialogConfig.width = '30%'
+    const dialogRef = this.dialog.open(ZsbEmailComponent, dialogConfig)
+    dialogRef.componentInstance.addresseesIds = this.selectedSchoolsIds
   }
 
   exportAddresses() {
