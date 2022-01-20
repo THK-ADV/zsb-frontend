@@ -1,68 +1,53 @@
-import {Component, OnInit} from '@angular/core'
+import {Component, Inject, OnDestroy} from '@angular/core'
 import {FormControl, FormGroup, Validators} from '@angular/forms'
-import {DatabaseService} from '../../shared/database.service'
-import {MatDialogRef} from '@angular/material/dialog'
-import {DatePipe} from '@angular/common'
-import {School} from '../../zsb-school/school'
-import {Letter} from '../zsb-letter/letter'
-import {generateTitle, saveBlobAsFile} from '../../shared/downloads'
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog'
 import {Email} from './email'
 import {NotificationService} from '../../shared/notification.service'
+import {Subscription} from 'rxjs'
+import {DatabaseService} from '../../shared/database.service'
 
 @Component({
   selector: 'app-zsb-email',
   templateUrl: './zsb-email.component.html',
   styleUrls: ['./zsb-email.component.css']
 })
-export class ZsbEmailComponent implements OnInit {
+export class ZsbEmailComponent implements OnDestroy {
 
-  public addresseesIds: string[] = []
-  private addressees: string[] = []
   public formGroup: FormGroup = new FormGroup({
     msg: new FormControl('', Validators.required),
     subject: new FormControl('', Validators.required)
   })
+  private sub?: Subscription
 
   constructor(
     private dbService: DatabaseService,
     public dialogRef: MatDialogRef<ZsbEmailComponent>,
     private notificationService: NotificationService,
-    private datePipe: DatePipe) {
+    @Inject(MAT_DIALOG_DATA) public emailAddresses: string[]
+  ) {
   }
 
-  ngOnInit(): void {
-    this.dbService.getSchoolsAtomic().subscribe(schools => {
-      this.resolveMails(schools)
-    })
-    console.log('send stuff to schools with mail adresses:')
-    console.log(this.addresseesIds)
-  }
-
-  resolveMails(schools: School[]) {
-    schools.forEach(it => {
-      if (this.addresseesIds.some(
-        id => id === it.school_id)) {
-        it.contacts.forEach(c => this.addressees.push(c.email))
-      }
-    })
+  ngOnDestroy() {
+    this.sub?.unsubscribe()
   }
 
   onSubmit() {
     const formValue = this.formGroup.value
-    const email = new Email(formValue.msg, this.addressees, formValue.subject)
-
-    console.log('create email')
-    console.log(email)
-
-    this.dbService.createEmail(email).subscribe(result => {
-      this.notificationService.success('Sendevorgang erfolgreich')
-    })
-
-    this.dialogRef.close()
+    const email = new Email(formValue.msg, this.emailAddresses, formValue.subject)
+    this.sub = this.dbService
+      .createEmail(email)
+      .subscribe(_ => {
+          this.notificationService.success('Sendevorgang erfolgreich')
+          this.dialogRef.close()
+        },
+        error => {
+          this.notificationService.failure('Sendevorgang gescheitert. Fehler: ' + error)
+          this.dialogRef.close()
+        }
+      )
   }
 
   onCancel() {
     this.dialogRef.close()
   }
-
 }

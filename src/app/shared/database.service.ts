@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core'
 import {HttpClient, HttpHeaders} from '@angular/common/http'
 import {School} from '../zsb-school/school'
 import {Address} from '../zsb-address/address'
-import {catchError, retry} from 'rxjs/operators'
+import {catchError, map, retry} from 'rxjs/operators'
 import {Observable, throwError} from 'rxjs'
 import {SchoolType} from '../zsb-school/schoolType'
 import {City} from '../zsb-address/city'
@@ -19,7 +19,7 @@ import {Report} from '../zsb-events/zsb-report/report'
 import {CooperationPartner} from '../zsb-school/cooperationPartner'
 import {Signature} from '../zsb-communication/zsb-letter/signature'
 import {Letter} from '../zsb-communication/zsb-letter/letter'
-import {Email} from "../zsb-communication/zsb-email/email";
+import {Email} from '../zsb-communication/zsb-email/email'
 
 @Injectable({
   providedIn: 'root'
@@ -247,7 +247,7 @@ export class DatabaseService {
     return this.httpClient.post(
       this.DB_URL + '/serialletter',
       letter,
-      { headers, responseType: 'blob'}
+      {headers, responseType: 'blob'}
     )
   }
 
@@ -260,8 +260,9 @@ export class DatabaseService {
     )
   }
 
-  createEmail(email: Email) {
-    return this.httpClient.post<Email>(this.DB_URL + '/email', email)
+  createEmail(email: Email): Observable<string> {
+    return this.httpClient.post<any>(this.DB_URL + '/email', email)
+      .pipe(map(resp => JSON.stringify(resp)))
   }
 
   getInstitutionByIdAtomic(institutionId: string) {

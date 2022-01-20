@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser'
-import {NgModule} from '@angular/core'
+import {APP_INITIALIZER, NgModule} from '@angular/core'
 import {AppComponent} from './app.component'
 import {RouterModule, Routes} from '@angular/router'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
@@ -32,7 +32,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle'
 import {MatSlideToggleModule} from '@angular/material/slide-toggle'
 import {FlexLayoutModule} from '@angular/flex-layout'
 import {MatSidenavModule} from '@angular/material/sidenav'
-import {KeycloakAngularModule} from 'keycloak-angular'
+import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular'
 import {ZsbEventsComponent} from './zsb-events/zsb-events.component'
 import {ZsbEventsListComponent} from './zsb-events/zsb-events-list/zsb-events-list.component'
 import {DatePipe} from '@angular/common'
@@ -46,6 +46,7 @@ import {ZsbInstitutionsListComponent} from './zsb-institutions/zsb-institutions-
 import {ZsbInstitutionsDetailComponent} from './zsb-institutions/zsb-institutions-detail/zsb-institutions-detail.component'
 import {ZsbLetterComponent} from './zsb-communication/zsb-letter/zsb-letter.component'
 import {ZsbEmailComponent} from './zsb-communication/zsb-email/zsb-email.component'
+import {keycloakInitializer} from './authentication/keycloak.init'
 
 const appRoutes: Routes = [
   {path: '', component: ZsbSchoolComponent},
@@ -119,12 +120,12 @@ const appRoutes: Routes = [
       provide: MAT_DATE_LOCALE,
       useValue: 'de-DE'
     },
-    // {
-    //   provide: APP_INITIALIZER,
-    //   useFactory: keycloakInitializer,
-    //   multi: true,
-    //   deps: [KeycloakService],
-    // }
+    {
+      provide: APP_INITIALIZER,
+      useFactory: keycloakInitializer,
+      multi: true,
+      deps: [KeycloakService],
+    }
   ],
   bootstrap: [AppComponent]
   // entryComponents: [ZsbSchoolDetailComponent]

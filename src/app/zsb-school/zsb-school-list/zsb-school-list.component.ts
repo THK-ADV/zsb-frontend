@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core'
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core'
 import {MatPaginator} from '@angular/material/paginator'
 import {MatSort} from '@angular/material/sort'
 import {MatTableDataSource} from '@angular/material/table'
@@ -12,9 +12,9 @@ import {ZsbLetterComponent} from '../../zsb-communication/zsb-letter/zsb-letter.
 import {Subscription, zip} from 'rxjs'
 import {buildCustomFilter} from '../../shared/keywordsearch'
 import {SelectionModel} from '@angular/cdk/collections'
-import {saveBlobAsFile, generateTitle} from '../../shared/downloads'
-import {DatePipe} from "@angular/common";
-import {ZsbEmailComponent} from "../../zsb-communication/zsb-email/zsb-email.component";
+import {generateTitle, saveBlobAsFile} from '../../shared/downloads'
+import {DatePipe} from '@angular/common'
+import {ZsbEmailComponent} from '../../zsb-communication/zsb-email/zsb-email.component'
 
 @Component({
   selector: 'app-zsb-school-list',
@@ -167,11 +167,17 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
 
   openEmailDialog() {
     if (this.warnIfSelectedSchoolsIsEmpty()) return
+    const emailAddresses: string[] = []
+    this.listData.data.forEach(s => {
+      if (this.selectedSchoolsIds.some(id => id === s.school_id)) {
+        emailAddresses.push(...s.contacts.map(c => c.email))
+      }
+    })
     const dialogConfig = new MatDialogConfig()
     dialogConfig.disableClose = true
     dialogConfig.width = '30%'
-    const dialogRef = this.dialog.open(ZsbEmailComponent, dialogConfig)
-    dialogRef.componentInstance.addresseesIds = this.selectedSchoolsIds
+    dialogConfig.data = emailAddresses
+    this.dialog.open(ZsbEmailComponent, dialogConfig)
   }
 
   exportAddresses() {
@@ -207,8 +213,7 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getSchoolById(id: string): School | null
-  {
+  private getSchoolById(id: string): School | null {
     return this.listData.data.find(s => s.school_id === id) ?? null
   }
 }
