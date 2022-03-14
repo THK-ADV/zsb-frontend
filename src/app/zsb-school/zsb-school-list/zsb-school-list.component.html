@@ -14,6 +14,24 @@
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
+
+  <button mat-stroked-button (click)="toggleFilterOptions()" color="primary">
+    <mat-icon>filter_alt</mat-icon>
+    Filtern nach
+  </button>
+
+  <mat-card *ngIf="showFilterOptions" class="filter-card">
+    <mat-radio-group
+      aria-labelledby="filter-radio-group-label"
+      class="filter-radio-group"
+      [(ngModel)]="selectedFilterOption">
+      <mat-radio-button class="filter-radio-button" *ngFor="let option of filterOptions" [value]="option"
+                        (change)="setSelectedValue($event)">
+        {{option}}
+      </mat-radio-button>
+    </mat-radio-group>
+  </mat-card>
+
 </div>
 
 <div class="mat-elevation-z8 data-table">

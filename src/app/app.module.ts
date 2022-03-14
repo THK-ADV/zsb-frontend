@@ -46,6 +46,8 @@ import {ZsbInstitutionsListComponent} from './zsb-institutions/zsb-institutions-
 import {ZsbInstitutionsDetailComponent} from './zsb-institutions/zsb-institutions-detail/zsb-institutions-detail.component'
 import {ZsbLetterComponent} from './zsb-communication/zsb-letter/zsb-letter.component'
 import {ZsbEmailComponent} from './zsb-communication/zsb-email/zsb-email.component'
+import {MatRadioModule} from '@angular/material/radio'
+import {MatCardModule} from '@angular/material/card'
 
 const appRoutes: Routes = [
   {path: '', component: ZsbSchoolComponent},
@@ -111,7 +113,9 @@ const appRoutes: Routes = [
     KeycloakAngularModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatRadioModule,
+    MatCardModule
   ],
   providers: [
     DatePipe,
