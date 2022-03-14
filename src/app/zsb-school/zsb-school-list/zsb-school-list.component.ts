@@ -1,9 +1,9 @@
-import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core'
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core'
 import {MatPaginator} from '@angular/material/paginator'
 import {MatSort} from '@angular/material/sort'
 import {MatTableDataSource} from '@angular/material/table'
 import {DatabaseService} from '../../shared/database.service'
-import {SchoolType} from '../schoolType'
+import {SchoolType, schoolTypeDescById} from '../schoolType'
 import {NotificationService} from '../../shared/notification.service'
 import {completeSchoolAsString, School} from '../school'
 import {AmountStudents} from '../amount-students'
@@ -12,9 +12,12 @@ import {ZsbLetterComponent} from '../../zsb-communication/zsb-letter/zsb-letter.
 import {Subscription, zip} from 'rxjs'
 import {buildCustomFilter} from '../../shared/keywordsearch'
 import {SelectionModel} from '@angular/cdk/collections'
-import {saveBlobAsFile, generateTitle} from '../../shared/downloads'
-import {DatePipe} from "@angular/common";
-import {ZsbEmailComponent} from "../../zsb-communication/zsb-email/zsb-email.component";
+import {generateTitle, saveBlobAsFile} from '../../shared/downloads'
+import {DatePipe} from '@angular/common'
+import {ZsbEmailComponent} from '../../zsb-communication/zsb-email/zsb-email.component'
+import {MatRadioChange} from '@angular/material/radio'
+
+type SchoolFilterOption = 'Alle' | 'Name' | 'Schulform' | 'Straße' | 'Stadt' | 'Kontakte'
 
 @Component({
   selector: 'app-zsb-school-list',
@@ -24,7 +27,7 @@ import {ZsbEmailComponent} from "../../zsb-communication/zsb-email/zsb-email.com
 export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
-  searchKey: string
+  searchKey = ''
 
   listData: MatTableDataSource<School>
   schoolTypes: SchoolType[]
@@ -32,6 +35,11 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   selectedSchoolsIds: string[] = []
   private sub: Subscription
   selection = new SelectionModel(true, [])
+
+  // filter
+  filterOptions: SchoolFilterOption[] = ['Alle', 'Name', 'Schulform', 'Straße', 'Stadt', 'Kontakte']
+  selectedFilterOption: SchoolFilterOption = this.filterOptions[0]
+  showFilterOptions = false
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns: Array<string> = [
@@ -67,12 +75,30 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
       this.listData = new MatTableDataSource([...list])
       this.listData.sort = this.sort
       this.listData.paginator = this.paginator
-      this.listData.filterPredicate = buildCustomFilter(s =>
-        completeSchoolAsString(
-          s,
-          schoolTypes,
-          amountStudents
-        ))
+      this.listData.filterPredicate = buildCustomFilter(s => {
+          switch (this.selectedFilterOption) {
+            case 'Alle':
+              return completeSchoolAsString(
+                s,
+                schoolTypes,
+                amountStudents
+              )
+            case 'Name':
+              return s.name
+            case 'Schulform':
+              return schoolTypeDescById(s.schooltype, schoolTypes)
+            case 'Straße':
+              return s.address.street + s.address.houseNumber
+            case 'Stadt':
+              return s.address.city.postcode +
+                s.address.city.designation +
+                s.address.city.governmentDistrict +
+                s.address.city.constituency
+            case 'Kontakte':
+              return s.contacts.map(c => c.surname).join()
+          }
+        }
+      )
       this.buildCustomSorting()
 
       this.schoolTypes = schoolTypes
@@ -87,6 +113,7 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
 
   onSearchClear() {
     this.searchKey = ''
+    this.selectedFilterOption = this.filterOptions[0]
     this.applyFilter()
   }
 
@@ -110,7 +137,14 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   }
 
   applyFilter() {
-    this.listData.filter = this.searchKey.trim().toLowerCase()
+    const searchKey = this.searchKey.trim().toLowerCase()
+    if (searchKey) {
+      this.listData.filter = searchKey
+    }
+  }
+
+  toggleFilterOptions() {
+    this.showFilterOptions = !this.showFilterOptions
   }
 
   getSchoolTypeById(id: number) {
@@ -207,8 +241,12 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getSchoolById(id: string): School | null
-  {
+  private getSchoolById(id: string): School | null {
     return this.listData.data.find(s => s.school_id === id) ?? null
+  }
+
+  setSelectedValue(event: MatRadioChange) {
+    this.selectedFilterOption = event.value
+    this.applyFilter()
   }
 }
