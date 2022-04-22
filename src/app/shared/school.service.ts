@@ -66,9 +66,9 @@ export class SchoolService {
     this.contacts.push(new FormControl())
 
     this.formGroup.setValue({
-      school_id: school.school_id,
+      school_id: school.id,
       name: school.name,
-      schooltype: school.schooltype,
+      schooltype: school.type,
       // focus: school.focus,
       address: this.getReadableAddress(school.address, school.address.city),
       city: school.address.city.city_id,
@@ -76,9 +76,9 @@ export class SchoolService {
       cooperationcontract: school.cooperationcontract,
       amount_students: +school.amount_students,
       kaoa_university: school.kaoa_university,
-      kaoa_partner: school.kaoa_partner,
+      kaoa_partner: school.kaoaSupervisor,
       talentscouting: school.talentscouting,
-      talentscouting_partner: school.talentscouting_partner
+      talentscouting_partner: school.talentscout
     })
 
     this.contacts.clear()
@@ -141,18 +141,18 @@ export class SchoolService {
 
   updateSchoolWithoutNewAddress(school: School, notificationService: NotificationService) {
     const newSchool = {
-      school_id: school.school_id,
+      school_id: school.id,
       name: school.name,
-      schooltype: school.schooltype,
+      schooltype: school.type,
       focus: 'unbekannt',
       address_id: school.address_id,
       city_id: undefined,
       cooperationcontract: school.cooperationcontract,
       amount_students: +school.amount_students,
       kaoa_university: school.kaoa_university,
-      kaoa_partner: school.kaoa_partner,
+      kaoa_partner: school.kaoaSupervisor,
       talentscouting: school.talentscouting,
-      talentscouting_partner: school.talentscouting_partner,
+      talentscouting_partner: school.talentscout,
       contacts_ids: school.contacts.map(it => it.uuid),
       address: undefined,
       city: undefined
@@ -166,7 +166,7 @@ export class SchoolService {
     }
 
     this.newSchool.subscribe(it => {
-      if (it.school_id !== undefined) {
+      if (it.id !== undefined) {
         notificationService.success(':: Schule erfolgreich aktualisiert.')
         this.router.navigate(['/'])
       } else {
@@ -200,9 +200,9 @@ export class SchoolService {
         console.log('School before request')
         console.log(school)
         // check if school already exists
-        if (school.school_id === undefined || school.school_id === null) {
+        if (school.id === undefined || school.id === null) {
           this.dbService.createSchool(school).subscribe(it => {
-            if (it.school_id !== undefined) {
+            if (it.id !== undefined) {
               notificationService.success(':: Schule erfolgreich erstellt.')
               // return to overview
               this.router.navigate(['/'])
@@ -213,7 +213,7 @@ export class SchoolService {
         } else {
           const result = this.dbService.updateSchool(school)
           result.subscribe(it => {
-            if (it.school_id !== undefined) {
+            if (it.id !== undefined) {
               notificationService.success(':: Schule erfolgreich aktualisiert.')
               this.router.navigate(['/'])
             } else {

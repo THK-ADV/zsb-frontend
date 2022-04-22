@@ -86,7 +86,7 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
             case 'Name':
               return s.name
             case 'Schulform':
-              return schoolTypeDescById(s.schooltype, schoolTypes)
+              return schoolTypeDescById(s.type, schoolTypes)
             case 'Straße':
               return s.address.street + s.address.houseNumber
             case 'Stadt':
@@ -120,7 +120,7 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   toggleSelectAll() {
     if (this.selectedSchoolsIds.length !== this.listData.data.length) {
       this.selectedSchoolsIds.splice(0)
-      this.listData.data.forEach(s => this.selectedSchoolsIds.push(s.school_id))
+      this.listData.data.forEach(s => this.selectedSchoolsIds.push(s.id))
     } else {
       this.selectedSchoolsIds.splice(0)
     }
@@ -228,7 +228,7 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
         case 'name':
           return s.name.toLocaleLowerCase()
         case 'schoolType':
-          return this.getSchoolTypeById(s.schooltype).toLocaleLowerCase()
+          return this.getSchoolTypeById(s.type).toLocaleLowerCase()
         case 'city':
           return `${s.address.city.postcode}, ${s.address.city.designation}`.toLocaleLowerCase()
         case 'address':
@@ -242,7 +242,7 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   }
 
   private getSchoolById(id: string): School | null {
-    return this.listData.data.find(s => s.school_id === id) ?? null
+    return this.listData.data.find(s => s.id === id) ?? null
   }
 
   setSelectedValue(event: MatRadioChange) {

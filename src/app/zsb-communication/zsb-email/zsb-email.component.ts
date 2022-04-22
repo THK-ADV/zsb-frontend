@@ -41,7 +41,7 @@ export class ZsbEmailComponent implements OnInit {
   resolveMails(schools: School[]) {
     schools.forEach(it => {
       if (this.addresseesIds.some(
-        id => id === it.school_id)) {
+        id => id === it.id)) {
         it.contacts.forEach(c => this.addressees.push(c.email))
       }
     })

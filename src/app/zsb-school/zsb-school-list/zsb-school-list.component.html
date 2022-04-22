@@ -118,7 +118,10 @@
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let row" class="actions-col">
-        <button mat-icon-button [routerLink]="['/schools', row.school_id]" matTooltip="Schule editieren">
+        <button mat-icon-button [routerLink]="['/schools/detail', row.school_id]" matTooltip="Schule anzeigen">
+          <mat-icon>visibility</mat-icon> <!-- use launch or edit -->
+        </button>
+        <button mat-icon-button [routerLink]="['/schools/edit', row.school_id]" matTooltip="Schule editieren">
           <mat-icon>edit</mat-icon> <!-- use launch or edit -->
         </button>
         <button mat-icon-button color="warn" matTooltip="Schule entfernen">
