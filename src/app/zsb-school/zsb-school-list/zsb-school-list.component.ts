@@ -31,7 +31,7 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
 
   listData: MatTableDataSource<School>
   schoolTypes: SchoolType[]
-  amountStudents: AmountStudents[]
+  //amountStudents: AmountStudents[]
   selectedSchoolsIds: string[] = []
   private sub: Subscription
   selection = new SelectionModel(true, [])
@@ -45,16 +45,9 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   displayedColumns: Array<string> = [
     'select',
     'name',
-    'schoolType',
-    // 'focus',
+    'type',
     'address',
     'city',
-    // 'schulleitung_mail',
-    // 'stubo_mail',
-    // 'schueleranzahl',
-    // 'kooperationsvertrag',
-    // 'kaoa_hochschule',
-    // 'talent',
     'actions'
   ]
 
@@ -70,8 +63,7 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
     this.sub = zip(
       this.service.getSchoolsAtomic(),
       this.service.getSchoolType(),
-      this.service.getAmountStudents()
-    ).subscribe(([list, schoolTypes, amountStudents]) => {
+    ).subscribe(([list, schoolTypes]) => {
       this.listData = new MatTableDataSource([...list])
       this.listData.sort = this.sort
       this.listData.paginator = this.paginator
@@ -81,7 +73,6 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
               return completeSchoolAsString(
                 s,
                 schoolTypes,
-                amountStudents
               )
             case 'Name':
               return s.name
@@ -102,7 +93,6 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
       this.buildCustomSorting()
 
       this.schoolTypes = schoolTypes
-      this.amountStudents = amountStudents
     })
     this.selectedSchoolsIds = []
   }
@@ -224,17 +214,16 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
 
   private buildCustomSorting() {
     this.listData.sortingDataAccessor = (s, id) => {
+      console.log('buildCustomSorting', s)
       switch (id) {
         case 'name':
           return s.name.toLocaleLowerCase()
-        case 'schoolType':
+        case 'type':
           return this.getSchoolTypeById(s.type).toLocaleLowerCase()
         case 'city':
           return `${s.address.city.postcode}, ${s.address.city.designation}`.toLocaleLowerCase()
         case 'address':
           return `${s.address.street}, ${s.address.houseNumber}`.toLocaleLowerCase()
-        case 'amountStudents':
-          return s.amount_students
         default:
           throw Error(id)
       }

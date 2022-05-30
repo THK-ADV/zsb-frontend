@@ -69,15 +69,14 @@ export class SchoolService {
       school_id: school.id,
       name: school.name,
       schooltype: school.type,
-      // focus: school.focus,
       address: this.getReadableAddress(school.address, school.address.city),
       city: school.address.city.city_id,
       contacts: [new FormControl()],
       cooperationcontract: school.cooperationcontract,
-      amount_students: +school.amount_students,
-      kaoa_university: school.kaoa_university,
+      amount_students: school.amount_students11, // TODO
+      kaoa_university: school.kaoaSupervisor !== 0,
       kaoa_partner: school.kaoaSupervisor,
-      talentscouting: school.talentscouting,
+      talentscouting: school.talentscout !== 0,
       talentscouting_partner: school.talentscout
     })
 
@@ -148,10 +147,10 @@ export class SchoolService {
       address_id: school.address_id,
       city_id: undefined,
       cooperationcontract: school.cooperationcontract,
-      amount_students: +school.amount_students,
-      kaoa_university: school.kaoa_university,
+      amount_students: school.amount_students11,
+      kaoa_university: school.kaoaSupervisor !== 0,
       kaoa_partner: school.kaoaSupervisor,
-      talentscouting: school.talentscouting,
+      talentscouting: school.talentscout !== 0,
       talentscouting_partner: school.talentscout,
       contacts_ids: school.contacts.map(it => it.uuid),
       address: undefined,
@@ -195,7 +194,6 @@ export class SchoolService {
         school.address_id = newAddress.address_id
         school.address = null
         school.contacts_ids = school.contacts.map(it => it.uuid)
-        school.focus = 'unbekannt'
 
         console.log('School before request')
         console.log(school)

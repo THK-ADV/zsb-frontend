@@ -24,7 +24,7 @@ export interface School {
   address: Address
 }
 
-export function completeSchoolAsString(school: School, schoolTypes: SchoolType[], amountStudentsList: AmountStudents[]): string {
+export function completeSchoolAsString(school: School, schoolTypes: SchoolType[]): string {
   let concatenatedString = school.name
   concatenatedString += schoolTypeDescById(school.type, schoolTypes)
   if (school.cooperationcontract) concatenatedString += 'Kooperationsvertrag'
