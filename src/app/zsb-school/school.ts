@@ -1,7 +1,6 @@
 import {Address} from '../zsb-address/address'
 import {Contact} from '../zsb-contact/contact'
 import {SchoolType, schoolTypeDescById} from './schoolType'
-import {AmountStudents, amountStudentsTextById} from './amount-students'
 
 export interface School {
   id: string

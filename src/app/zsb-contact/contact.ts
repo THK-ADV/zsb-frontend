@@ -1,5 +1,5 @@
 export interface Contact {
-  uuid: string
+  contact_id: string
   surname: string
   firstname: string
   salutation: number

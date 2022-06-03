@@ -6,7 +6,6 @@ import {DatabaseService} from '../../shared/database.service'
 import {SchoolType, schoolTypeDescById} from '../schoolType'
 import {NotificationService} from '../../shared/notification.service'
 import {completeSchoolAsString, School} from '../school'
-import {AmountStudents} from '../amount-students'
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
 import {ZsbLetterComponent} from '../../zsb-communication/zsb-letter/zsb-letter.component'
 import {Subscription, zip} from 'rxjs'
@@ -31,7 +30,6 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
 
   listData: MatTableDataSource<School>
   schoolTypes: SchoolType[]
-  //amountStudents: AmountStudents[]
   selectedSchoolsIds: string[] = []
   private sub: Subscription
   selection = new SelectionModel(true, [])

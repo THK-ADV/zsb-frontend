@@ -6,7 +6,6 @@ import {catchError, retry} from 'rxjs/operators'
 import {Observable, throwError} from 'rxjs'
 import {SchoolType} from '../zsb-school/schoolType'
 import {City} from '../zsb-address/city'
-import {AmountStudents} from '../zsb-school/amount-students'
 import {Contact, ContactFunction, ContactSalutation} from '../zsb-contact/contact'
 import {environment} from '../../environments/environment'
 import {Event} from '../zsb-events/event'
@@ -20,6 +19,8 @@ import {CooperationPartner} from '../zsb-school/cooperationPartner'
 import {Signature} from '../zsb-communication/zsb-letter/signature'
 import {Letter} from '../zsb-communication/zsb-letter/letter'
 import {Email} from '../zsb-communication/zsb-email/email'
+import {KaoaSupervisor} from '../zsb-school/kaoaSupervisor'
+import {KAoAWork} from '../zsb-school/kAoAWork'
 
 @Injectable({
   providedIn: 'root'
@@ -107,12 +108,12 @@ export class DatabaseService {
     return this.httpClient.get<School>(this.DB_URL + '/schools/' + id + '?resolve_ids=true')
   }
 
-  getSchoolType() {
-    return this.httpClient.get<SchoolType[]>(this.DB_URL + '/schools/schooltypes')
+  getKAoAWorkBySchoolId(id: string) {
+    return this.httpClient.get<KAoAWork[]>(`${this.DB_URL}/schools/${id}/kAoAWork`)
   }
 
-  getAmountStudents() {
-    return this.httpClient.get<AmountStudents[]>(this.DB_URL + '/schools/amountstudents')
+  getSchoolType() {
+    return this.httpClient.get<SchoolType[]>(this.DB_URL + '/schools/schooltypes')
   }
 
   getContactFunctions() {
@@ -219,7 +220,15 @@ export class DatabaseService {
   }
 
   getCooperationPartner() {
-    return this.httpClient.get<CooperationPartner[]>(this.DB_URL + '/schools/cooperationpartner')
+    return this.httpClient.get<CooperationPartner[]>(this.DB_URL + '/schools/cooperationPartner')
+  }
+
+  getKaoaSupervisors() {
+    return this.httpClient.get<KaoaSupervisor[]>(this.DB_URL + '/schools/kaoaSupervisors')
+  }
+
+  getTalentScouts() {
+    return this.httpClient.get<KaoaSupervisor[]>(this.DB_URL + '/schools/talentScouts')
   }
 
   deleteInstitution(uuid: string): Observable<any> {

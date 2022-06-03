@@ -10,37 +10,67 @@
   <div class="" fxLayout="row" fxLayout.xs="column" fxFlexFill>
     <div class="sec1" fxFlex="100" fxFlex.xs="55">
       <div class="controls-container">
+        <h3>Schulinfos</h3>
+
         <input type="hidden" formControlName="school_id">
 
         <mat-form-field>
-          <label>
-            <input formControlName="name" matInput placeholder="Name*">
-          </label>
+          <mat-label>Name*</mat-label>
+          <input type="text" formControlName="name" matInput placeholder="Name*">
           <mat-error>Ihre Eingabe wird benötigt.</mat-error>
         </mat-form-field>
 
         <mat-form-field>
           <mat-select formControlName="schooltype" placeholder="Schulform*">
-            <mat-option value="-1">Keine</mat-option>
-            <ng-container *ngFor="let schulform of schoolTypes | async">
-              <mat-option [value]="schulform.id">
-                {{schulform.desc}} <br>
-              </mat-option>
-            </ng-container>
+            <mat-option *ngFor="let schulform of schoolTypes | async" [value]="schulform.id">
+              {{schulform.desc}}
+            </mat-option>
           </mat-select>
           <mat-error>Bitte wählen Sie die passende Schulform aus</mat-error>
         </mat-form-field>
 
         <mat-form-field>
-          <mat-select formControlName="amount_students" placeholder="Anzahl SuS*">
-            <mat-option value="-1">Keine</mat-option>
-            <ng-container *ngFor="let sus of amountStudentsRanges | async">
-              <mat-option [value]="sus.id">
-                {{sus.range}} <br>
-              </mat-option>
-            </ng-container>
-          </mat-select>
-          <mat-error>Bitte wählen Sie die passende Schulform aus</mat-error>
+          <mat-label>Telefon*</mat-label>
+          <input type="text" formControlName="phoneNumber" matInput placeholder="Telefon*">
+          <mat-error>Ihre Eingabe wird benötigt.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Email*</mat-label>
+          <input type="text" formControlName="email" matInput placeholder="Email*">
+          <mat-error>Ihre Eingabe wird benötigt.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Webseite*</mat-label>
+          <input type="text" formControlName="website" matInput placeholder="Webseite*">
+          <mat-error>Ihre Eingabe wird benötigt.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Kommentar*</mat-label>
+          <textarea matInput formControlName="comment" placeholder="Kommentar*"></textarea>
+          <mat-error>Ihre Eingabe wird benötigt.</mat-error>
+        </mat-form-field>
+
+        <h3>Schülerzahlen</h3>
+
+        <mat-form-field>
+          <mat-label>Schülerzahl EF/11*</mat-label>
+          <input formControlName="amount_students11" matInput type="number" placeholder="Schülerzahl EF/11*">
+          <mat-error>Schülerzahl muss zwischen 0 und 150 liegen</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Schülerzahl Q1/12*</mat-label>
+          <input formControlName="amount_students12" matInput type="number" placeholder="Schülerzahl Q1/12*">
+          <mat-error>Schülerzahl muss zwischen 0 und 150 liegen</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Schülerzahl Q2/13*</mat-label>
+          <input formControlName="amount_students13" matInput type="number" placeholder="Schülerzahl Q2/13*">
+          <mat-error>Schülerzahl muss zwischen 0 und 150 liegen</mat-error>
         </mat-form-field>
 
         <!-- Kontakte -->
@@ -77,12 +107,12 @@
                 </td>
                 <td>
                   <!-- go to details for this kontakt-->
-                  <button mat-icon-button (click)="showContactDetail(contact.value.uuid)"
+                  <button mat-icon-button (click)="showContactDetail(contact)"
                           matTooltip="Kontakt editieren">
                     <mat-icon>edit</mat-icon>
                   </button>
                   <!-- delete icon -> trigger delete connection between this kontakt and schule-->
-                  <button mat-icon-button color="warn" (click)="service.removeContact(contact.value.uuid)"
+                  <button mat-icon-button color="warn" (click)="service.removeContact(contact)"
                           matTooltip="Kontakt entfernen">
                     <mat-icon>delete_outline</mat-icon>
                   </button>
@@ -102,6 +132,7 @@
         </div>
       </div> <!-- grid controls-container -->
     </div>
+
     <div class="sec2" fxFlex="100" fxFlex.xs="55">
       <div class="controls-container">
         <!-- Adresse -->
@@ -116,43 +147,47 @@
                   (click)="changeAddress()">Standort verwalten
           </button>
         </div>
-        <br><br>
+
+        <h3>Kooperationen</h3>
 
         <div class="add-bottom-padding">
-          <mat-checkbox formControlName="cooperationcontract">Kooperationsvertrag</mat-checkbox>
+          <mat-checkbox formControlName="cooperationContract">Hochschulischen Kooperationsvertrag TH</mat-checkbox>
         </div>
-        <div class="add-bottom-padding">
-          <mat-checkbox #kaoa_cb formControlName="kaoa_university">kaoa Hochschule</mat-checkbox>
-          <div *ngIf="kaoa_cb.checked">
 
-            <mat-form-field>
-              <mat-select formControlName="kaoa_partner" placeholder="Partner*">
-                <ng-container *ngFor="let option of cooperationPartners">
-                  <mat-option [value]="option.id">
-                    {{option.desc}} <br>
-                  </mat-option>
-                </ng-container>
-              </mat-select>
-            </mat-form-field>
+        <mat-form-field>
+          <mat-select formControlName="cooperationPartner" placeholder="Betreuende Hochschule KAoA/Talentscouting*">
+            <mat-option *ngFor="let cooperationpartner of cooperationPartners | async" [value]="cooperationpartner.id">
+              {{cooperationpartner.desc}}
+            </mat-option>
+          </mat-select>
+          <mat-error>Bitte wählen Sie einen Kooperationpartner aus</mat-error>
+        </mat-form-field>
 
-          </div>
-        </div>
-        <div class="add-bottom-padding">
-          <mat-checkbox #talentscouting_cb formControlName="talentscouting">Talentscouting</mat-checkbox>
-          <div *ngIf="talentscouting_cb.checked">
+        <mat-form-field>
+          <mat-select formControlName="kaoaSupervisor" placeholder="KAoA Betreuer*in*">
+            <mat-option *ngFor="let kaoaSupervisor of kaoaSupervisors | async" [value]="kaoaSupervisor.id">
+              {{kaoaSupervisor.desc}}
+            </mat-option>
+          </mat-select>
+          <mat-error>Bitte wählen Sie eine KAoA Betreuer*in aus</mat-error>
+        </mat-form-field>
 
-            <mat-form-field>
-              <mat-select formControlName="talentscouting_partner" placeholder="Partner*">
-                <ng-container *ngFor="let option of cooperationPartners">
-                  <mat-option [value]="option.id">
-                    {{option.desc}} <br>
-                  </mat-option>
-                </ng-container>
-              </mat-select>
-            </mat-form-field>
+        <mat-form-field>
+          <mat-select formControlName="talentScout" placeholder="Talentscout*">
+            <mat-option *ngFor="let talentscout of talentScouts | async" [value]="talentscout.id">
+              {{talentscout.desc}}
+            </mat-option>
+          </mat-select>
+          <mat-error>Bitte wählen Sie einen Talentscout aus</mat-error>
+        </mat-form-field>
 
-          </div>
-        </div>
+        <ng-container *ngIf="kAoAWork.length > 0">
+          <h3>KAoAArbeit</h3>
+          <ng-container *ngFor="let work of kAoAWork">
+            <h4>{{work.name}}</h4>
+            <p>{{work.content}}</p>
+          </ng-container>
+        </ng-container>
 
         <ng-container *ngIf="this.schoolId != null">
           <div class="btn-row">
@@ -161,8 +196,6 @@
               Veranstaltung erstellen
             </button>
           </div>
-          <br>
-          <br>
         </ng-container>
 
         <div class="btn-row">

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core'
-import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms'
+import {AbstractControl, FormArray, FormControl, FormGroup, Validators} from '@angular/forms'
 import {School} from '../zsb-school/school'
 import {DatabaseService} from './database.service'
 import {Observable} from 'rxjs'
@@ -14,116 +14,119 @@ import {Router} from '@angular/router'
 })
 export class SchoolService {
 
-  constructor(private dbService: DatabaseService, private router: Router) {
-  }
-
   newSchool: Observable<School>
+  formGroup: FormGroup
+  contacts: FormArray
 
-  formGroup: FormGroup = new FormGroup({
-    school_id: new FormControl(null),
-    name: new FormControl('', Validators.required),
-    schooltype: new FormControl('', Validators.required),
-    // focus: new FormControl(null),
-    address: new FormControl({value: '', disabled: true}, Validators.required),
-    city: new FormControl(0),
-    contacts: new FormArray([]),
-    cooperationcontract: new FormControl(false),
-    amount_students: new FormControl('', Validators.required),
-    kaoa_university: new FormControl(false),
-    kaoa_partner: new FormControl(-1),
-    talentscouting: new FormControl(false),
-    talentscouting_partner: new FormControl(-1)
-  })
-
-  // direct access to contacts as array
-  get contacts(): FormArray {
-    return this.formGroup.get('contacts') as FormArray
+  constructor(private dbService: DatabaseService, private router: Router) {
+    this.contacts = new FormArray([])
+    this.formGroup = new FormGroup({
+      school_id: new FormControl(null),
+      name: new FormControl('', Validators.required),
+      schooltype: new FormControl('', Validators.required),
+      phoneNumber: new FormControl('', Validators.required),
+      email: new FormControl('', Validators.required),
+      website: new FormControl('', Validators.required),
+      comment: new FormControl(''),
+      // focus: new FormControl(null),
+      address: new FormControl({value: '', disabled: true}, Validators.required),
+      city: new FormControl(0),
+      contacts: this.contacts,
+      cooperationContract: new FormControl(false),
+      amount_students11: new FormControl('', [
+        Validators.required,
+        Validators.min(0),
+        Validators.max(150)
+      ]),
+      amount_students12: new FormControl('', [
+        Validators.required,
+        Validators.min(0),
+        Validators.max(150)
+      ]),
+      amount_students13: new FormControl('', [
+        Validators.required,
+        Validators.min(0),
+        Validators.max(150)
+      ]),
+      cooperationPartner: new FormControl('', Validators.required),
+      kaoaSupervisor: new FormControl('', Validators.required),
+      talentScout: new FormControl('', Validators.required),
+    })
   }
 
   initializeFormGroup() {
     this.contacts.clear()
-    this.contacts.push(new FormControl())
+
     this.formGroup.setValue({
+      ...this.formGroup.value,
       school_id: null,
       name: '',
       schooltype: '',
-      // focus: '',
+      phoneNumber: '',
+      email: '',
+      website: '',
+      comment: '',
       address: null,
       city: null,
-      contacts: [new FormControl()],
-      cooperationcontract: false,
-      amount_students: '',
-      kaoa_university: false,
-      kaoa_partner: -1,
-      talentscouting: false,
-      talentscouting_partner: -1
+      cooperationContract: false,
+      amount_students11: '',
+      amount_students12: '',
+      amount_students13: '',
+      cooperationPartner: '',
+      kaoaSupervisor: '',
+      talentScout: '',
     })
-    this.contacts.clear()
   }
 
   loadFormData(school: School) {
     this.contacts.clear()
-    this.contacts.push(new FormControl())
 
     this.formGroup.setValue({
+      ...this.formGroup.value,
       school_id: school.id,
       name: school.name,
       schooltype: school.type,
+      phoneNumber: school.phonenumber,
+      email: school.email,
+      website: school.website,
+      comment: school.comment,
       address: this.getReadableAddress(school.address, school.address.city),
       city: school.address.city.city_id,
-      contacts: [new FormControl()],
-      cooperationcontract: school.cooperationcontract,
-      amount_students: school.amount_students11, // TODO
-      kaoa_university: school.kaoaSupervisor !== 0,
-      kaoa_partner: school.kaoaSupervisor,
-      talentscouting: school.talentscout !== 0,
-      talentscouting_partner: school.talentscout
+      cooperationContract: school.cooperationcontract,
+      amount_students11: school.amount_students11,
+      amount_students12: school.amount_students12,
+      amount_students13: school.amount_students13,
+      cooperationPartner: school.cooperationpartner,
+      kaoaSupervisor: school.kaoaSupervisor,
+      talentScout: school.talentscout,
     })
 
-    this.contacts.clear()
     this.addContacts(school.contacts)
   }
 
-  addContact(it: Contact) {
-    this.contacts.push(new FormControl(it))
+  addContact(contact: Contact) {
+    const contactAlreadyExists = this.contacts.controls.some(c => c.value.contact_id === contact.contact_id)
+    if (!contactAlreadyExists) {
+      this.contacts.push(new FormControl(contact))
+    }
   }
 
   private addContacts(contacts: Contact[]) {
-    contacts.forEach(it => {
-      this.addContact(it)
-    })
+    contacts.forEach(c => this.addContact(c))
   }
 
-  removeContact(uuid: string) {
-    // get all contacts from form
-    const formContacts = this.getContactsFromForm()
-
-    // find contact to be removed
-    const wantedContact = formContacts.find(it => it.uuid === uuid)
-    const wantedIndex = formContacts.indexOf(wantedContact)
-
-    // remove contact
-    formContacts.splice(wantedIndex, 1)
-
-    // update form-array
-    this.refillFormArray(formContacts)
-
-    // update form
-    console.log('removed contact ' + uuid + ' from this school')
+  removeContact(control: AbstractControl) {
+    const contacts = this.contacts
+    const index = contacts.controls.indexOf(control)
+    contacts.removeAt(index)
   }
 
   updateContact(updated: Contact) {
     const formContacts = this.getContactsFromForm()
-
-    // get index of old contact
-    const oldContact = formContacts.find(it => it.uuid === updated.uuid)
-    const index = formContacts.indexOf(oldContact)
-
-    // update contact
+    const index = formContacts.findIndex(it => it.contact_id === updated.contact_id)
     formContacts[index] = updated
-
-    // update form-array
-    this.refillFormArray(formContacts)
+    this.contacts.clear()
+    this.addContacts(formContacts)
   }
 
   /** get all contacts from form */
@@ -132,27 +135,26 @@ export class SchoolService {
     return school.contacts
   }
 
-  private refillFormArray(contacts: Contact[]) {
-    this.contacts.clear()
-    this.addContacts(contacts)
-  }
-
-
   updateSchoolWithoutNewAddress(school: School, notificationService: NotificationService) {
     const newSchool = {
       school_id: school.id,
       name: school.name,
       schooltype: school.type,
+      phoneNumber: school.phonenumber,
+      email: school.email,
+      website: school.website,
+      comment: school.comment,
       focus: 'unbekannt',
       address_id: school.address_id,
       city_id: undefined,
-      cooperationcontract: school.cooperationcontract,
-      amount_students: school.amount_students11,
-      kaoa_university: school.kaoaSupervisor !== 0,
-      kaoa_partner: school.kaoaSupervisor,
-      talentscouting: school.talentscout !== 0,
-      talentscouting_partner: school.talentscout,
-      contacts_ids: school.contacts.map(it => it.uuid),
+      cooperationContract: school.cooperationcontract,
+      mount_students11: school.amount_students11,
+      mount_students12: school.amount_students12,
+      mount_students13: school.amount_students13,
+      cooperationPartner: school.cooperationpartner,
+      kaoaSupervisor: school.kaoaSupervisor,
+      talentScout: school.talentscout,
+      contacts_ids: school.contacts.map(it => it.contact_id),
       address: undefined,
       city: undefined
     }
@@ -193,7 +195,7 @@ export class SchoolService {
       addressObservable.subscribe(newAddress => {
         school.address_id = newAddress.address_id
         school.address = null
-        school.contacts_ids = school.contacts.map(it => it.uuid)
+        school.contacts_ids = school.contacts.map(it => it.contact_id)
 
         console.log('School before request')
         console.log(school)
