@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser'
 import {NgModule} from '@angular/core'
 import {AppComponent} from './app.component'
-import {RouterModule, Routes} from '@angular/router'
+import {RouterModule} from '@angular/router'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import {MatToolbarModule} from '@angular/material/toolbar'
 import {MatSliderModule} from '@angular/material/slider'
@@ -48,20 +48,8 @@ import {ZsbLetterComponent} from './zsb-communication/zsb-letter/zsb-letter.comp
 import {ZsbEmailComponent} from './zsb-communication/zsb-email/zsb-email.component'
 import {MatRadioModule} from '@angular/material/radio'
 import {MatCardModule} from '@angular/material/card'
-import {ZsbSchoolDetailComponent} from './zsb-school/zsb-school-detail/zsb-school-detail.component';
-
-const appRoutes: Routes = [
-  {path: '', component: ZsbSchoolComponent},
-  {path: 'schools/:schoolId', component: ZsbSchoolEditComponent},
-  {path: 'schools/:schoolId/address/:addressId', component: ZsbAddressComponent},
-  {path: 'schools/edit/:schoolId', component: ZsbSchoolEditComponent},
-  {path: 'schools/detail/:schoolId', component: ZsbSchoolDetailComponent},
-  {path: 'schools', component: ZsbSchoolEditComponent},
-  {path: 'events', component: ZsbEventsComponent},
-  {path: 'events/:eventId', component: ZsbEventsDetailComponent},
-  {path: 'institutions', component: ZsbInstitutionsComponent},
-  {path: 'institutions/:institutionId', component: ZsbInstitutionsDetailComponent},
-]
+import {ZsbSchoolDetailComponent} from './zsb-school/zsb-school-detail/zsb-school-detail.component'
+import {appRoutes} from './routes'
 
 @NgModule({
   declarations: [
