@@ -74,12 +74,12 @@ export class ZsbEventsListComponent implements OnInit {
       this.service.deleteEvent(uuid).subscribe(it => {
         const response = it as DbTextResponse
         if (+response.status === 200) {
-          this.notificationService.success(':: Veranstaltung wurde erfolgreich entfernt.')
+          this.notificationService.success(':: Termin wurde erfolgreich entfernt.')
           // remove event from table
           this.ngOnInit()
         } else {
           console.log(response.msg + '(' + response.status + ')')
-          this.notificationService.failure('-- Veranstaltung konnte nicht entfernt werden.')
+          this.notificationService.failure('-- Termin konnte nicht entfernt werden.')
         }
       })
     }

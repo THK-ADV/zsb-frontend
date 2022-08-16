@@ -74,7 +74,7 @@ export class ZsbInstitutionsListComponent implements OnInit {
 
   deleteInstitution(designation: string, uuid: string) {
     if (confirm('Seid ihr sicher, dass ihr die Institution "' + designation + '" löschen möchtet? ' +
-      '\nHinweis: Zugehörige VERANSTALTUNGEN werden ebenfalls gelöscht!')) {
+      '\nHinweis: Zugehörige Termine werden ebenfalls gelöscht!')) {
       this.service.deleteInstitution(uuid).subscribe(it => {
         const response = it as DbTextResponse
         if (+response.status === 200) {

@@ -46,13 +46,13 @@
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let row">
-        <button mat-icon-button [routerLink]="['/events', row.uuid]" matTooltip="Veranstaltung editieren">
+        <button mat-icon-button [routerLink]="['/events', row.uuid]" matTooltip="Termin editieren">
           <mat-icon>edit</mat-icon> <!-- use launch or edit -->
         </button>
-        <button mat-icon-button [routerLink]="['/events/new']" [queryParams]="{copy: row.uuid}" matTooltip="Veranstaltung kopieren">
+        <button mat-icon-button [routerLink]="['/events/new']" [queryParams]="{copy: row.uuid}" matTooltip="Termin kopieren">
           <mat-icon>content_copy</mat-icon> <!-- use launch or edit -->
         </button>
-        <button mat-icon-button color="warn" matTooltip="Veranstaltung entfernen">
+        <button mat-icon-button color="warn" matTooltip="Termin entfernen">
           <mat-icon (click)="deleteEvent(row.designation, row.uuid)">delete_outline</mat-icon>
         </button>
       </mat-cell>

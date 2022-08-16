@@ -31,7 +31,7 @@ export class EventService {
     category: new FormControl([0], Validators.required),
     level: new FormControl([0], Validators.required),
     amountStudents: new FormControl(0, Validators.required),
-    sequence: new FormControl(''), // Ablauf
+    annotations: new FormControl(''), // Ablauf
     runs: new FormControl(''), // Durchläufe
     contactPerson: new FormControl(''),
     report_btn: new FormControl({value: '', disabled: true}),
@@ -62,7 +62,7 @@ export class EventService {
       category: [0],
       level: [0],
       amountStudents: 0,
-      sequence: '',
+      annotations: '',
       runs: '',
       contactPerson: '',
       report_btn: {value: '', disabled: true},
@@ -84,7 +84,7 @@ export class EventService {
       category: event.category,
       level: event.level,
       amountStudents: event.amountStudents,
-      sequence: event.sequence,
+      annotations: event.annotations,
       runs: event.runs,
       contactPerson: event.contactPerson,
       report_btn: {value: '', disabled: true},
@@ -134,10 +134,10 @@ export class EventService {
               .pipe(
                 tap(it => {
                   if (it.uuid !== undefined) {
-                    this.notificationService.success(':: Veranstaltung erfolgreich erstellt.')
+                    this.notificationService.success(':: Termin erfolgreich erstellt.')
                     this.router.navigate(['/', 'events'])
                   } else {
-                    this.notificationService.failure('-- Veranstaltung konnte nicht erstellt werden.')
+                    this.notificationService.failure('-- Termin konnte nicht erstellt werden.')
                   }
                 })
               ),
@@ -147,10 +147,10 @@ export class EventService {
                 tap(
                   it => {
                     if (it.uuid !== undefined) {
-                      this.notificationService.success(':: Veranstaltung erfolgreich aktualisiert.')
+                      this.notificationService.success(':: Termin erfolgreich aktualisiert.')
                       this.router.navigate(['/', 'events'])
                     } else {
-                      this.notificationService.failure('-- Veranstaltung konnte nicht aktualisiert werden.')
+                      this.notificationService.failure('-- Termin konnte nicht aktualisiert werden.')
                     }
                   })
               )
