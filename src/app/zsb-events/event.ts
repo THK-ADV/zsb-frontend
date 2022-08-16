@@ -9,8 +9,7 @@ export interface Event {
   date: string
   amountStudents: string
   level: number[]
-  sequence: string
-  runs: string
+  annotations: string
   contactPerson: string
   host?: Host
   categoryNames?: string

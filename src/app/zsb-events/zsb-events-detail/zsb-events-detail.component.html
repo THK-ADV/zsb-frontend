@@ -1,8 +1,8 @@
 <ng-container *ngIf="this.eventId === undefined; else edit">
-  <h1>Veranstaltung hinzufügen</h1>
+  <h1>Termin hinzufügen</h1>
 </ng-container>
 <ng-template #edit>
-  <h1>Veranstaltung bearbeiten</h1>
+  <h1>Termin bearbeiten</h1>
 </ng-template>
 
 <form [formGroup]="service.getDetailForm()" class="event-form">
@@ -57,7 +57,7 @@
 
   <!-- veranstalterToggle -->
   <mat-slide-toggle name="hostToggle" formControlName="hostToggle">
-    Veranstalter ist Schule?
+    Veranstaltungsort ist Schule?
   </mat-slide-toggle>
   <br>
   <br>
@@ -132,28 +132,18 @@
   </mat-form-field>
   <br>
 
-  <!-- ablaufUndBewertung -->
+  <!-- anmerkungen -->
   <mat-form-field>
     <label>
-      <textarea formControlName="sequence" matInput placeholder="Ablauf und Bewertung"></textarea>
+      <textarea formControlName="annotations" matInput placeholder="Anmerkungen"></textarea>
     </label>
   </mat-form-field>
   <br>
 
-  <!-- durchlaeufe -->
+  <!-- verantwortliche:r th köln -->
   <mat-form-field>
     <label>
-      <input formControlName="runs" matInput placeholder="Durchläufe">
-    </label>
-    <mat-error>Ihre Eingabe wird benötigt.</mat-error>
-  </mat-form-field>
-  <br>
-  <br>
-
-  <!-- ansprechpartner -->
-  <mat-form-field>
-    <label>
-      <input formControlName="contactPerson" matInput placeholder="Ansprechpartner">
+      <input formControlName="contactPerson" matInput placeholder="Verantwortliche*r TH Köln">
     </label>
   </mat-form-field>
   <br>
