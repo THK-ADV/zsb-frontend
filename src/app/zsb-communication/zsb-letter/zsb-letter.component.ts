@@ -39,7 +39,7 @@ export class ZsbLetterComponent implements OnInit {
 
   resolveAddresses(schools: School[]) {
     schools.forEach(it => {
-      if (this.addresseesIds.some(id => id === it.school_id)) {
+      if (this.addresseesIds.some(id => id === it.id)) {
         this.addressees.push(it)
       }
     })

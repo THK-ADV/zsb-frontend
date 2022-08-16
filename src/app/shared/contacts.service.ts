@@ -18,7 +18,7 @@ export class ContactsService {
   }
 
   public contactForm: FormGroup = new FormGroup({
-    uuid: new FormControl(null),
+    contact_id: new FormControl(null),
     surname: new FormControl('', Validators.required),
     firstname: new FormControl(''),
     salutation: new FormControl(0, Validators.required),
@@ -33,7 +33,7 @@ export class ContactsService {
 
   initializeContactForm() {
     this.contactForm.setValue({
-      uuid: null,
+      contact_id: null,
       surname: '',
       firstname: '',
       salutation: 0,
@@ -44,7 +44,7 @@ export class ContactsService {
 
   populateContactForm(contact: Contact) {
     this.contactForm.setValue({
-      uuid: contact.uuid,
+      contact_id: contact.contact_id,
       surname: contact.surname,
       firstname: contact.firstname,
       salutation: contact.salutation,

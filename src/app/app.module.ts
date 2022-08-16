@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser'
 import {NgModule} from '@angular/core'
 import {AppComponent} from './app.component'
-import {RouterModule, Routes} from '@angular/router'
+import {RouterModule} from '@angular/router'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import {MatToolbarModule} from '@angular/material/toolbar'
 import {MatSliderModule} from '@angular/material/slider'
@@ -17,7 +17,7 @@ import {MatPaginatorModule} from '@angular/material/paginator'
 import {MatSortModule} from '@angular/material/sort'
 import {MatDialogModule} from '@angular/material/dialog'
 import {ZsbSchoolListComponent} from './zsb-school/zsb-school-list/zsb-school-list.component'
-import {ZsbSchoolDetailComponent} from './zsb-school/zsb-school-detail/zsb-school-detail.component'
+import {ZsbSchoolEditComponent} from './zsb-school/zsb-school-edit/zsb-school-edit.component'
 import {MatFormFieldModule} from '@angular/material/form-field'
 import {MatSelectModule} from '@angular/material/select'
 import {MatInputModule} from '@angular/material/input'
@@ -48,24 +48,15 @@ import {ZsbLetterComponent} from './zsb-communication/zsb-letter/zsb-letter.comp
 import {ZsbEmailComponent} from './zsb-communication/zsb-email/zsb-email.component'
 import {MatRadioModule} from '@angular/material/radio'
 import {MatCardModule} from '@angular/material/card'
-
-const appRoutes: Routes = [
-  {path: '', component: ZsbSchoolComponent},
-  {path: 'schools/:schoolId', component: ZsbSchoolDetailComponent},
-  {path: 'schools/:schoolId/address/:addressId', component: ZsbAddressComponent},
-  {path: 'schools', component: ZsbSchoolDetailComponent},
-  {path: 'events', component: ZsbEventsComponent},
-  {path: 'events/:eventId', component: ZsbEventsDetailComponent},
-  {path: 'institutions', component: ZsbInstitutionsComponent},
-  {path: 'institutions/:institutionId', component: ZsbInstitutionsDetailComponent},
-]
+import {ZsbSchoolDetailComponent} from './zsb-school/zsb-school-detail/zsb-school-detail.component'
+import {appRoutes} from './routes'
 
 @NgModule({
   declarations: [
     AppComponent,
     ZsbSchoolComponent,
     ZsbSchoolListComponent,
-    ZsbSchoolDetailComponent,
+    ZsbSchoolEditComponent,
     ZsbAddressComponent,
     ZsbContactDetailComponent,
     ZsbContactSearchComponent,
@@ -77,7 +68,8 @@ const appRoutes: Routes = [
     ZsbInstitutionsListComponent,
     ZsbInstitutionsDetailComponent,
     ZsbLetterComponent,
-    ZsbEmailComponent
+    ZsbEmailComponent,
+    ZsbSchoolDetailComponent
   ],
   imports: [
     BrowserModule,

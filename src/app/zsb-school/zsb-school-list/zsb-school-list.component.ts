@@ -6,7 +6,6 @@ import {DatabaseService} from '../../shared/database.service'
 import {SchoolType, schoolTypeDescById} from '../schoolType'
 import {NotificationService} from '../../shared/notification.service'
 import {completeSchoolAsString, School} from '../school'
-import {AmountStudents} from '../amount-students'
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
 import {ZsbLetterComponent} from '../../zsb-communication/zsb-letter/zsb-letter.component'
 import {Subscription, zip} from 'rxjs'
@@ -31,7 +30,6 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
 
   listData: MatTableDataSource<School>
   schoolTypes: SchoolType[]
-  amountStudents: AmountStudents[]
   selectedSchoolsIds: string[] = []
   private sub: Subscription
   selection = new SelectionModel(true, [])
@@ -45,16 +43,9 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   displayedColumns: Array<string> = [
     'select',
     'name',
-    'schoolType',
-    // 'focus',
+    'type',
     'address',
     'city',
-    // 'schulleitung_mail',
-    // 'stubo_mail',
-    // 'schueleranzahl',
-    // 'kooperationsvertrag',
-    // 'kaoa_hochschule',
-    // 'talent',
     'actions'
   ]
 
@@ -70,8 +61,7 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
     this.sub = zip(
       this.service.getSchoolsAtomic(),
       this.service.getSchoolType(),
-      this.service.getAmountStudents()
-    ).subscribe(([list, schoolTypes, amountStudents]) => {
+    ).subscribe(([list, schoolTypes]) => {
       this.listData = new MatTableDataSource([...list])
       this.listData.sort = this.sort
       this.listData.paginator = this.paginator
@@ -81,12 +71,11 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
               return completeSchoolAsString(
                 s,
                 schoolTypes,
-                amountStudents
               )
             case 'Name':
               return s.name
             case 'Schulform':
-              return schoolTypeDescById(s.schooltype, schoolTypes)
+              return schoolTypeDescById(s.type, schoolTypes)
             case 'Straße':
               return s.address.street + s.address.houseNumber
             case 'Stadt':
@@ -102,7 +91,6 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
       this.buildCustomSorting()
 
       this.schoolTypes = schoolTypes
-      this.amountStudents = amountStudents
     })
     this.selectedSchoolsIds = []
   }
@@ -120,7 +108,7 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   toggleSelectAll() {
     if (this.selectedSchoolsIds.length !== this.listData.data.length) {
       this.selectedSchoolsIds.splice(0)
-      this.listData.data.forEach(s => this.selectedSchoolsIds.push(s.school_id))
+      this.listData.data.forEach(s => this.selectedSchoolsIds.push(s.id))
     } else {
       this.selectedSchoolsIds.splice(0)
     }
@@ -224,17 +212,16 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
 
   private buildCustomSorting() {
     this.listData.sortingDataAccessor = (s, id) => {
+      console.log('buildCustomSorting', s)
       switch (id) {
         case 'name':
           return s.name.toLocaleLowerCase()
-        case 'schoolType':
-          return this.getSchoolTypeById(s.schooltype).toLocaleLowerCase()
+        case 'type':
+          return this.getSchoolTypeById(s.type).toLocaleLowerCase()
         case 'city':
           return `${s.address.city.postcode}, ${s.address.city.designation}`.toLocaleLowerCase()
         case 'address':
           return `${s.address.street}, ${s.address.houseNumber}`.toLocaleLowerCase()
-        case 'amountStudents':
-          return s.amount_students
         default:
           throw Error(id)
       }
@@ -242,7 +229,7 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
   }
 
   private getSchoolById(id: string): School | null {
-    return this.listData.data.find(s => s.school_id === id) ?? null
+    return this.listData.data.find(s => s.id === id) ?? null
   }
 
   setSelectedValue(event: MatRadioChange) {

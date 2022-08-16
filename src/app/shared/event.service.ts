@@ -180,7 +180,7 @@ export class EventService {
   initFormWithSchool(school: School) {
     this.detailForm.patchValue({
       hostToggle: true,
-      school: school.school_id,
+      school: school.id,
     })
   }
 

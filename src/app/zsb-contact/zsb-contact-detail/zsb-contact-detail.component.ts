@@ -13,14 +13,13 @@ import {NotificationService} from '../../shared/notification.service'
 export class ZsbContactDetailComponent implements OnInit {
 
   constructor(
-    private dialogRef: MatDialogRef<ZsbContactDetailComponent>,
+    private dialogRef: MatDialogRef<ZsbContactDetailComponent, Contact>,
     private notificationService: NotificationService,
     private dbService: DatabaseService,
     public service: ContactsService) {
   }
 
-  uuid: string = undefined
-  contact: Contact = undefined
+  contact?: Contact = undefined
 
   ngOnInit(): void {
     this.service.contactForm.enable()
@@ -28,22 +27,16 @@ export class ZsbContactDetailComponent implements OnInit {
     // initialize form
     this.service.initializeContactForm()
 
-    // load existing contact, if available
-    if (this.uuid !== undefined) {
-      console.log('load contact: ' + this.uuid)
-      this.dbService.getContactById(this.uuid).subscribe(it => {
-        this.service.populateContactForm(it)
-        this.contact = it
-      })
+    if (this.contact) {
+      this.service.populateContactForm(this.contact)
     }
   }
 
   onSubmit() {
     // get possible modified contact from form
     const editedContact = this.service.getContact()
-
     // check if anything changed
-    if (this.contact.uuid === editedContact.uuid
+    if (this.contact.contact_id === editedContact.contact_id
       && this.contact.surname === editedContact.surname
       && this.contact.firstname === editedContact.firstname
       && this.contact.email === editedContact.email
