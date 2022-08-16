@@ -10,7 +10,6 @@ export interface Event {
   amountStudents: string
   level: number[]
   annotations: string
-  runs: string
   contactPerson: string
   host?: Host
   categoryNames?: string

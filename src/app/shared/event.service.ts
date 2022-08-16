@@ -32,7 +32,6 @@ export class EventService {
     level: new FormControl([0], Validators.required),
     amountStudents: new FormControl(0, Validators.required),
     annotations: new FormControl(''), // Ablauf
-    runs: new FormControl(''), // Durchläufe
     contactPerson: new FormControl(''),
     report_btn: new FormControl({value: '', disabled: true}),
     host_id: new FormControl(null)
@@ -63,7 +62,6 @@ export class EventService {
       level: [0],
       amountStudents: 0,
       annotations: '',
-      runs: '',
       contactPerson: '',
       report_btn: {value: '', disabled: true},
       host_id: null
@@ -85,7 +83,6 @@ export class EventService {
       level: event.level,
       amountStudents: event.amountStudents,
       annotations: event.annotations,
-      runs: event.runs,
       contactPerson: event.contactPerson,
       report_btn: {value: '', disabled: true},
       host_id: event.host_id
