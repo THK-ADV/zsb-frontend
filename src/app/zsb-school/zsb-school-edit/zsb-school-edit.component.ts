@@ -105,6 +105,7 @@ export class ZsbSchoolEditComponent implements OnInit, OnDestroy {
   onSubmit() {
     const school = this.service.formGroup.value
     console.log(school)
+    // TODO
     // remove nulls from contacts-array
     // const cleanedContacts = []
     // school.contacts.forEach(it => {

@@ -28,8 +28,8 @@ export function completeSchoolAsString(school: School, schoolTypes: SchoolType[]
   concatenatedString += schoolTypeDescById(school.type, schoolTypes)
   if (school.cooperationcontract) concatenatedString += 'Kooperationsvertrag'
   // TODO
-  // if (school.kaoa_university) concatenatedString += 'kaoa'
-  // if (school.talentscouting) concatenatedString += 'Talentscouting'
+  if (school.kaoaSupervisor !== 0) concatenatedString += 'kaoa'
+  if (school.talentscout !== 0) concatenatedString += 'Talentscouting'
   // concatenatedString += amountStudentsTextById(school.amount_students, amountStudentsList)
   concatenatedString += school.address.city.postcode
   concatenatedString += school.address.city.designation

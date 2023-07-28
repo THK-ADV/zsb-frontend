@@ -184,8 +184,15 @@
         <ng-container *ngIf="kAoAWork.length > 0">
           <h3>KAoAArbeit</h3>
           <ng-container *ngFor="let work of kAoAWork">
-            <h4>{{work.name}}</h4>
-            <p>{{work.content}}</p>
+            <mat-form-field>
+              <mat-select formControlName="kAoAWorkName" placeholder="{{work.name}}">
+                <mat-option *ngFor="let talentscout of talentScouts | async" [value]="talentscout.id">
+                  {{talentscout.desc}}
+                </mat-option>
+              </mat-select>
+              <mat-error>Bitte wählen Sie einen Kontakt aus</mat-error>
+            </mat-form-field>
+<!--        TODO <p>{{work.content}}</p>-->
           </ng-container>
         </ng-container>
 
