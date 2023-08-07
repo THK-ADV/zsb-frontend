@@ -104,6 +104,7 @@ export class ZsbContactSearchComponent implements OnInit, OnDestroy {
     }
   }
 
+// redundant declaration in functions.ts
   sortArrayAlphabetically(array: string[]): string[] {
     return array.sort((a, b) => {
       const textA = a.toUpperCase()
