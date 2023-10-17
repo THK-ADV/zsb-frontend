@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core'
 import {DatabaseService} from '../shared/database.service'
-import {FormControl, FormGroup, Validators} from '@angular/forms'
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {Institution} from './institution'
 import {Address} from '../zsb-address/address'
 import {getReadableAddress} from '../shared/functions'
@@ -13,11 +13,11 @@ export class InstitutionsService {
   constructor(public dbService: DatabaseService) {
   }
 
-  private instForm: FormGroup = new FormGroup({
-    uuid: new FormControl(null),
-    designation: new FormControl('', Validators.required),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    address: new FormControl({value: '', disabled: true}, Validators.required)
+  private instForm: UntypedFormGroup = new UntypedFormGroup({
+    uuid: new UntypedFormControl(null),
+    designation: new UntypedFormControl('', Validators.required),
+    email: new UntypedFormControl('', [Validators.required, Validators.email]),
+    address: new UntypedFormControl({value: '', disabled: true}, Validators.required)
   })
 
   initializeInstForm() {
@@ -44,7 +44,7 @@ export class InstitutionsService {
     })
   }
 
-  getInstForm(): FormGroup {
+  getInstForm(): UntypedFormGroup {
     return this.instForm
   }
 

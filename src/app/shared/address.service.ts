@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core'
-import {FormControl, FormGroup, Validators} from '@angular/forms'
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {Address} from '../zsb-address/address'
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
 import {AddressResult, AddressStatus, ZsbAddressComponent} from '../zsb-address/zsb-address.component'
@@ -14,14 +14,14 @@ export class AddressService {
   constructor() {
   }
 
-  public formGroup: FormGroup = new FormGroup({
-    addressId: new FormControl(null),
-    governmentDistrict: new FormControl('', Validators.required), // regierungsbezirk
-    constituency: new FormControl('', Validators.required), // kreis
-    postcode: new FormControl('', Validators.required),
-    designation: new FormControl('', Validators.required), // designation
-    street: new FormControl('', Validators.required),
-    houseNumber: new FormControl('', Validators.required)
+  public formGroup: UntypedFormGroup = new UntypedFormGroup({
+    addressId: new UntypedFormControl(null),
+    governmentDistrict: new UntypedFormControl('', Validators.required), // regierungsbezirk
+    constituency: new UntypedFormControl('', Validators.required), // kreis
+    postcode: new UntypedFormControl('', Validators.required),
+    designation: new UntypedFormControl('', Validators.required), // designation
+    street: new UntypedFormControl('', Validators.required),
+    houseNumber: new UntypedFormControl('', Validators.required)
   })
 
   static getStandardDialogConfig(): MatDialogConfig {

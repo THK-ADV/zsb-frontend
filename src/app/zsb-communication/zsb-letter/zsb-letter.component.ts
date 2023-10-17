@@ -3,7 +3,7 @@ import {DatabaseService} from '../../shared/database.service'
 import {MatDialogRef} from '@angular/material/dialog'
 import {Signature} from './signature'
 import {Observable} from 'rxjs'
-import {FormControl, FormGroup, Validators} from '@angular/forms'
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {Letter} from './letter'
 import {School} from '../../zsb-school/school'
 import {saveBlobAsFile, generateTitle} from '../../shared/downloads'
@@ -19,9 +19,9 @@ export class ZsbLetterComponent implements OnInit {
   public addresseesIds: string[] = []
   private addressees: School[] = []
   public signatures: Observable<Signature[]>
-  public formGroup: FormGroup = new FormGroup({
-    msg: new FormControl('', Validators.required),
-    signature_id: new FormControl(0)
+  public formGroup: UntypedFormGroup = new UntypedFormGroup({
+    msg: new UntypedFormControl('', Validators.required),
+    signature_id: new UntypedFormControl(0)
   })
 
   constructor(private dbService: DatabaseService, public dialogRef: MatDialogRef<ZsbLetterComponent>, private datePipe: DatePipe) {

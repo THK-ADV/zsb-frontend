@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core'
-import {AbstractControl, FormArray, FormControl, FormGroup, Validators} from '@angular/forms'
+import {AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {School} from '../zsb-school/school'
 import {DatabaseService} from './database.service'
 import {Observable} from 'rxjs'
@@ -15,42 +15,42 @@ import {Router} from '@angular/router'
 export class SchoolService {
 
   newSchool: Observable<School>
-  formGroup: FormGroup
-  contacts: FormArray
+  formGroup: UntypedFormGroup
+  contacts: UntypedFormArray
 
   constructor(private dbService: DatabaseService, private router: Router) {
-    this.contacts = new FormArray([])
-    this.formGroup = new FormGroup({
-      school_id: new FormControl(null),
-      name: new FormControl('', Validators.required),
-      schooltype: new FormControl('', Validators.required),
-      phoneNumber: new FormControl('', Validators.required),
-      email: new FormControl('', Validators.required),
-      website: new FormControl('', Validators.required),
-      comment: new FormControl(''),
+    this.contacts = new UntypedFormArray([])
+    this.formGroup = new UntypedFormGroup({
+      school_id: new UntypedFormControl(null),
+      name: new UntypedFormControl('', Validators.required),
+      schooltype: new UntypedFormControl('', Validators.required),
+      phoneNumber: new UntypedFormControl('', Validators.required),
+      email: new UntypedFormControl('', Validators.required),
+      website: new UntypedFormControl('', Validators.required),
+      comment: new UntypedFormControl(''),
       // focus: new FormControl(null),
-      address: new FormControl({value: '', disabled: true}, Validators.required),
-      city: new FormControl(0),
+      address: new UntypedFormControl({value: '', disabled: true}, Validators.required),
+      city: new UntypedFormControl(0),
       contacts: this.contacts,
-      cooperationContract: new FormControl(false),
-      amount_students11: new FormControl('', [
+      cooperationContract: new UntypedFormControl(false),
+      amount_students11: new UntypedFormControl('', [
         Validators.required,
         Validators.min(0),
         Validators.max(150)
       ]),
-      amount_students12: new FormControl('', [
+      amount_students12: new UntypedFormControl('', [
         Validators.required,
         Validators.min(0),
         Validators.max(150)
       ]),
-      amount_students13: new FormControl('', [
+      amount_students13: new UntypedFormControl('', [
         Validators.required,
         Validators.min(0),
         Validators.max(150)
       ]),
-      cooperationPartner: new FormControl('', Validators.required),
-      kaoaSupervisor: new FormControl('', Validators.required),
-      talentScout: new FormControl('', Validators.required),
+      cooperationPartner: new UntypedFormControl('', Validators.required),
+      kaoaSupervisor: new UntypedFormControl('', Validators.required),
+      talentScout: new UntypedFormControl('', Validators.required),
     })
   }
 
@@ -107,7 +107,7 @@ export class SchoolService {
   addContact(contact: Contact) {
     const contactAlreadyExists = this.contacts.controls.some(c => c.value.contact_id === contact.contact_id)
     if (!contactAlreadyExists) {
-      this.contacts.push(new FormControl(contact))
+      this.contacts.push(new UntypedFormControl(contact))
     }
   }
 

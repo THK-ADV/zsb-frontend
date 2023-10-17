@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core'
-import {FormControl, FormGroup, Validators} from '@angular/forms'
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {Contact, ContactSalutation, ContactFunction} from '../zsb-contact/contact'
 import {Observable} from 'rxjs'
 import {DatabaseService} from './database.service'
@@ -17,18 +17,18 @@ export class ContactsService {
     this.contactSalutationOptions = this.dbService.getContactSalutationOptions()
   }
 
-  public contactForm: FormGroup = new FormGroup({
-    contact_id: new FormControl(null),
-    surname: new FormControl('', Validators.required),
-    firstname: new FormControl(''),
-    salutation: new FormControl(0, Validators.required),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    feature: new FormControl('', Validators.required)
+  public contactForm: UntypedFormGroup = new UntypedFormGroup({
+    contact_id: new UntypedFormControl(null),
+    surname: new UntypedFormControl('', Validators.required),
+    firstname: new UntypedFormControl(''),
+    salutation: new UntypedFormControl(0, Validators.required),
+    email: new UntypedFormControl('', [Validators.required, Validators.email]),
+    feature: new UntypedFormControl('', Validators.required)
   })
 
-  public searchForm: FormGroup = new FormGroup({
-    searchKey: new FormControl(''),
-    enableEdit: new FormControl(false)
+  public searchForm: UntypedFormGroup = new UntypedFormGroup({
+    searchKey: new UntypedFormControl(''),
+    enableEdit: new UntypedFormControl(false)
   })
 
   initializeContactForm() {
