@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core'
 import {combineContactName, Contact} from '../contact'
-import {MatLegacyDialogRef as MatDialogRef} from '@angular/material/legacy-dialog'
+import {MatDialogRef} from '@angular/material/dialog'
 import {NotificationService} from '../../shared/notification.service'
 import {DatabaseService} from '../../shared/database.service'
 import {ContactsService} from '../../shared/contacts.service'

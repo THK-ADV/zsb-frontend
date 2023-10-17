@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core'
 import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {DatabaseService} from '../../shared/database.service'
-import {MatLegacyDialogRef as MatDialogRef} from '@angular/material/legacy-dialog'
+import {MatDialogRef} from '@angular/material/dialog'
 import {DatePipe} from '@angular/common'
 import {School} from '../../zsb-school/school'
 import {Letter} from '../zsb-letter/letter'

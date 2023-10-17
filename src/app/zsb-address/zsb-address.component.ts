@@ -5,7 +5,7 @@ import {City} from './city'
 import {Address} from './address'
 import {DatabaseService} from '../shared/database.service'
 import {AddressService} from '../shared/address.service'
-import {MatLegacyDialogRef as MatDialogRef} from '@angular/material/legacy-dialog'
+import {MatDialogRef} from '@angular/material/dialog'
 import {filterDuplicates, filterOptions} from '../shared/functions'
 
 @Component({
