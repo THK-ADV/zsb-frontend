@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core'
 import {DatabaseService} from '../../shared/database.service'
-import {MatDialogRef} from '@angular/material/dialog'
+import {MatLegacyDialogRef as MatDialogRef} from '@angular/material/legacy-dialog'
 import {Signature} from './signature'
 import {Observable} from 'rxjs'
 import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'

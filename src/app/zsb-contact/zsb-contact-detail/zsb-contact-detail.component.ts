@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core'
 import {DatabaseService} from '../../shared/database.service'
 import {Contact} from '../contact'
 import {ContactsService} from '../../shared/contacts.service'
-import {MatDialogRef} from '@angular/material/dialog'
+import {MatLegacyDialogRef as MatDialogRef} from '@angular/material/legacy-dialog'
 import {NotificationService} from '../../shared/notification.service'
 
 @Component({

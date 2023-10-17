@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core'
 import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {Address} from '../zsb-address/address'
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
+import {MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig} from '@angular/material/legacy-dialog'
 import {AddressResult, AddressStatus, ZsbAddressComponent} from '../zsb-address/zsb-address.component'
 import {Observable} from 'rxjs'
 import {tap} from 'rxjs/operators'

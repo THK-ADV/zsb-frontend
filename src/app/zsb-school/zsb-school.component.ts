@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core'
 import {Observable} from 'rxjs'
 import {School} from './school'
 import {DatabaseService} from '../shared/database.service'
-import {MatDialog} from '@angular/material/dialog'
+import {MatLegacyDialog as MatDialog} from '@angular/material/legacy-dialog'
 
 @Component({
   selector: 'app-zsb-school',

@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core'
 import {EventService} from '../../shared/event.service'
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
+import {MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig} from '@angular/material/legacy-dialog'
 import {ActivatedRoute} from '@angular/router'
 import {Observable, Subscription} from 'rxjs'
 import {Category} from '../category'

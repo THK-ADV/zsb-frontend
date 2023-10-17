@@ -4,7 +4,7 @@ import {Report} from './report'
 import {DatabaseService} from '../../shared/database.service'
 import {Observable} from 'rxjs'
 import {NotificationService} from '../../shared/notification.service'
-import {MatDialogRef} from '@angular/material/dialog'
+import {MatLegacyDialogRef as MatDialogRef} from '@angular/material/legacy-dialog'
 
 @Component({
   selector: 'app-zsb-report',
