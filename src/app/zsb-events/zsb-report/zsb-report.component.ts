@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core'
-import {FormControl, FormGroup, Validators} from '@angular/forms'
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {Report} from './report'
 import {DatabaseService} from '../../shared/database.service'
 import {Observable} from 'rxjs'
@@ -23,11 +23,11 @@ export class ZsbReportComponent implements OnInit {
   reportId: string
   eventId: string
 
-  reportForm: FormGroup = new FormGroup({
-    uuid: new FormControl(null),
-    event_id: new FormControl(null),
-    title: new FormControl('', Validators.required),
-    text: new FormControl('', Validators.required)
+  reportForm: UntypedFormGroup = new UntypedFormGroup({
+    uuid: new UntypedFormControl(null),
+    event_id: new UntypedFormControl(null),
+    title: new UntypedFormControl('', Validators.required),
+    text: new UntypedFormControl('', Validators.required)
   })
 
   ngOnInit(): void {

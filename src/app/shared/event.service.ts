@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core'
 import {DatabaseService} from './database.service'
 import {iif, Observable} from 'rxjs'
 import {Event} from '../zsb-events/event'
-import {FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms'
+import {UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators} from '@angular/forms'
 import {NotificationService} from './notification.service'
 import {Host} from '../zsb-events/host'
 import {Institution} from '../zsb-institutions/institution'
@@ -20,21 +20,21 @@ export class EventService {
               private router: Router) {
   }
 
-  private detailForm: FormGroup = new FormGroup({
-    uuid: new FormControl(null),
-    date: new FormControl(new Date(), Validators.required),
-    designation: new FormControl('', Validators.required),
-    topic: new FormControl('', Validators.required),
-    hostToggle: new FormControl(true),
-    school: new FormControl(null),
-    institution: new FormControl(null),
-    category: new FormControl([0], Validators.required),
-    level: new FormControl([0], Validators.required),
-    amountStudents: new FormControl(0, Validators.required),
-    annotations: new FormControl(''), // Ablauf
-    contactPerson: new FormControl(''),
-    report_btn: new FormControl({value: '', disabled: true}),
-    host_id: new FormControl(null)
+  private detailForm: UntypedFormGroup = new UntypedFormGroup({
+    uuid: new UntypedFormControl(null),
+    date: new UntypedFormControl(new Date(), Validators.required),
+    designation: new UntypedFormControl('', Validators.required),
+    topic: new UntypedFormControl('', Validators.required),
+    hostToggle: new UntypedFormControl(true),
+    school: new UntypedFormControl(null),
+    institution: new UntypedFormControl(null),
+    category: new UntypedFormControl([0], Validators.required),
+    level: new UntypedFormControl([0], Validators.required),
+    amountStudents: new UntypedFormControl(0, Validators.required),
+    annotations: new UntypedFormControl(''), // Ablauf
+    contactPerson: new UntypedFormControl(''),
+    report_btn: new UntypedFormControl({value: '', disabled: true}),
+    host_id: new UntypedFormControl(null)
   }, {validators: this.selectedHostRequired()})
 
   getEvents(): Observable<Event[]> {
@@ -45,7 +45,7 @@ export class EventService {
     return this.dbService.deleteEvents(uuid)
   }
 
-  getDetailForm(): FormGroup {
+  getDetailForm(): UntypedFormGroup {
     return this.detailForm
   }
 
@@ -160,7 +160,7 @@ export class EventService {
   selectedHostRequired() {
     // const isUniversityHost = this.detailForm.value.hostToggle as boolean
 
-    return (fg: FormGroup): ValidationErrors | null => {
+    return (fg: UntypedFormGroup): ValidationErrors | null => {
       const isUniversityHost = fg.get('hostToggle').value as boolean
       const school = fg.get('school').value
       const institution = fg.get('institution').value

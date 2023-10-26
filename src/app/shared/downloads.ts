@@ -4,8 +4,10 @@ import {DatePipe} from '@angular/common'
 export function saveBlobAsFile(blob: Blob, filename: string) {
     const newBlob = new Blob([blob], {type: ''})
 
-    if (window.navigator.msSaveOrOpenBlob) {
-      window.navigator.msSaveOrOpenBlob(newBlob)
+  const nav = (window.navigator as any)
+
+    if (nav.msSaveOrOpenBlob) {
+      nav.msSaveOrOpenBlob(newBlob)
       return
     }
 

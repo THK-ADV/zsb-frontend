@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core'
-import {FormControl, FormGroup, Validators} from '@angular/forms'
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {DatabaseService} from '../../shared/database.service'
 import {MatDialogRef} from '@angular/material/dialog'
 import {DatePipe} from '@angular/common'
@@ -18,9 +18,9 @@ export class ZsbEmailComponent implements OnInit {
 
   public addresseesIds: string[] = []
   private addressees: string[] = []
-  public formGroup: FormGroup = new FormGroup({
-    msg: new FormControl('', Validators.required),
-    subject: new FormControl('', Validators.required)
+  public formGroup: UntypedFormGroup = new UntypedFormGroup({
+    msg: new UntypedFormControl('', Validators.required),
+    subject: new UntypedFormControl('', Validators.required)
   })
 
   constructor(

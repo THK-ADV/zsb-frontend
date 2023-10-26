@@ -30,7 +30,6 @@ import {ZsbContactDetailComponent} from './zsb-contact/zsb-contact-detail/zsb-co
 import {ZsbContactSearchComponent} from './zsb-contact/zsb-contact-search/zsb-contact-search.component'
 import {MatButtonToggleModule} from '@angular/material/button-toggle'
 import {MatSlideToggleModule} from '@angular/material/slide-toggle'
-import {FlexLayoutModule} from '@angular/flex-layout'
 import {MatSidenavModule} from '@angular/material/sidenav'
 import {KeycloakAngularModule} from 'keycloak-angular'
 import {ZsbEventsComponent} from './zsb-events/zsb-events.component'
@@ -100,7 +99,6 @@ import {appRoutes} from './routes'
     MatListModule,
     MatButtonToggleModule,
     MatSlideToggleModule,
-    FlexLayoutModule,
     MatSidenavModule,
     KeycloakAngularModule,
     MatDatepickerModule,
