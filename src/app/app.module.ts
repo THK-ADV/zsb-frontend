@@ -49,6 +49,8 @@ import {MatRadioModule} from '@angular/material/radio'
 import {MatCardModule} from '@angular/material/card'
 import {ZsbSchoolDetailComponent} from './zsb-school/zsb-school-detail/zsb-school-detail.component'
 import {appRoutes} from './routes'
+import { ZsbOverviewListComponent } from './zsb-overview/zsb-overview-list/zsb-overview-list.component'
+import { ZsbOverviewComponent } from './zsb-overview/zsb-overview.component'
 
 @NgModule({
   declarations: [
@@ -68,7 +70,9 @@ import {appRoutes} from './routes'
     ZsbInstitutionsDetailComponent,
     ZsbLetterComponent,
     ZsbEmailComponent,
-    ZsbSchoolDetailComponent
+    ZsbSchoolDetailComponent,
+    ZsbOverviewListComponent,
+    ZsbOverviewComponent
   ],
   imports: [
     BrowserModule,
