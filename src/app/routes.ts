@@ -7,9 +7,10 @@ import {ZsbEventsComponent} from './zsb-events/zsb-events.component'
 import {ZsbEventsDetailComponent} from './zsb-events/zsb-events-detail/zsb-events-detail.component'
 import {ZsbInstitutionsComponent} from './zsb-institutions/zsb-institutions.component'
 import {ZsbInstitutionsDetailComponent} from './zsb-institutions/zsb-institutions-detail/zsb-institutions-detail.component'
+import {ZsbOverviewComponent} from './zsb-overview/zsb-overview.component'
 
 export const appRoutes: Routes = [
-  {path: '', component: ZsbSchoolComponent},
+  {path: '', component: ZsbOverviewComponent},
   {path: 'schools/:schoolId', component: ZsbSchoolEditComponent},
   {path: 'schools/:schoolId/address/:addressId', component: ZsbAddressComponent},
   {path: 'schools/edit/:schoolId', component: ZsbSchoolEditComponent},

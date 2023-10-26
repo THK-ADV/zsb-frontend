@@ -4,8 +4,6 @@ import {DatabaseService} from '../../shared/database.service'
 import {MatDialogRef} from '@angular/material/dialog'
 import {DatePipe} from '@angular/common'
 import {School} from '../../zsb-school/school'
-import {Letter} from '../zsb-letter/letter'
-import {generateTitle, saveBlobAsFile} from '../../shared/downloads'
 import {Email} from './email'
 import {NotificationService} from '../../shared/notification.service'
 
