@@ -1,7 +1,7 @@
-import {Component, ViewChild} from '@angular/core'
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core'
 import {MatPaginator} from '@angular/material/paginator'
 import {MatSort} from '@angular/material/sort'
-import {MatTableDataSource} from '@angular/material/table'
+import {MatTableDataSource, MatTableModule} from '@angular/material/table'
 import {completeSchoolAsString, School} from '../../zsb-school/school'
 import {SchoolType, schoolTypeDescById} from '../../zsb-school/schoolType'
 import {Subscription, zip} from 'rxjs'
@@ -9,21 +9,31 @@ import {SelectionModel} from '@angular/cdk/collections'
 import {DatabaseService} from '../../shared/database.service'
 import {NotificationService} from '../../shared/notification.service'
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
-import {DatePipe} from '@angular/common'
+import {DatePipe, NgFor, NgIf} from '@angular/common'
 import {buildCustomFilter} from '../../shared/keywordsearch'
 import {ZsbLetterComponent} from '../../zsb-communication/zsb-letter/zsb-letter.component'
 import {ZsbEmailComponent} from '../../zsb-communication/zsb-email/zsb-email.component'
 import {generateTitle, saveBlobAsFile} from '../../shared/downloads'
 import {MatRadioChange} from '@angular/material/radio'
+import {animate, state, style, transition, trigger} from '@angular/animations'
+import {MatButtonModule} from '@angular/material/button'
+import {MatIconModule} from '@angular/material/icon'
 
 type SchoolFilterOption = 'Alle' | 'Name' | 'Schulform' | 'Straße' | 'Stadt' | 'Kontakte'
 @Component({
   selector: 'app-zsb-overview-list',
   templateUrl: './zsb-overview-list.component.html',
-  styleUrls: ['./zsb-overview-list.component.css']
+  styleUrls: ['./zsb-overview-list.component.css'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ]
 })
 
-export class ZsbOverviewListComponent {
+export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
   searchKey = ''

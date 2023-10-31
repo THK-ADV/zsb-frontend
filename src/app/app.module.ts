@@ -16,7 +16,7 @@ import {MatIconModule} from '@angular/material/icon'
 import {MatPaginatorModule} from '@angular/material/paginator'
 import {MatSortModule} from '@angular/material/sort'
 import {MatDialogModule} from '@angular/material/dialog'
-import {ZsbSchoolListComponent} from './zsb-school/zsb-school-list/zsb-school-list.component'
+// import {ZsbSchoolListComponent} from './zsb-school/zsb-school-list/zsb-school-list.component'
 import {ZsbSchoolEditComponent} from './zsb-school/zsb-school-edit/zsb-school-edit.component'
 import {MatFormFieldModule} from '@angular/material/form-field'
 import {MatSelectModule} from '@angular/material/select'
@@ -56,7 +56,7 @@ import { ZsbOverviewComponent } from './zsb-overview/zsb-overview.component'
   declarations: [
     AppComponent,
     ZsbSchoolComponent,
-    ZsbSchoolListComponent,
+    // ZsbSchoolListComponent,
     ZsbSchoolEditComponent,
     ZsbAddressComponent,
     ZsbContactDetailComponent,
