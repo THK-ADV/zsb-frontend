@@ -51,6 +51,7 @@ import {ZsbSchoolDetailComponent} from './zsb-school/zsb-school-detail/zsb-schoo
 import {appRoutes} from './routes'
 import { ZsbOverviewListComponent } from './zsb-overview/zsb-overview-list/zsb-overview-list.component'
 import { ZsbOverviewComponent } from './zsb-overview/zsb-overview.component'
+import {MatExpansionModule} from '@angular/material/expansion'
 
 @NgModule({
   declarations: [
@@ -109,7 +110,8 @@ import { ZsbOverviewComponent } from './zsb-overview/zsb-overview.component'
     MatNativeDateModule,
     MatTooltipModule,
     MatRadioModule,
-    MatCardModule
+    MatCardModule,
+    MatExpansionModule
   ],
   providers: [
     DatePipe,

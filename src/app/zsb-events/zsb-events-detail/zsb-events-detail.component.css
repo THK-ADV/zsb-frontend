@@ -1,9 +1,13 @@
 .event-form {
-  min-width: 350px;
+  min-width: 450px;
 }
 
 .event-form mat-form-field {
   width: 100%;
+}
+
+.event-form mat-form-field input {
+  padding-top: 10px;
 }
 
 .event-form mat-form-field textarea {

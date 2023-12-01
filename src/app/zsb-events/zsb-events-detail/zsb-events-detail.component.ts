@@ -12,6 +12,9 @@ import {Report} from '../zsb-report/report'
 import {ZsbReportComponent} from '../zsb-report/zsb-report.component'
 import {DatabaseService} from '../../shared/database.service'
 import {map, startWith} from 'rxjs/operators'
+import {atSchoolProperty} from './event-properties'
+import {internProperty} from './event-properties'
+import {ChangeDetectorRef} from '@angular/core'
 
 @Component({
   selector: 'app-zsb-events-detail',
@@ -19,6 +22,19 @@ import {map, startWith} from 'rxjs/operators'
   styleUrls: ['./zsb-events-detail.component.css']
 })
 export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
+
+  // TODO: eingegebene Daten speichern
+
+  constructor(
+    public service: EventService,
+    private dbService: DatabaseService,
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private notificationService: NotificationService,
+    private cdr: ChangeDetectorRef
+  ) {
+  }
+
   public categories: Observable<Category[]>
   public levels: Observable<Level[]>
   public schools: School[] = []
@@ -27,22 +43,32 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
   public report: Report = undefined
   public hostIsSchool = true
   filteredSchools: Observable<School[]>
-  filteredInstitutions: Observable<Institution[]>
   schoolSub: Subscription
-  institutionSub: Subscription
+  typeSelection = ''
+  protected readonly atSchoolProperty = atSchoolProperty
+  protected readonly internProperty = internProperty
+  someChecked = false
 
-  constructor(
-    public service: EventService,
-    private dbService: DatabaseService,
-    private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private notificationService: NotificationService
-  ) {
+  getPropertyKeys(type: any) {
+    return Object.keys(type)
+  }
+
+  onSelectionChange(event: any) {
+    this.typeSelection = event.value
+  }
+
+  initToggle(toggleName: string, param: any) {
+    const toggleControl = this.service.getDetailForm().get(toggleName)
+    param = toggleControl.value
+    toggleControl.valueChanges.subscribe((value) => {
+      param = value
+      this.cdr.detectChanges()
+    })
   }
 
   ngOnDestroy(): void {
-        this.schoolSub.unsubscribe()
-    }
+    this.schoolSub.unsubscribe()
+  }
 
   ngOnInit(): void {
     this.service.initializeDetailForm()
@@ -52,7 +78,6 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
     this.categories = this.service.dbService.getCategories()
     this.levels = this.service.dbService.getLevels()
     this.schoolSub = this.service.dbService.getSchoolsAtomic().subscribe(schools => this.schools = schools)
-    this.institutionSub = this.service.dbService.getAllInstitutions().subscribe(institutions => this.institutions = institutions)
 
     // check routeParam
     this.route.paramMap.subscribe(paramMap => {
@@ -70,30 +95,15 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
         map(value => typeof value === 'string' ? value : this.displayFnSchool(value)),
         map(name => name ? this.schoolFilter(name) : this.schools.slice())
       )
-    this.filteredInstitutions = this.service.getDetailForm().get('institution').valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : this.displayFnInstitution(value)),
-        map(designation => designation ? this.institutionFilter(designation) : this.institutions)
-      )
   }
 
   displayFnSchool(school: School): string {
     return school?.name ?? ''
   }
 
-  displayFnInstitution(institution: Institution): string {
-    return institution?.designation ?? ''
-  }
-
   private schoolFilter(value: string): School[] {
     const filterValue = value.toLowerCase()
     return this.schools.filter(school => school.name.toLowerCase().includes(filterValue))
-  }
-
-  private institutionFilter(value: string): Institution[] {
-    const filterValue = value.toLowerCase()
-    return this.institutions.filter(institution => institution.designation.toLowerCase().includes(filterValue))
   }
 
   private checkQueryParametersAndPreloadAvailableData() {
@@ -134,14 +144,21 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
   }
 
   private initHostToggle() {
-    this.service.getDetailForm().get('hostToggle').valueChanges.subscribe(isSchool => {
+    /*this.service.getDetailForm().get('hostToggle').valueChanges.subscribe(isSchool => {
       this.hostIsSchool = isSchool
-    })
+    })*/
   }
 
   onSubmit() {
     console.log('submit')
-    this.service.insertOrUpdateCurrentEvent()
+    console.log(this.service.getDetailForm().value)
+    let isPost = false
+    console.log(this.eventId)
+    if (!this.eventId) {
+      isPost = true
+    }
+    console.log(isPost)
+    this.service.insertOrUpdateCurrentEvent(isPost)
   }
 
   onClear() {
@@ -170,18 +187,16 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
   }
 
   private loadNewFormWithPreFilledSchool(schoolId: string) {
-    this.dbService.getSchoolByIdAtomic(schoolId).subscribe(school => {
+    /*this.dbService.getSchoolByIdAtomic(schoolId).subscribe(school => {
       this.service.initFormWithSchool(school)
-    })
+    })*/
   }
 
   private loadNewFormWithPreFilledInstitution(institutionId: any) {
-    this.dbService.getInstitutionByIdAtomic(institutionId).subscribe( institution => {
+    /*this.dbService.getInstitutionByIdAtomic(institutionId).subscribe(institution => {
       this.service.initFormWithInstitution(institution)
-    })
+    })*/
   }
 
   schoolIsSelected = () => typeof this.service.getDetailForm().get('school').value !== 'string'
-
-  institutionIsSelected = () => typeof this.service.getDetailForm().get('institution').value !== 'string'
 }

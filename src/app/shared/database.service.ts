@@ -8,7 +8,7 @@ import {SchoolType} from '../zsb-school/schoolType'
 import {City} from '../zsb-address/city'
 import {Contact, ContactFunction, ContactSalutation} from '../zsb-contact/contact'
 import {environment} from '../../environments/environment'
-import {Event} from '../zsb-events/event'
+import {DatabaseEvent, Event} from '../zsb-events/event'
 import {Category} from '../zsb-events/category'
 import {Level} from '../zsb-events/level'
 import {PresentationType} from '../zsb-events/presentationType'
@@ -187,12 +187,12 @@ export class DatabaseService {
     return this.httpClient.get<Institution[]>(this.DB_URL + '/institutions?resolve_ids=true')
   }
 
-  updateEvent(event: Event) {
-    return this.httpClient.put<Event>(this.DB_URL + '/events', event)
+  updateEvent(event: DatabaseEvent) {
+    return this.httpClient.put<DatabaseEvent>(this.DB_URL + '/events', event)
   }
 
-  createEvent(event: Event) {
-    return this.httpClient.post<Event>(this.DB_URL + '/events', event)
+  createEvent(event: DatabaseEvent) {
+    return this.httpClient.post<DatabaseEvent>(this.DB_URL + '/events', event)
   }
 
   createHost(host: Host) {
