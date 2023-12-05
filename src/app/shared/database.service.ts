@@ -159,12 +159,12 @@ export class DatabaseService {
     return this.httpClient.get<ContactSalutation[]>(this.DB_URL + '/contacts/salutations')
   }
 
-  getAllEvents(): Observable<Event[]> {
-    return this.httpClient.get<Event[]>(this.DB_URL + '/events?resolve_ids=true')
+  getAllEvents(): Observable<DatabaseEvent[]> {
+    return this.httpClient.get<DatabaseEvent[]>(this.DB_URL + '/events?resolve_ids=true')
   }
 
-  getEventById(uuid: string): Observable<Event> {
-    return this.httpClient.get<Event>(this.DB_URL + '/events/' + uuid + '?resolve_ids=true')
+  getEventById(uuid: string): Observable<DatabaseEvent> {
+    return this.httpClient.get<DatabaseEvent>(this.DB_URL + '/events/' + uuid + '?resolve_ids=true')
   }
 
   deleteEvents(uuid: string): Observable<any> {

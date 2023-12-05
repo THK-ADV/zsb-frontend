@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core'
 import {EventService} from '../../shared/event.service'
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
+import {MatDialog} from '@angular/material/dialog'
 import {ActivatedRoute} from '@angular/router'
 import {Observable, Subscription} from 'rxjs'
 import {Category} from '../category'
@@ -8,8 +8,6 @@ import {Level} from '../level'
 import {School} from '../../zsb-school/school'
 import {Institution} from '../../zsb-institutions/institution'
 import {NotificationService} from '../../shared/notification.service'
-import {Report} from '../zsb-report/report'
-import {ZsbReportComponent} from '../zsb-report/zsb-report.component'
 import {DatabaseService} from '../../shared/database.service'
 import {map, startWith} from 'rxjs/operators'
 import {atSchoolProperty} from './event-properties'
@@ -23,7 +21,16 @@ import {ChangeDetectorRef} from '@angular/core'
 })
 export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
 
-  // TODO: eingegebene Daten speichern
+  public categories: Observable<Category[]>
+  public levels: Observable<Level[]>
+  public schools: School[] = []
+  public institutions: Institution[] = []
+  public eventId: string = undefined
+  filteredSchools: Observable<School[]>
+  private subs: Subscription[] = []
+  typeSelection = ''
+  protected readonly atSchoolProperty = atSchoolProperty
+  protected readonly internProperty = internProperty
 
   constructor(
     public service: EventService,
@@ -35,61 +42,27 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
   ) {
   }
 
-  public categories: Observable<Category[]>
-  public levels: Observable<Level[]>
-  public schools: School[] = []
-  public institutions: Institution[] = []
-  public eventId: string = undefined
-  public report: Report = undefined
-  public hostIsSchool = true
-  filteredSchools: Observable<School[]>
-  schoolSub: Subscription
-  typeSelection = ''
-  protected readonly atSchoolProperty = atSchoolProperty
-  protected readonly internProperty = internProperty
-  someChecked = false
-
-  getPropertyKeys(type: any) {
-    return Object.keys(type)
-  }
-
-  onSelectionChange(event: any) {
-    this.typeSelection = event.value
-  }
-
-  initToggle(toggleName: string, param: any) {
-    const toggleControl = this.service.getDetailForm().get(toggleName)
-    param = toggleControl.value
-    toggleControl.valueChanges.subscribe((value) => {
-      param = value
-      this.cdr.detectChanges()
-    })
-  }
-
-  ngOnDestroy(): void {
-    this.schoolSub.unsubscribe()
-  }
-
   ngOnInit(): void {
-    this.service.initializeDetailForm()
-    this.initHostToggle()
-
-    // initialize lists for all dropdowns
+    this.service.initializeFormGroup()
     this.categories = this.service.dbService.getCategories()
     this.levels = this.service.dbService.getLevels()
-    this.schoolSub = this.service.dbService.getSchoolsAtomic().subscribe(schools => this.schools = schools)
 
-    // check routeParam
-    this.route.paramMap.subscribe(paramMap => {
-      const parameter = paramMap.get('eventId')
-      if (parameter === 'new') {
-        this.checkQueryParametersAndPreloadAvailableData()
-      } else {
-        this.eventId = parameter
-        this.loadEvent(parameter)
-      }
-    })
-    this.filteredSchools = this.service.getDetailForm().get('school').valueChanges
+    this.subs.push(
+      this.service.dbService.getSchoolsAtomic().subscribe(schools =>
+        this.schools = schools
+      )
+    )
+
+    this.subs.push(
+      this.route.paramMap.subscribe(params => {
+        this.eventId = params.get('eventId')
+        if (this.eventId != null) {
+          this.loadEvent(this.eventId)
+        }
+      })
+    )
+
+    this.filteredSchools = this.service.formGroup.get('school').valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : this.displayFnSchool(value)),
@@ -97,6 +70,13 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
       )
   }
 
+  onSelectionChange(event: any) {
+    this.typeSelection = event.value
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe())
+  }
   displayFnSchool(school: School): string {
     return school?.name ?? ''
   }
@@ -106,97 +86,39 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
     return this.schools.filter(school => school.name.toLowerCase().includes(filterValue))
   }
 
-  private checkQueryParametersAndPreloadAvailableData() {
-    this.route.queryParams.subscribe(params => {
-      const copyId = params.copy
-      const schoolId = params.school_id
-      const institutionId = params.institution_id
-      if (copyId !== undefined) {
-        this.loadEventWithoutId(copyId)
-        return
-      }
-      if (schoolId !== undefined) {
-        this.loadNewFormWithPreFilledSchool(schoolId)
-      }
-      if (institutionId !== undefined) {
-        this.loadNewFormWithPreFilledInstitution(institutionId)
-      }
-    })
+  getCheckboxValue(formControlName: string): boolean {
+    return this.service.formGroup.get(formControlName)?.value || false
   }
 
-  private loadEventWithoutId(uuid: string) {
-    this.service.dbService.getEventById(uuid).subscribe(event => {
-      event.uuid = null
-      this.service.loadFormData(event)
-    })
+  updateCheckboxValue(formControlName: string) {
+    const currentValue = this.service.formGroup.get(formControlName)?.value
+    this.service.formGroup.get(formControlName).setValue(!currentValue)
   }
 
   private loadEvent(uuid: string) {
     this.service.dbService.getEventById(uuid).subscribe(event => {
       this.service.loadFormData(event)
-
-      this.service.dbService.getAllReports().subscribe(reports => {
-        reports.forEach(it => {
-          if (it.event_id === event.uuid) this.report = it
-        })
-      })
+      this.typeSelection = this.service.formGroup.get('category').value
+      console.log(this.service.formGroup.get('campusDays').value)
     })
-  }
-
-  private initHostToggle() {
-    /*this.service.getDetailForm().get('hostToggle').valueChanges.subscribe(isSchool => {
-      this.hostIsSchool = isSchool
-    })*/
   }
 
   onSubmit() {
     console.log('submit')
-    console.log(this.service.getDetailForm().value)
+    console.log(this.service.formGroup.value)
     let isPost = false
-    console.log(this.eventId)
     if (!this.eventId) {
       isPost = true
     }
-    console.log(isPost)
     this.service.insertOrUpdateCurrentEvent(isPost)
   }
 
   onClear() {
     console.log('CLEAR')
-    this.service.getDetailForm().reset()
-    this.service.initializeDetailForm()
-    this.service.getDetailForm().get('school').reset(undefined, {emitEvent: false})
+    this.service.formGroup.reset()
+    this.service.initializeFormGroup()
+    this.service.formGroup.get('school').reset(undefined, {emitEvent: false})
     this.ngOnInit()
     this.notificationService.success(':: Formular zurückgesetzt.')
   }
-
-  editReport(report?: Report) {
-    const dialogConfig = new MatDialogConfig()
-    dialogConfig.disableClose = true
-    dialogConfig.width = '30%'
-    const dialogRef = this.dialog.open(ZsbReportComponent, dialogConfig)
-    dialogRef.componentInstance.reportId = report?.uuid
-    dialogRef.componentInstance.eventId = this.service.getDetailForm().controls.uuid.value
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === undefined) {
-        return
-      }
-      this.report = result
-    })
-  }
-
-  private loadNewFormWithPreFilledSchool(schoolId: string) {
-    /*this.dbService.getSchoolByIdAtomic(schoolId).subscribe(school => {
-      this.service.initFormWithSchool(school)
-    })*/
-  }
-
-  private loadNewFormWithPreFilledInstitution(institutionId: any) {
-    /*this.dbService.getInstitutionByIdAtomic(institutionId).subscribe(institution => {
-      this.service.initFormWithInstitution(institution)
-    })*/
-  }
-
-  schoolIsSelected = () => typeof this.service.getDetailForm().get('school').value !== 'string'
 }

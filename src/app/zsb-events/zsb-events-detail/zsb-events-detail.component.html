@@ -1,11 +1,11 @@
-<ng-container *ngIf="this.eventId === undefined; else edit">
-  <h1>Termin hinzufügen</h1>
-</ng-container>
-<ng-template #edit>
+<ng-container *ngIf="this.eventId != null; else newTermin">
   <h1>Termin bearbeiten</h1>
+</ng-container>
+<ng-template #newTermin>
+  <h1>Termin hinzufügen</h1>
 </ng-template>
 
-<form [formGroup]="service.getDetailForm()" class="event-form">
+<form [formGroup]="service.formGroup" class="event-form">
   <!-- uuid -->
   <input type="hidden" formControlName="uuid">
 
@@ -109,7 +109,9 @@
       <div *ngIf="property.properties && property.properties.length > 0">
         <div *ngFor="let subProperty of property.properties" style="margin-left: 20px;">
           <ng-container [ngSwitch]="subProperty.type">
-            <mat-checkbox *ngSwitchCase="'checkbox'">
+            <mat-checkbox *ngSwitchCase="'checkbox'"
+                          [checked]="getCheckboxValue(subProperty.formControlName)"
+                          (change)="updateCheckboxValue(subProperty.formControlName)">
               {{subProperty.name}}
             </mat-checkbox>
             <div *ngSwitchCase="'integer'">
@@ -133,7 +135,9 @@
           <div *ngIf="subProperty.properties && subProperty.properties.length > 0">
             <div *ngFor="let subSubProperty of subProperty.properties" style="margin-left: 20px;">
               <ng-container [ngSwitch]="subSubProperty.type">
-                <mat-checkbox *ngSwitchCase="'checkbox'">
+                <mat-checkbox *ngSwitchCase="'checkbox'"
+                              [checked]="getCheckboxValue(subSubProperty.formControlName)"
+                              (change)="updateCheckboxValue(subSubProperty.formControlName)">
                   {{subSubProperty.name}}
                 </mat-checkbox>
                 <div *ngSwitchCase="'integer'">
@@ -166,7 +170,9 @@
   <div *ngIf="typeSelection === 'intern'">
     <div *ngFor="let property of internProperty.properties">
       <ng-container [ngSwitch]="property.type">
-        <mat-checkbox *ngSwitchCase="'checkbox'">
+        <mat-checkbox *ngSwitchCase="'checkbox'"
+                      [checked]="getCheckboxValue(property.formControlName)"
+                      (change)="updateCheckboxValue(property.formControlName)">
           {{property.name}}
         </mat-checkbox>
         <div *ngSwitchCase="'integer'">
@@ -190,7 +196,9 @@
       <div *ngIf="property.properties && property.properties.length > 0">
         <div *ngFor="let subProperty of property.properties" style="margin-left: 20px;">
           <ng-container [ngSwitch]="subProperty.type">
-            <mat-checkbox *ngSwitchCase="'checkbox'">
+            <mat-checkbox *ngSwitchCase="'checkbox'"
+                          [checked]="getCheckboxValue(subProperty.formControlName)"
+                          (change)="updateCheckboxValue(subProperty.formControlName)">
               {{subProperty.name}}
             </mat-checkbox>
             <div *ngSwitchCase="'integer'">
@@ -226,7 +234,7 @@
 
   <div class="btn-row">
     <button mat-raised-button color="primary" type="submit" (click)="onSubmit()"
-            [disabled]="service.getDetailForm().invalid">Speichern
+            [disabled]="service.formGroup.invalid">Speichern
     </button>
     <button mat-raised-button color="warn" (click)="onClear()">Zurücksetzen</button>
   </div>

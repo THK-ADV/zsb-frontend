@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core'
 import {MatPaginator} from '@angular/material/paginator'
 import {MatSort} from '@angular/material/sort'
-import {MatTableDataSource, MatTableModule} from '@angular/material/table'
+import {MatTableDataSource} from '@angular/material/table'
 import {completeSchoolAsString, School} from '../../zsb-school/school'
 import {SchoolType, schoolTypeDescById} from '../../zsb-school/schoolType'
 import {Subscription, zip} from 'rxjs'
@@ -9,17 +9,20 @@ import {SelectionModel} from '@angular/cdk/collections'
 import {DatabaseService} from '../../shared/database.service'
 import {NotificationService} from '../../shared/notification.service'
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
-import {DatePipe, NgFor, NgIf} from '@angular/common'
+import {DatePipe} from '@angular/common'
 import {buildCustomFilter} from '../../shared/keywordsearch'
 import {ZsbLetterComponent} from '../../zsb-communication/zsb-letter/zsb-letter.component'
 import {ZsbEmailComponent} from '../../zsb-communication/zsb-email/zsb-email.component'
 import {generateTitle, saveBlobAsFile} from '../../shared/downloads'
 import {MatRadioChange} from '@angular/material/radio'
 import {animate, state, style, transition, trigger} from '@angular/animations'
-import {MatButtonModule} from '@angular/material/button'
-import {MatIconModule} from '@angular/material/icon'
+import {DatabaseEvent, Event} from '../../zsb-events/event'
 
 type SchoolFilterOption = 'Alle' | 'Name' | 'Schulform' | 'Straße' | 'Stadt' | 'Kontakte'
+type SchoolWithEvents = {
+  school: School,
+  events: DatabaseEvent[]
+}
 @Component({
   selector: 'app-zsb-overview-list',
   templateUrl: './zsb-overview-list.component.html',
@@ -38,12 +41,13 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort
   searchKey = ''
 
-  listData: MatTableDataSource<School>
+  listData: MatTableDataSource<SchoolWithEvents>
+  detailData: MatTableDataSource<DatabaseEvent>
   schoolTypes: SchoolType[]
   selectedSchoolsIds: string[] = []
   private sub: Subscription
   selection = new SelectionModel(true, [])
-  expandedElement: School | null
+  expandedElement: SchoolWithEvents | null
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns: Array<string> = [
     'select',
@@ -52,6 +56,12 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
     'address',
     'city',
     'actions'
+  ]
+  displayedDetailColumns: Array<string> = [
+    'detailDesignation',
+    'detailDate',
+    'detailCategory',
+    'detailActions'
   ]
   columnsToDisplayWithExpand = [...this.displayedColumns, 'expand']
 
@@ -72,30 +82,44 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
     this.sub = zip(
       this.service.getSchoolsAtomic(),
       this.service.getSchoolType(),
-    ).subscribe(([list, schoolTypes]) => {
-      this.listData = new MatTableDataSource([...list])
+      this.service.getAllEvents()
+    ).subscribe(([schools, schoolTypes, events]) => {
+      console.log(events)
+      const schoolWithEvents: SchoolWithEvents[] = []
+      schools.forEach((school) => {
+        const schoolEvents = events.filter((event) => {
+          return (event.school_id === school.id)
+        })
+        const schoolWithEvent: SchoolWithEvents = {
+          school,
+          events: schoolEvents
+        }
+        schoolWithEvents.push(schoolWithEvent)
+      })
+      this.listData = new MatTableDataSource(schoolWithEvents)
+      this.detailData = new MatTableDataSource([])
       this.listData.sort = this.sort
       this.listData.paginator = this.paginator
-      this.listData.filterPredicate = buildCustomFilter(s => {
+      this.listData.filterPredicate = buildCustomFilter(({school}) => {
           switch (this.selectedFilterOption) {
             case 'Alle':
               return completeSchoolAsString(
-                s,
+                school,
                 schoolTypes,
               )
             case 'Name':
-              return s.name
+              return school.name
             case 'Schulform':
-              return schoolTypeDescById(s.type, schoolTypes)
+              return schoolTypeDescById(school.type, schoolTypes)
             case 'Straße':
-              return s.address.street + s.address.houseNumber
+              return school.address.street + school.address.houseNumber
             case 'Stadt':
-              return s.address.city.postcode +
-                s.address.city.designation +
-                s.address.city.governmentDistrict +
-                s.address.city.constituency
+              return school.address.city.postcode +
+                school.address.city.designation +
+                school.address.city.governmentDistrict +
+                school.address.city.constituency
             case 'Kontakte':
-              return s.contacts.map(c => c.surname).join()
+              return school.contacts.map(c => c.surname).join()
           }
         }
       )
@@ -110,6 +134,10 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe()
   }
 
+  updateDetailData() {
+    this.detailData.data = this.expandedElement.events
+  }
+
   onSearchClear() {
     this.searchKey = ''
     this.selectedFilterOption = this.filterOptions[0]
@@ -119,7 +147,7 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   toggleSelectAll() {
     if (this.selectedSchoolsIds.length !== this.listData.data.length) {
       this.selectedSchoolsIds.splice(0)
-      this.listData.data.forEach(s => this.selectedSchoolsIds.push(s.id))
+      this.listData.data.forEach(({school}) => this.selectedSchoolsIds.push(school.id))
     } else {
       this.selectedSchoolsIds.splice(0)
     }
@@ -167,6 +195,20 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
     }
   }
 
+  deleteEvent(eventName: string, uuid: string) {
+    if (confirm('Seid ihr sicher, dass ihr "' + eventName + '" löschen möchtet?')) {
+      this.service.deleteEvents(uuid).subscribe(it => {
+        if (it !== undefined) {
+          this.notificationService.success(':: Termin wurde erfolgreich entfernt.')
+          // remove event from table
+          this.ngOnInit()
+        } else {
+          this.notificationService.failure('-- Termin konnte nicht entfernt werden.')
+        }
+      })
+    }
+  }
+
   toggleSelectedSchool(schoolId: string) {
     this.selection.toggle(schoolId)
     if (this.shouldRowBeSelected(schoolId)) {
@@ -208,8 +250,8 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   }
 
   exportAddresses() {
-    if (this.warnIfSelectedSchoolsIsEmpty()) return
-    this.service.createSheet(this.selectedSchoolsIds.map(id => this.getSchoolById(id)).filter(s => s !== null))
+    /*if (this.warnIfSelectedSchoolsIsEmpty()) return
+    this.service.createSheet(this.selectedSchoolsIds.map(id => this.getSchoolWithEventsById(id)).filter(({school}) => school !== null))
       .subscribe(result => saveBlobAsFile(
         result,
         generateTitle(
@@ -218,29 +260,29 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
           '.xlsx',
           this.datePipe
         )
-      ))
+      ))*/
   }
 
   private buildCustomSorting() {
-    this.listData.sortingDataAccessor = (s, id) => {
-      console.log('buildCustomSorting', s)
+    this.listData.sortingDataAccessor = ({school}, id) => {
+      console.log('buildCustomSorting', school)
       switch (id) {
         case 'name':
-          return s.name.toLocaleLowerCase()
+          return school.name.toLocaleLowerCase()
         case 'type':
-          return this.getSchoolTypeById(s.type).toLocaleLowerCase()
+          return this.getSchoolTypeById(school.type).toLocaleLowerCase()
         case 'city':
-          return `${s.address.city.postcode}, ${s.address.city.designation}`.toLocaleLowerCase()
+          return `${school.address.city.postcode}, ${school.address.city.designation}`.toLocaleLowerCase()
         case 'address':
-          return `${s.address.street}, ${s.address.houseNumber}`.toLocaleLowerCase()
+          return `${school.address.street}, ${school.address.houseNumber}`.toLocaleLowerCase()
         default:
           throw Error(id)
       }
     }
   }
 
-  private getSchoolById(id: string): School | null {
-    return this.listData.data.find(s => s.id === id) ?? null
+  private getSchoolWithEventsById(id: string): SchoolWithEvents {
+    return this.listData.data.find(({school}) => school.id === id) ?? null
   }
 
   setSelectedValue(event: MatRadioChange) {

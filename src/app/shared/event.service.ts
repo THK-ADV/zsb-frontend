@@ -1,71 +1,72 @@
 import {Injectable} from '@angular/core'
 import {DatabaseService} from './database.service'
-import {Observable} from 'rxjs'
 import {DatabaseEvent, Event} from '../zsb-events/event'
 import {UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators} from '@angular/forms'
 import {NotificationService} from './notification.service'
 import {tap} from 'rxjs/operators'
 import {Router} from '@angular/router'
 import {formatDate} from '@angular/common'
+import {Observable} from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventService {
 
+  formGroup: UntypedFormGroup
+
   constructor(public dbService: DatabaseService,
               private notificationService: NotificationService,
               private router: Router) {
+    this.formGroup = new UntypedFormGroup({
+      uuid: new UntypedFormControl(null),
+      designation: new UntypedFormControl('', Validators.required),
+      date: new UntypedFormControl(new Date(), Validators.required),
+      category: new UntypedFormControl([0], Validators.required),
+      school: new UntypedFormControl(null),
+      semester: new UntypedFormControl(''),
+      contactPersonSchool: new UntypedFormControl(null),
+      contactPersonUniversity: new UntypedFormControl(null),
+      rating: new UntypedFormControl(''),
+      kaoa: new UntypedFormControl(false),
+      lastMinuteInformation: new UntypedFormControl(false),
+      generalStuOri: new UntypedFormControl(false),
+      runsStuOri: new UntypedFormControl(0),
+      endMeeting: new UntypedFormControl(false),
+      planMeeting: new UntypedFormControl(false),
+      kaoaOther: new UntypedFormControl(false),
+      kaoaOtherText: new UntypedFormControl(''),
+      talentScouting: new UntypedFormControl(false),
+      meeting: new UntypedFormControl(false),
+      scouting: new UntypedFormControl(false),
+      tsOther: new UntypedFormControl(false),
+      tsOtherText: new UntypedFormControl(''),
+      thSpecific: new UntypedFormControl(false),
+      singleAppt: new UntypedFormControl(false),
+      singleConsulting: new UntypedFormControl(false),
+      singlePresentation: new UntypedFormControl(false),
+      singlePresentationTh: new UntypedFormControl(false),
+      singleRunsPresentation: new UntypedFormControl(0),
+      singleInformation: new UntypedFormControl(false),
+      singleOther: new UntypedFormControl(false),
+      singleOtherText: new UntypedFormControl(''),
+      schoolFair: new UntypedFormControl(false),
+      fairConsulting: new UntypedFormControl(false),
+      fairPresentation: new UntypedFormControl(false),
+      fairPresentationTh: new UntypedFormControl(false),
+      fairRunsPresentation: new UntypedFormControl(0),
+      fairInformation: new UntypedFormControl(false),
+      fairOther: new UntypedFormControl(false),
+      fairOtherText: new UntypedFormControl(''),
+      campusDays: new UntypedFormControl(false),
+      studentLab: new UntypedFormControl(false),
+      internOther: new UntypedFormControl(false),
+      internOtherText: new UntypedFormControl(''),
+      other: new UntypedFormControl('')
+    })
   }
 
-  private detailForm: UntypedFormGroup = new UntypedFormGroup({
-    uuid: new UntypedFormControl(null),
-    designation: new UntypedFormControl('', Validators.required),
-    date: new UntypedFormControl(new Date(), Validators.required),
-    category: new UntypedFormControl([0], Validators.required),
-    school: new UntypedFormControl(null),
-    semester: new UntypedFormControl(''),
-    contactPersonSchool: new UntypedFormControl(null),
-    contactPersonUniversity: new UntypedFormControl(null),
-    rating: new UntypedFormControl(''),
-    kaoa: new UntypedFormControl(false),
-    lastMinuteInformation: new UntypedFormControl(false),
-    generalStuOri: new UntypedFormControl(false),
-    runsStuOri: new UntypedFormControl(0),
-    endMeeting: new UntypedFormControl(false),
-    planMeeting: new UntypedFormControl(false),
-    kaoaOther: new UntypedFormControl(false),
-    kaoaOtherText: new UntypedFormControl(''),
-    talentScouting: new UntypedFormControl(false),
-    meeting: new UntypedFormControl(false),
-    scouting: new UntypedFormControl(false),
-    tsOther: new UntypedFormControl(false),
-    tsOtherText: new UntypedFormControl(''),
-    thSpecific: new UntypedFormControl(false),
-    singleAppt: new UntypedFormControl(false),
-    singleConsulting: new UntypedFormControl(false),
-    singlePresentation: new UntypedFormControl(false),
-    singlePresentationTh: new UntypedFormControl(false),
-    singleRunsPresentation: new UntypedFormControl(0),
-    singleInformation: new UntypedFormControl(false),
-    singleOther: new UntypedFormControl(false),
-    singleOtherText: new UntypedFormControl(''),
-    schoolFair: new UntypedFormControl(false),
-    fairConsulting: new UntypedFormControl(false),
-    fairPresentation: new UntypedFormControl(false),
-    fairPresentationTh: new UntypedFormControl(false),
-    fairRunsPresentation: new UntypedFormControl(0),
-    fairInformation: new UntypedFormControl(false),
-    fairOther: new UntypedFormControl(false),
-    fairOtherText: new UntypedFormControl(''),
-    campusDays: new UntypedFormControl(false),
-    studentLab: new UntypedFormControl(false),
-    internOther: new UntypedFormControl(false),
-    internOtherText: new UntypedFormControl(''),
-    other: new UntypedFormControl('')
-  })
-
-  getEvents(): Observable<Event[]> {
+  getEvents(): Observable<DatabaseEvent[]> {
     return this.dbService.getAllEvents()
   }
 
@@ -73,12 +74,8 @@ export class EventService {
     return this.dbService.deleteEvents(uuid)
   }
 
-  getDetailForm(): UntypedFormGroup {
-    return this.detailForm
-  }
-
-  initializeDetailForm() {
-    this.detailForm.setValue({
+  initializeFormGroup() {
+    this.formGroup.setValue({
       uuid: null,
       designation: '',
       date: new Date(),
@@ -126,57 +123,106 @@ export class EventService {
     })
   }
 
-  loadFormData(event: Event) {
-    this.detailForm.setValue({
+  loadFormData(event: DatabaseEvent) {
+    const kaoa = event.schoolCategory?.includes('KAOA') ?? false
+    const talentScouting = event.schoolCategory?.includes('TALENTSCOUT') ?? false
+    const thSpecific = event.schoolCategory?.includes('THSPECIFIC') ?? false
+    const lastMinuteInformation = event.kAoACategory?.includes('LASTMINUTE') ?? false
+    const generalStuOri = event.kAoACategory?.includes('GENERALORIENTATION') ?? false
+    const runsStuOri = event.kAoARuns ?? 0
+    const endMeeting = event.kAoACategory?.includes('YEARENDING') ?? false
+    const planMeeting = event.kAoACategory?.includes('YEARPLANNING') ?? false
+    const kaoaOther = event.kAoACategory?.includes('OTHER') ?? false
+    const kaoaOtherText = event.kAoAOther ?? ''
+    const meeting = event.talentscoutCategory?.includes('CONVERSATION') ?? false
+    const scouting = event.talentscoutCategory?.includes('SCOUTING') ?? false
+    const tsOther = event.talentscoutCategory?.includes('OTHER') ?? false
+    const tsOtherText = event.talentscoutOther ?? ''
+    const singleAppt = event.thSpecificCategory?.includes('SINGLEAPPT') ?? false
+    const singleConsulting = event.thSpecificCategory?.includes('CONSULTATIONSINGLE') ?? false
+    const singlePresentation = event.thSpecificCategory?.includes('TALKSINGLE') ?? false
+    const singlePresentationTh = event.thSpecificCategory?.includes('THTALKSINGLE') ?? false
+    const singleInformation = event.thSpecificCategory?.includes('INFORMATIONSINGLE') ?? false
+    const singleOther = event.thSpecificCategory?.includes('OTHERSINGLE') ?? false
+    const schoolFair = event.thSpecificCategory?.includes('SCHOOLFAIR') ?? false
+    const fairConsulting = event.thSpecificCategory?.includes('CONSULTATIONFAIR') ?? false
+    const fairPresentation = event.thSpecificCategory?.includes('TALKFAIR') ?? false
+    const fairPresentationTh = event.thSpecificCategory?.includes('THTALKFAIR') ?? false
+    const fairInformation = event.thSpecificCategory?.includes('INFORMATIONFAIR') ?? false
+    const fairOther = event.thSpecificCategory?.includes('OTHERFAIR') ?? false
+    const fairRunsPresentation = event.thRunsFair ?? 0
+    const singleRunsPresentation = event.thRunsSingle ?? 0
+    const singleOtherText = event.thOtherSingle ?? ''
+    const fairOtherText = event.thOtherFair ?? ''
+    const campusDays = event.internCategory?.includes('CAMPUSDAY') ?? false
+    const studentLab = event.internCategory?.includes('LAB') ?? false
+    const internOther = event.internCategory?.includes('OTHER') ?? false
+    const internOtherText = event.internOther ?? ''
+    console.log(event.internCategory)
+    let category = ''
+    switch (event.type) {
+      case 'AnSchuleTermin':
+        category = 'atSchool'
+        break
+      case 'BeiUnsTermin':
+        category = 'intern'
+        break
+      case 'BeiDrittenTermin':
+        category = 'atThird'
+    }
+    this.formGroup.setValue({
       uuid: event.uuid,
       designation: event.designation,
       date: new Date(event.date),
-      category: event.category,
+      category,
       school: event.school,
-      semester: event.semester,
-      contactPersonSchool: event.contactPersonSchool,
-      contactPersonUniversity: event.contactPersonUniversity,
+      semester: event.schoolyear,
+      contactPersonSchool: event.contact_school,
+      contactPersonUniversity: event.contact_university,
       rating: event.rating,
-      kaoa: event.kaoa,
-      lastMinuteInformation: event.lastMinuteInformation,
-      generalStuOri: event.generalStuOri,
-      runsStuOri: event.runsStuOri,
-      endMeeting: event.endMeeting,
-      planMeeting: event.planMeeting,
-      kaoaOther: event.kaoaOther,
-      kaoaOtherText: event.kaoaOtherText,
-      talentScouting: event.talentScouting,
-      meeting: event.meeting,
-      scouting: event.scouting,
-      tsOther: event.tsOther,
-      tsOtherText: event.tsOtherText,
-      thSpecific: event.thSpecific,
-      singleAppt: event.singleAppt,
-      singleConsulting: event.singleConsulting,
-      singlePresentation: event.singlePresentation,
-      singlePresentationTh: event.singlePresentationTh,
-      singleRunsPresentation: event.singleRunsPresentation,
-      singleInformation: event.singleInformation,
-      singleOther: event.singleOther,
-      singleOtherText: event.singleOtherText,
-      schoolFair: event.schoolFair,
-      fairConsulting: event.fairConsulting,
-      fairPresentation: event.fairPresentation,
-      fairPresentationTh: event.fairPresentationTh,
-      fairRunsPresentation: event.fairRunsPresentation,
-      fairInformation: event.fairInformation,
-      fairOther: event.fairOther,
-      fairOtherText: event.fairOtherText,
-      campusDays: event.campusDays,
-      studentLab: event.studentLab,
-      internOther: event.internOther,
-      internOtherText: event.internOtherText,
+      kaoa,
+      lastMinuteInformation,
+      generalStuOri,
+      runsStuOri,
+      endMeeting,
+      planMeeting,
+      kaoaOther,
+      kaoaOtherText,
+      talentScouting,
+      meeting,
+      scouting,
+      tsOther,
+      tsOtherText,
+      thSpecific,
+      singleAppt,
+      singleConsulting,
+      singlePresentation,
+      singlePresentationTh,
+      singleRunsPresentation,
+      singleInformation,
+      singleOther,
+      singleOtherText,
+      schoolFair,
+      fairConsulting,
+      fairPresentation,
+      fairPresentationTh,
+      fairRunsPresentation,
+      fairInformation,
+      fairOther,
+      fairOtherText,
+      campusDays,
+      studentLab,
+      internOther,
+      internOtherText,
       other: event.other
     })
+    console.log('campusDays')
+    console.log(campusDays)
   }
 
+  // TODO: an Backend anpassen, insert und update aufteilen
   insertOrUpdateCurrentEvent(isPost: boolean) {
-    const eventForm = this.detailForm.value
+    const eventForm = this.formGroup.value
     let discriminator = ''
     switch (eventForm.category) {
       case 'atSchool':
@@ -191,7 +237,6 @@ export class EventService {
     }
     eventForm.date = formatDate(new Date(eventForm.date), 'yyyy-MM-dd', 'en-US')
     // TODO: schöner
-    // Terminart
     eventForm.schoolCategory = []
     if (eventForm.kaoa) {
       eventForm.schoolCategory.push('KAoA')
@@ -283,9 +328,6 @@ export class EventService {
     if (eventForm.internOther) {
       eventForm.internCategory.push('Sonstiges')
     }
-
-    console.log('eventForm')
-    console.log(eventForm)
     const eventObject: DatabaseEvent = {
       type: discriminator,
       uuid: eventForm.uuid,
@@ -312,15 +354,13 @@ export class EventService {
       internCategory: eventForm.internCategory,
       internOther: eventForm.internOtherText
     }
-    console.log('eventObject')
-    console.log(eventObject)
     if (isPost) {
       this.dbService.createEvent(eventObject)
         .pipe(
           tap(
             it => {
-                this.notificationService.success(':: Termin erfolgreich erstellt.')
-                this.router.navigate(['/', 'events'])
+              this.notificationService.success(':: Termin erfolgreich erstellt.')
+              this.router.navigate(['/', 'events'])
             })
         )
         .subscribe()
@@ -329,8 +369,8 @@ export class EventService {
         .pipe(
           tap(
             it => {
-                this.notificationService.success(':: Termin erfolgreich aktualisiert.')
-                this.router.navigate(['/', 'events'])
+              this.notificationService.success(':: Termin erfolgreich aktualisiert.')
+              this.router.navigate(['/', 'events'])
             })
         )
         .subscribe()
