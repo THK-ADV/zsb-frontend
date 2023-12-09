@@ -1,5 +1,5 @@
 export interface City {
-  city_id: string
+  id: string
   postcode: number
   designation: string
   constituency: string

@@ -18,9 +18,9 @@ export interface School {
   talentscout: number
   cooperationcontract: boolean
   address_id: string
+  address: Address
   contacts_ids: string[]
   contacts: Contact[]
-  address: Address
 }
 
 export function completeSchoolAsString(school: School, schoolTypes: SchoolType[]): string {
