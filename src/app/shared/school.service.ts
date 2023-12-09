@@ -8,6 +8,7 @@ import {City} from '../zsb-address/city'
 import {NotificationService} from './notification.service'
 import {Contact} from '../zsb-contact/contact'
 import {Router} from '@angular/router'
+import {getReadableAddress} from './functions'
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,8 @@ export class SchoolService {
   formGroup: UntypedFormGroup
   contacts: UntypedFormArray
 
-  constructor(private dbService: DatabaseService, private router: Router) {
+  constructor(public dbService: DatabaseService,
+              private router: Router) {
     this.contacts = new UntypedFormArray([])
     this.formGroup = new UntypedFormGroup({
       school_id: new UntypedFormControl(null),
@@ -55,9 +57,7 @@ export class SchoolService {
 
   initializeFormGroup() {
     this.contacts.clear()
-
     this.formGroup.setValue({
-      ...this.formGroup.value,
       school_id: null,
       name: '',
       schooltype: '',
@@ -67,21 +67,21 @@ export class SchoolService {
       comment: '',
       address: null,
       city: null,
+      contacts: [],
       cooperationContract: false,
       amount_students11: '',
       amount_students12: '',
       amount_students13: '',
       cooperationPartner: '',
       kaoaSupervisor: '',
-      talentScout: '',
+      talentScout: ''
     })
   }
 
   loadFormData(school: School) {
     this.contacts.clear()
-
+    this.addContacts(school.contacts)
     this.formGroup.setValue({
-      ...this.formGroup.value,
       school_id: school.id,
       name: school.name,
       schooltype: school.type,
@@ -89,18 +89,17 @@ export class SchoolService {
       email: school.email,
       website: school.website,
       comment: school.comment,
-      address: this.getReadableAddress(school.address, school.address.city),
-      city: school.address.city.city_id,
-      cooperationContract: school.cooperationcontract,
       amount_students11: school.amount_students11,
       amount_students12: school.amount_students12,
       amount_students13: school.amount_students13,
+      address: getReadableAddress(school.address, school.address.city),
+      city: school.address.city,
+      contacts: school.contacts,
+      cooperationContract: school.cooperationcontract,
       cooperationPartner: school.cooperationpartner,
       kaoaSupervisor: school.kaoaSupervisor,
       talentScout: school.talentscout,
     })
-
-    this.addContacts(school.contacts)
   }
 
   addContact(contact: Contact) {
@@ -134,35 +133,35 @@ export class SchoolService {
     return school.contacts
   }
 
-  updateSchoolWithoutNewAddress(school: School, notificationService: NotificationService) {
-    const newSchool = {
-      school_id: school.id,
-      name: school.name,
-      schooltype: school.type,
-      phoneNumber: school.phonenumber,
-      email: school.email,
-      website: school.website,
-      comment: school.comment,
-      focus: 'unbekannt',
-      address_id: school.address_id,
-      city_id: undefined,
-      cooperationContract: school.cooperationcontract,
-      mount_students11: school.amount_students11,
-      mount_students12: school.amount_students12,
-      mount_students13: school.amount_students13,
-      cooperationPartner: school.cooperationpartner,
-      kaoaSupervisor: school.kaoaSupervisor,
-      talentScout: school.talentscout,
-      contacts_ids: school.contacts.map(it => it.contact_id),
-      address: undefined,
-      city: undefined
+  updateSchoolWithoutNewAddress(schoolForm: any, notificationService: NotificationService) {
+    console.log('updateSchoolWithoutNewAddress')
+    console.log(schoolForm)
+    const schoolObject: School = {
+      id: schoolForm.school_id,
+      name: schoolForm.name,
+      type: schoolForm.schooltype,
+      comment: schoolForm.comment,
+      amount_students11: schoolForm.amount_students11,
+      amount_students12: schoolForm.amount_students12,
+      amount_students13: schoolForm.amount_students13,
+      phonenumber: schoolForm.phoneNumber,
+      email: schoolForm.email,
+      website: schoolForm.website,
+      cooperationpartner: schoolForm.cooperationPartner,
+      kaoaSupervisor: schoolForm.kaoaSupervisor,
+      talentscout: schoolForm.talentScout,
+      cooperationcontract: schoolForm.cooperationContract,
+      address_id: schoolForm.address_id,
+      address: schoolForm.address,
+      contacts_ids: schoolForm.contacts.map(it => it.contact_id),
+      contacts: schoolForm.contacts
     }
 
-    if (newSchool.school_id == null) {
+    if (schoolObject.id == null) {
       notificationService.failure('-- Can\'t update "school" without id. Please contact your administrator')
       return
     } else {
-      this.newSchool = this.dbService.updateSchool(newSchool)
+      this.newSchool = this.dbService.updateSchool(schoolObject)
     }
 
     this.newSchool.subscribe(it => {
@@ -179,28 +178,51 @@ export class SchoolService {
     return address.street + ' ' + address.houseNumber + ', ' + city.postcode + ' ' + city.designation
   }
 
-  insertOrUpdateSchool(school: School, notificationService: NotificationService) {
-    const cityObservable = this.dbService.updateOrCreateCity(school.address.city)
+  insertOrUpdateSchool(schoolForm: any, notificationService: NotificationService) {
+    const schoolObject: School = {
+      id: schoolForm.school_id,
+      name: schoolForm.name,
+      type: schoolForm.schooltype,
+      comment: schoolForm.comment,
+      amount_students11: schoolForm.amount_students11,
+      amount_students12: schoolForm.amount_students12,
+      amount_students13: schoolForm.amount_students13,
+      phonenumber: schoolForm.phoneNumber,
+      email: schoolForm.email,
+      website: schoolForm.website,
+      cooperationpartner: schoolForm.cooperationPartner,
+      kaoaSupervisor: schoolForm.kaoaSupervisor,
+      talentscout: schoolForm.talentScout,
+      cooperationcontract: schoolForm.cooperationContract,
+      address_id: schoolForm.address_id,
+      address: schoolForm.address,
+      contacts_ids: schoolForm.contacts.map(it => it.contact_id),
+      contacts: schoolForm.contacts,
+    }
+    console.log('insertOrUpdateSchool')
+    console.log('schoolForm.city:')
+    console.log(schoolForm)
+    const cityObservable = this.dbService.updateOrCreateCity(schoolForm.city)
     cityObservable.subscribe(newCity => {
       const address = {
-        address_id: null,
-        street: school.address.street,
-        houseNumber: school.address.houseNumber,
-        city_id: newCity.city_id,
+        id: null,
+        street: schoolObject.address.street,
+        houseNumber: schoolObject.address.houseNumber,
+        city_id: newCity.id,
         city: null
       }
       const addressObservable = this.dbService.updateOrCreateAddress(address)
 
       addressObservable.subscribe(newAddress => {
-        school.address_id = newAddress.address_id
-        school.address = null
-        school.contacts_ids = school.contacts.map(it => it.contact_id)
+        schoolObject.address_id = newAddress.id
+        schoolObject.address = null
+        schoolObject.contacts_ids = schoolObject.contacts.map(it => it.contact_id)
 
         console.log('School before request')
-        console.log(school)
+        console.log(schoolObject)
         // check if school already exists
-        if (school.id === undefined || school.id === null) {
-          this.dbService.createSchool(school).subscribe(it => {
+        if (schoolObject.id === undefined || schoolObject.id === null) {
+          this.dbService.createSchool(schoolObject).subscribe(it => {
             if (it.id !== undefined) {
               notificationService.success(':: Schule erfolgreich erstellt.')
               // return to overview
@@ -210,7 +232,8 @@ export class SchoolService {
             }
           })
         } else {
-          const result = this.dbService.updateSchool(school)
+          console.log('insertOrUpdateSchool')
+          const result = this.dbService.updateSchool(schoolObject)
           result.subscribe(it => {
             if (it.id !== undefined) {
               notificationService.success(':: Schule erfolgreich aktualisiert.')

@@ -89,7 +89,7 @@ export class ZsbAddressComponent implements OnInit {
   onSubmit() {
     let addressId = null
     if (this.addressId !== null) {
-      addressId = this.address.address_id
+      addressId = this.address.id
     }
 
     // maybe save city id if nothing has changed. Should be covered by backend but would be cleaner here
@@ -98,11 +98,11 @@ export class ZsbAddressComponent implements OnInit {
       constituency: this.service.formGroup.value.constituency,
       designation: this.service.formGroup.value.designation,
       postcode: this.service.formGroup.value.postcode,
-      city_id: undefined
+      id: undefined
     }
 
     const newAddress = {
-      address_id: addressId,
+      id: addressId,
       street: this.service.formGroup.value.street,
       houseNumber: this.service.formGroup.value.houseNumber,
       city_id: undefined,
@@ -115,13 +115,16 @@ export class ZsbAddressComponent implements OnInit {
     } else {
       console.log('return new/updated address')
       this.dbService.updateOrCreateCity(newCity).subscribe(city => {
-        newAddress.city_id = city.city_id
+        newAddress.city_id = city.id
         this.dbService.updateOrCreateAddress(newAddress)
           .subscribe(result => {
             if (result === undefined) {
               this.dialogRef.close(new AddressResult(null, AddressStatus.FAILURE))
             } else {
-              this.dbService.getAddressAtomicById(result.address_id).subscribe(atomicAddress => {
+              console.log('adress id')
+              console.log(result)
+              console.log(result.id)
+              this.dbService.getAddressAtomicById(result.id).subscribe(atomicAddress => {
                 this.dialogRef.close(new AddressResult(atomicAddress, AddressStatus.UPDATED))
               })
             }

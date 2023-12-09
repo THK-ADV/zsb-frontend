@@ -56,7 +56,7 @@ export class AddressService {
 
   loadAddress(address: Address) {
     this.formGroup.setValue({
-      addressId: address.address_id,
+      addressId: address.id,
       governmentDistrict: address.city.governmentDistrict,
       constituency: address.city.constituency,
       postcode: address.city.postcode,

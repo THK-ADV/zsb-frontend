@@ -39,10 +39,6 @@ import {ZsbEventsDetailComponent} from './zsb-events/zsb-events-detail/zsb-event
 import {MatDatepickerModule} from '@angular/material/datepicker'
 import {MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core'
 import {MatTooltipModule} from '@angular/material/tooltip'
-import {ZsbReportComponent} from './zsb-events/zsb-report/zsb-report.component'
-import {ZsbInstitutionsComponent} from './zsb-institutions/zsb-institutions.component'
-import {ZsbInstitutionsListComponent} from './zsb-institutions/zsb-institutions-list/zsb-institutions-list.component'
-import {ZsbInstitutionsDetailComponent} from './zsb-institutions/zsb-institutions-detail/zsb-institutions-detail.component'
 import {ZsbLetterComponent} from './zsb-communication/zsb-letter/zsb-letter.component'
 import {ZsbEmailComponent} from './zsb-communication/zsb-email/zsb-email.component'
 import {MatRadioModule} from '@angular/material/radio'
@@ -65,10 +61,6 @@ import {MatExpansionModule} from '@angular/material/expansion'
     ZsbEventsComponent,
     ZsbEventsListComponent,
     ZsbEventsDetailComponent,
-    ZsbReportComponent,
-    ZsbInstitutionsComponent,
-    ZsbInstitutionsListComponent,
-    ZsbInstitutionsDetailComponent,
     ZsbLetterComponent,
     ZsbEmailComponent,
     ZsbSchoolEventDetailComponent,
