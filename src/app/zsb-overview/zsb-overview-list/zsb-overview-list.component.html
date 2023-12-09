@@ -111,8 +111,8 @@
                 <button mat-icon-button [routerLink]="['/events', event.uuid]" matTooltip="Termin bearbeiten">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button color="warn" matTooltip="Termin entfernen">
-                  <mat-icon (click)="deleteEvent(event.designation, event.uuid)">delete_outline</mat-icon>
+                <button mat-icon-button color="warn" matTooltip="Termin entfernen" (click)="deleteEvent(event.designation, event.uuid)">
+                  <mat-icon>delete_outline</mat-icon>
                 </button>
               </td>
             </ng-container>
