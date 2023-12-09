@@ -68,8 +68,8 @@
         <button mat-icon-button [routerLink]="['/schools/edit', row.id]" matTooltip="Schule editieren">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button color="warn" matTooltip="Schule entfernen">
-          <mat-icon (click)="deleteSchool(row.name, row.id)">delete_outline</mat-icon>
+        <button mat-icon-button color="warn" matTooltip="Schule entfernen" (click)="deleteSchool(row.school.name, row.school.id)">
+          <mat-icon>delete_outline</mat-icon>
         </button>
       </td>
     </ng-container>
@@ -88,7 +88,41 @@
       <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
         <div class="element-detail"
              [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-          <p>{{element.name}}</p>
+          <table *ngIf="detailData.data.length > 0; else noDetails" mat-table [dataSource]="detailData" class="mat-elevation-z8">
+            <ng-container matColumnDef="detailDesignation">
+              <th mat-header-cell *matHeaderCellDef>Bezeichnung</th>
+              <td mat-cell *matCellDef="let event"> {{event.designation}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="detailDate">
+              <th mat-header-cell *matHeaderCellDef>Datum</th>
+              <td mat-cell *matCellDef="let event"> {{event.date}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="detailCategory">
+              <th mat-header-cell *matHeaderCellDef>Kategorie</th>
+              <td mat-cell *matCellDef="let event"> {{event.type}} </td>
+            </ng-container>
+
+            <!-- TODO: Event löschen implementieren -->
+            <ng-container matColumnDef="detailActions">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let event" class="actions-col">
+                <button mat-icon-button [routerLink]="['/events', event.uuid]" matTooltip="Termin bearbeiten">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" matTooltip="Termin entfernen">
+                  <mat-icon (click)="deleteEvent(event.designation, event.uuid)">delete_outline</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedDetailColumns"></tr>
+            <tr mat-row *matRowDef="let event; columns: displayedDetailColumns;"></tr>
+          </table>
+          <ng-template #noDetails>
+            <p>Keine Termine vorhanden</p>
+          </ng-template>
         </div>
       </td>
     </ng-container>

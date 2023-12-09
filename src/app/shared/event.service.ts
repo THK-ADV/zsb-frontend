@@ -4,8 +4,6 @@ import {iif, Observable} from 'rxjs'
 import {Event} from '../zsb-events/event'
 import {UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators} from '@angular/forms'
 import {NotificationService} from './notification.service'
-import {Host} from '../zsb-events/host'
-import {Institution} from '../zsb-institutions/institution'
 import {School} from '../zsb-school/school'
 import {mergeMap, tap} from 'rxjs/operators'
 import {Router} from '@angular/router'
@@ -68,15 +66,57 @@ export class EventService {
     })
   }
 
-  loadFormData(event: Event) {
-    const isUniversityHost = event.host.university_id !== null
-
-    this.detailForm.setValue({
+  loadFormData(event: DatabaseEvent) {
+    const kaoa = event.schoolCategory?.includes('KAOA') ?? false
+    const talentScouting = event.schoolCategory?.includes('TALENTSCOUT') ?? false
+    const thSpecific = event.schoolCategory?.includes('THSPECIFIC') ?? false
+    const lastMinuteInformation = event.kAoACategory?.includes('LASTMINUTE') ?? false
+    const generalStuOri = event.kAoACategory?.includes('GENERALORIENTATION') ?? false
+    const runsStuOri = event.kAoARuns ?? 0
+    const endMeeting = event.kAoACategory?.includes('YEARENDING') ?? false
+    const planMeeting = event.kAoACategory?.includes('YEARPLANNING') ?? false
+    const kaoaOther = event.kAoACategory?.includes('OTHER') ?? false
+    const kaoaOtherText = event.kAoAOther ?? ''
+    const meeting = event.talentscoutCategory?.includes('CONVERSATION') ?? false
+    const scouting = event.talentscoutCategory?.includes('SCOUTING') ?? false
+    const tsOther = event.talentscoutCategory?.includes('OTHER') ?? false
+    const tsOtherText = event.talentscoutOther ?? ''
+    const singleAppt = event.thSpecificCategory?.includes('SINGLEAPPT') ?? false
+    const singleConsulting = event.thSpecificCategory?.includes('CONSULTATIONSINGLE') ?? false
+    const singlePresentation = event.thSpecificCategory?.includes('TALKSINGLE') ?? false
+    const singlePresentationTh = event.thSpecificCategory?.includes('THTALKSINGLE') ?? false
+    const singleInformation = event.thSpecificCategory?.includes('INFORMATIONSINGLE') ?? false
+    const singleOther = event.thSpecificCategory?.includes('OTHERSINGLE') ?? false
+    const schoolFair = event.thSpecificCategory?.includes('SCHOOLFAIR') ?? false
+    const fairConsulting = event.thSpecificCategory?.includes('CONSULTATIONFAIR') ?? false
+    const fairPresentation = event.thSpecificCategory?.includes('TALKFAIR') ?? false
+    const fairPresentationTh = event.thSpecificCategory?.includes('THTALKFAIR') ?? false
+    const fairInformation = event.thSpecificCategory?.includes('INFORMATIONFAIR') ?? false
+    const fairOther = event.thSpecificCategory?.includes('OTHERFAIR') ?? false
+    const fairRunsPresentation = event.thRunsFair ?? 0
+    const singleRunsPresentation = event.thRunsSingle ?? 0
+    const singleOtherText = event.thOtherSingle ?? ''
+    const fairOtherText = event.thOtherFair ?? ''
+    const campusDays = event.internCategory?.includes('CAMPUSDAY') ?? false
+    const studentLab = event.internCategory?.includes('LAB') ?? false
+    const internOther = event.internCategory?.includes('OTHER') ?? false
+    const internOtherText = event.internOther ?? ''
+    let category = ''
+    switch (event.type) {
+      case 'AnSchuleTermin':
+        category = 'atSchool'
+        break
+      case 'BeiUnsTermin':
+        category = 'intern'
+        break
+      case 'BeiDrittenTermin':
+        category = 'atThird'
+    }
+    this.formGroup.setValue({
       uuid: event.uuid,
       date: new Date(event.date),
       designation: event.designation,
       topic: event.topic,
-      hostToggle: isUniversityHost,
       school: event.host.university_id,
       institution: event.host.institution_id,
       category: event.category,
@@ -93,40 +133,6 @@ export class EventService {
     const eventForm = this.detailForm.value
     eventForm.date = new Date(eventForm.date).toISOString()
 
-    const isUniversityHost = eventForm.hostToggle as boolean
-    let host: Host
-
-    if (isUniversityHost) {
-      host = {
-        uuid: eventForm.host_id,
-        university_id: eventForm.school.school_id ?? null,
-        institution_id: null
-      }
-    } else {
-      host = {
-        uuid: eventForm.host_id,
-        university_id: null,
-        institution_id: eventForm.institution.uuid ?? null
-      }
-    }
-
-    let updatedHostObservable: Observable<Host>
-    if (eventForm.host_id === undefined
-      || eventForm.host_id === ''
-      || eventForm.host_id === null) {
-      console.log('Create Veranstalter:')
-      updatedHostObservable = this.dbService.createHost(host)
-    } else {
-      console.log('Update Veranstalter:')
-      updatedHostObservable = this.dbService.updateHost(host)
-    }
-
-    updatedHostObservable
-      .pipe(
-        mergeMap(hostWithId => {
-          eventForm.host_id = hostWithId.uuid
-          return iif(
-            () => eventForm.uuid === null || eventForm.uuid === undefined,
             this.dbService.createEvent(eventForm)
               .pipe(
                 tap(it => {
@@ -155,36 +161,5 @@ export class EventService {
         })
       )
       .subscribe()
-  }
-
-  selectedHostRequired() {
-    // const isUniversityHost = this.detailForm.value.hostToggle as boolean
-
-    return (fg: UntypedFormGroup): ValidationErrors | null => {
-      const isUniversityHost = fg.get('hostToggle').value as boolean
-      const school = fg.get('school').value
-      const institution = fg.get('institution').value
-
-      if ((isUniversityHost && (school === undefined || school === '' || school === null))
-        || (!isUniversityHost && (institution === undefined || institution === '' || institution === null))) {
-        return {selectedHostRequired: 'Bitte einen Veranstalter wählen.'} as ValidationErrors
-      }
-
-      return null
-    }
-  }
-
-  initFormWithSchool(school: School) {
-    this.detailForm.patchValue({
-      hostToggle: true,
-      school: school.id,
-    })
-  }
-
-  initFormWithInstitution(institution: Institution) {
-    this.detailForm.patchValue({
-      hostToggle: false,
-      institution: institution.uuid,
-    })
   }
 }

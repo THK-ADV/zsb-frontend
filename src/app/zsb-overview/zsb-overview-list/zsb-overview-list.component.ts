@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core'
 import {MatPaginator} from '@angular/material/paginator'
 import {MatSort} from '@angular/material/sort'
-import {MatTableDataSource, MatTableModule} from '@angular/material/table'
+import {MatTableDataSource} from '@angular/material/table'
 import {completeSchoolAsString, School} from '../../zsb-school/school'
 import {SchoolType, schoolTypeDescById} from '../../zsb-school/schoolType'
 import {Subscription, zip} from 'rxjs'
@@ -16,8 +16,6 @@ import {ZsbEmailComponent} from '../../zsb-communication/zsb-email/zsb-email.com
 import {generateTitle, saveBlobAsFile} from '../../shared/downloads'
 import {MatRadioChange} from '@angular/material/radio'
 import {animate, state, style, transition, trigger} from '@angular/animations'
-import {MatButtonModule} from '@angular/material/button'
-import {MatIconModule} from '@angular/material/icon'
 
 type SchoolFilterOption = 'Alle' | 'Name' | 'Schulform' | 'Straße' | 'Stadt' | 'Kontakte'
 @Component({
@@ -72,8 +70,21 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
     this.sub = zip(
       this.service.getSchoolsAtomic(),
       this.service.getSchoolType(),
-    ).subscribe(([list, schoolTypes]) => {
-      this.listData = new MatTableDataSource([...list])
+      this.service.getAllEvents()
+    ).subscribe(([schools, schoolTypes, events]) => {
+      const schoolWithEvents: SchoolWithEvents[] = []
+      schools.forEach((school) => {
+        const schoolEvents = events.filter((event) => {
+          return (event.school_id === school.id)
+        })
+        const schoolWithEvent: SchoolWithEvents = {
+          school,
+          events: schoolEvents
+        }
+        schoolWithEvents.push(schoolWithEvent)
+      })
+      this.listData = new MatTableDataSource(schoolWithEvents)
+      this.detailData = new MatTableDataSource([])
       this.listData.sort = this.sort
       this.listData.paginator = this.paginator
       this.listData.filterPredicate = buildCustomFilter(s => {
@@ -154,6 +165,8 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   }
 
   deleteSchool(schoolName: string, uuid: string) {
+    console.log('schoolName, uuid')
+    console.log(schoolName, uuid)
     if (confirm('Seid ihr sicher, dass ihr "' + schoolName + '" löschen möchtet?')) {
       this.service.deleteSchool(uuid).subscribe(it => {
         if (it !== undefined) {
@@ -162,6 +175,23 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
           this.ngOnInit()
         } else {
           this.notificationService.failure('-- Schule konnte nicht entfernt werden.')
+        }
+      })
+    }
+  }
+
+  deleteEvent(eventName: string, uuid: string) {
+    console.log('Termin löschen')
+    console.log(eventName, uuid)
+    if (confirm('Seid ihr sicher, dass ihr "' + eventName + '" löschen möchtet?')) {
+      this.service.deleteEvents(uuid).subscribe(it => {
+        console.log('Termin löschen 2')
+        if (it !== undefined) {
+          this.notificationService.success(':: Termin wurde erfolgreich entfernt.')
+          // remove event from table
+          this.ngOnInit()
+        } else {
+          this.notificationService.failure('-- Termin konnte nicht entfernt werden.')
         }
       })
     }
@@ -223,7 +253,6 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
 
   private buildCustomSorting() {
     this.listData.sortingDataAccessor = (s, id) => {
-      console.log('buildCustomSorting', s)
       switch (id) {
         case 'name':
           return s.name.toLocaleLowerCase()
@@ -247,4 +276,6 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
     this.selectedFilterOption = event.value
     this.applyFilter()
   }
+
+  protected readonly console = console
 }

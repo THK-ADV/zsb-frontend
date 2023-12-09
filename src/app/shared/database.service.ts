@@ -12,15 +12,11 @@ import {Event} from '../zsb-events/event'
 import {Category} from '../zsb-events/category'
 import {Level} from '../zsb-events/level'
 import {PresentationType} from '../zsb-events/presentationType'
-import {Institution} from '../zsb-institutions/institution'
-import {Host} from '../zsb-events/host'
-import {Report} from '../zsb-events/zsb-report/report'
 import {CooperationPartner} from '../zsb-school/cooperationPartner'
 import {Signature} from '../zsb-communication/zsb-letter/signature'
 import {Letter} from '../zsb-communication/zsb-letter/letter'
 import {Email} from '../zsb-communication/zsb-email/email'
 import {KaoaSupervisor} from '../zsb-school/kaoaSupervisor'
-import {KAoAWork} from '../zsb-school/kAoAWork'
 
 @Injectable({
   providedIn: 'root'
@@ -70,15 +66,17 @@ export class DatabaseService {
   }
 
   updateOrCreateCity(city: City) {
+    console.log('updateOrCreateCity')
     return this.httpClient.put<City>(this.DB_URL + '/cities', city)
   }
 
-  createSchool(school) {
+  createSchool(school: School) {
     console.log('REQUEST: CREATE SCHULE')
+    console.log(school)
     return this.httpClient.post<School>(this.DB_URL + '/schools', school)
   }
 
-  updateSchool(school) {
+  updateSchool(school: School) {
     console.log('REQUEST: UPDATE SCHULE')
     return this.httpClient.put<School>(this.DB_URL + '/schools', school)
   }
@@ -108,10 +106,6 @@ export class DatabaseService {
     return this.httpClient.get<School>(this.DB_URL + '/schools/' + id + '?resolve_ids=true')
   }
 
-  getKAoAWorkBySchoolId(id: string) {
-    return this.httpClient.get<KAoAWork[]>(`${this.DB_URL}/schools/${id}/kAoAWork`)
-  }
-
   getSchoolType() {
     return this.httpClient.get<SchoolType[]>(this.DB_URL + '/schools/schooltypes')
   }
@@ -123,7 +117,7 @@ export class DatabaseService {
   getAddressFromArrayByAddressId(addresses: Address[], id: string): Address {
     let result = null
     addresses.forEach(it => {
-      if (it.address_id === id) {
+      if (it.id === id) {
         result = it
       }
     })
@@ -183,42 +177,13 @@ export class DatabaseService {
     return this.httpClient.get<PresentationType[]>(this.DB_URL + '/events/presentationtypes')
   }
 
-  getAllInstitutions() {
-    return this.httpClient.get<Institution[]>(this.DB_URL + '/institutions?resolve_ids=true')
-  }
-
-  updateEvent(event: Event) {
-    return this.httpClient.put<Event>(this.DB_URL + '/events', event)
+  updateEvent(event: DatabaseEvent) {
+    return this.httpClient.put<DatabaseEvent>(this.DB_URL + '/events', event)
   }
 
   createEvent(event: Event) {
     return this.httpClient.post<Event>(this.DB_URL + '/events', event)
   }
-
-  createHost(host: Host) {
-    return this.httpClient.post<Host>(this.DB_URL + '/hosts', host)
-  }
-
-  updateHost(host: Host) {
-    return this.httpClient.put<Host>(this.DB_URL + '/hosts', host)
-  }
-
-  getAllReports() {
-    return this.httpClient.get<Report[]>(this.DB_URL + '/reports')
-  }
-
-  getReportById(uuid: string) {
-    return this.httpClient.get<Report>(this.DB_URL + '/reports/' + uuid)
-  }
-
-  createReport(report: Report) {
-    return this.httpClient.post<Report>(this.DB_URL + '/reports', report)
-  }
-
-  updateReport(report: Report) {
-    return this.httpClient.put<Report>(this.DB_URL + '/reports', report)
-  }
-
   getCooperationPartner() {
     return this.httpClient.get<CooperationPartner[]>(this.DB_URL + '/schools/cooperationPartner')
   }
@@ -229,22 +194,6 @@ export class DatabaseService {
 
   getTalentScouts() {
     return this.httpClient.get<KaoaSupervisor[]>(this.DB_URL + '/schools/talentScouts')
-  }
-
-  deleteInstitution(uuid: string): Observable<any> {
-    return this.httpClient.delete(this.DB_URL + '/institutions/' + uuid)
-  }
-
-  getInstitutionAtomic(uuid: string) {
-    return this.httpClient.get(this.DB_URL + '/institutions/' + uuid + '?resolve_ids=true')
-  }
-
-  createInstitution(institution: Institution) {
-    return this.httpClient.post<Institution>(this.DB_URL + '/institutions', institution)
-  }
-
-  updateInstitution(institution: Institution) {
-    return this.httpClient.put<Institution>(this.DB_URL + '/institutions', institution)
   }
 
   getSignatures() {
@@ -271,9 +220,5 @@ export class DatabaseService {
 
   createEmail(email: Email) {
     return this.httpClient.post<Email>(this.DB_URL + '/email', email)
-  }
-
-  getInstitutionByIdAtomic(institutionId: string) {
-    return this.httpClient.get<Institution>(this.DB_URL + '/institutions/' + institutionId + this.ATOMIC)
   }
 }
