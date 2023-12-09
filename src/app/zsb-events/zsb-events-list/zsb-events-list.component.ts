@@ -34,7 +34,7 @@ export class ZsbEventsListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+/*
     zip(
       this.dbService.getCategories(),
       this.dbService.getAllEvents()
@@ -57,7 +57,7 @@ export class ZsbEventsListComponent implements OnInit {
         this.listData.filterPredicate = buildCustomFilter(e => completeEventAsString(e))
 
         this.changeDetectorRef.markForCheck()
-      })
+      })*/
   }
 
   onSearchClear() {

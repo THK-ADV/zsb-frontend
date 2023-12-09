@@ -28,7 +28,6 @@ export class SchoolService {
       email: new UntypedFormControl('', Validators.required),
       website: new UntypedFormControl('', Validators.required),
       comment: new UntypedFormControl(''),
-      // focus: new FormControl(null),
       address: new UntypedFormControl({value: '', disabled: true}, Validators.required),
       city: new UntypedFormControl(0),
       contacts: this.contacts,
