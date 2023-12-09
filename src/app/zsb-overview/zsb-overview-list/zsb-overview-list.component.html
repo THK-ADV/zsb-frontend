@@ -1,9 +1,8 @@
 <div class="container">
-
   <div class="actions-div">
-    <button class="action-button" mat-raised-button color="primary">
+    <button class="action-button" mat-raised-button [routerLink]="['/schools']" color="primary">
       <mat-icon>add</mat-icon>Schule hinzufügen</button>
-    <button class="action-button" mat-raised-button color="primary">
+    <button class="action-button" mat-raised-button [routerLink]="['/events']" color="primary">
       <mat-icon>add</mat-icon>Termin hinzufügen</button>
     <button class="action-button" mat-raised-button color="primary">
       <mat-icon>filter_alt</mat-icon>Filtern</button>
@@ -26,46 +25,46 @@
       </th>
       <td mat-cell *matCellDef="let row" [ngClass]="'w-02'">
         <mat-checkbox (click)="$event.stopPropagation()"
-                      (change)="$event ? toggleSelectedSchool(row.id) : null"
-                      [checked]="this.shouldRowBeSelected(row.id)"></mat-checkbox>
+                      (change)="$event ? toggleSelectedSchool(row.school.id) : null"
+                      [checked]="this.shouldRowBeSelected(row.school.id)"></mat-checkbox>
       </td>
     </ng-container>
 
     <!-- schulname Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-      <td mat-cell [routerLink]="['/schools', row.id]" *matCellDef="let row">{{row.name}}</td>
+      <td mat-cell [routerLink]="['/schools', row.school.id]" *matCellDef="let row">{{row.school.name}}</td>
     </ng-container>
 
     <!-- schulform Column -->
     <ng-container matColumnDef="type">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Schulform</th>
-      <td mat-cell [routerLink]="['/schools', row.id]"
-                *matCellDef="let row">{{getSchoolTypeById(row.type)}}</td>
+      <td mat-cell [routerLink]="['/schools', row.school.id]"
+                *matCellDef="let row">{{getSchoolTypeById(row.school.type)}}</td>
     </ng-container>
 
     <!-- address column -->
     <ng-container matColumnDef="address">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Adresse</th>
-      <td mat-cell [routerLink]="['/schools', row.id]" *matCellDef="let row">{{row.address.street}}
-        , {{row.address.houseNumber}}</td>
+      <td mat-cell [routerLink]="['/schools', row.school.id]" *matCellDef="let row">{{row.school.address.street}}
+        , {{row.school.address.houseNumber}}</td>
     </ng-container>
 
     <!-- city column column -->
     <ng-container matColumnDef="city">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Ort</th>
-      <td mat-cell [routerLink]="['/schools', row.id]" *matCellDef="let row">{{row.address.city.postcode}},
-        {{row.address.city.designation}}</td>
+      <td mat-cell [routerLink]="['/schools', row.school.id]" *matCellDef="let row">{{row.school.address.city.postcode}},
+        {{row.school.address.city.designation}}</td>
     </ng-container>
 
     <!-- edit and delete Column -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let row" class="actions-col">
-        <button mat-icon-button [routerLink]="['/schools/detail', row.id]" matTooltip="Schule anzeigen">
+        <button mat-icon-button [routerLink]="['/schools/detail', row.school.id]" matTooltip="Schule anzeigen">
           <mat-icon>visibility</mat-icon>
         </button>
-        <button mat-icon-button [routerLink]="['/schools/edit', row.id]" matTooltip="Schule editieren">
+        <button mat-icon-button [routerLink]="['/schools/edit', row.school.id]" matTooltip="Schule editieren">
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-icon-button color="warn" matTooltip="Schule entfernen" (click)="deleteSchool(row.school.name, row.school.id)">
@@ -77,13 +76,14 @@
     <ng-container matColumnDef="expand">
       <th mat-header-cell *matHeaderCellDef aria-label="row actions"></th>
       <td mat-cell *matCellDef="let element">
-        <button mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
+        <button mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation(); updateDetailData()">
           <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
           <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
         </button>
       </td>
     </ng-container>
 
+    <!-- TODO: details stylen -->
     <ng-container matColumnDef="expandedDetail">
       <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
         <div class="element-detail"

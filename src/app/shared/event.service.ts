@@ -1,41 +1,72 @@
 import {Injectable} from '@angular/core'
 import {DatabaseService} from './database.service'
-import {iif, Observable} from 'rxjs'
-import {Event} from '../zsb-events/event'
+import {DatabaseEvent, Event} from '../zsb-events/event'
 import {UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators} from '@angular/forms'
 import {NotificationService} from './notification.service'
-import {School} from '../zsb-school/school'
 import {mergeMap, tap} from 'rxjs/operators'
 import {Router} from '@angular/router'
+import {formatDate} from '@angular/common'
+import {Observable} from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventService {
 
+  formGroup: UntypedFormGroup
+
   constructor(public dbService: DatabaseService,
               private notificationService: NotificationService,
               private router: Router) {
+    this.formGroup = new UntypedFormGroup({
+      uuid: new UntypedFormControl(null),
+      designation: new UntypedFormControl('', Validators.required),
+      date: new UntypedFormControl(new Date(), Validators.required),
+      category: new UntypedFormControl([0], Validators.required),
+      school: new UntypedFormControl(null),
+      semester: new UntypedFormControl(''),
+      contactPersonSchool: new UntypedFormControl(null),
+      contactPersonUniversity: new UntypedFormControl(null),
+      rating: new UntypedFormControl(''),
+      kaoa: new UntypedFormControl(false),
+      lastMinuteInformation: new UntypedFormControl(false),
+      generalStuOri: new UntypedFormControl(false),
+      runsStuOri: new UntypedFormControl(0),
+      endMeeting: new UntypedFormControl(false),
+      planMeeting: new UntypedFormControl(false),
+      kaoaOther: new UntypedFormControl(false),
+      kaoaOtherText: new UntypedFormControl(''),
+      talentScouting: new UntypedFormControl(false),
+      meeting: new UntypedFormControl(false),
+      scouting: new UntypedFormControl(false),
+      tsOther: new UntypedFormControl(false),
+      tsOtherText: new UntypedFormControl(''),
+      thSpecific: new UntypedFormControl(false),
+      singleAppt: new UntypedFormControl(false),
+      singleConsulting: new UntypedFormControl(false),
+      singlePresentation: new UntypedFormControl(false),
+      singlePresentationTh: new UntypedFormControl(false),
+      singleRunsPresentation: new UntypedFormControl(0),
+      singleInformation: new UntypedFormControl(false),
+      singleOther: new UntypedFormControl(false),
+      singleOtherText: new UntypedFormControl(''),
+      schoolFair: new UntypedFormControl(false),
+      fairConsulting: new UntypedFormControl(false),
+      fairPresentation: new UntypedFormControl(false),
+      fairPresentationTh: new UntypedFormControl(false),
+      fairRunsPresentation: new UntypedFormControl(0),
+      fairInformation: new UntypedFormControl(false),
+      fairOther: new UntypedFormControl(false),
+      fairOtherText: new UntypedFormControl(''),
+      campusDays: new UntypedFormControl(false),
+      studentLab: new UntypedFormControl(false),
+      internOther: new UntypedFormControl(false),
+      internOtherText: new UntypedFormControl(''),
+      other: new UntypedFormControl('')
+    })
   }
 
-  private detailForm: UntypedFormGroup = new UntypedFormGroup({
-    uuid: new UntypedFormControl(null),
-    date: new UntypedFormControl(new Date(), Validators.required),
-    designation: new UntypedFormControl('', Validators.required),
-    topic: new UntypedFormControl('', Validators.required),
-    hostToggle: new UntypedFormControl(true),
-    school: new UntypedFormControl(null),
-    institution: new UntypedFormControl(null),
-    category: new UntypedFormControl([0], Validators.required),
-    level: new UntypedFormControl([0], Validators.required),
-    amountStudents: new UntypedFormControl(0, Validators.required),
-    annotations: new UntypedFormControl(''), // Ablauf
-    contactPerson: new UntypedFormControl(''),
-    report_btn: new UntypedFormControl({value: '', disabled: true}),
-    host_id: new UntypedFormControl(null)
-  }, {validators: this.selectedHostRequired()})
-
-  getEvents(): Observable<Event[]> {
+  getEvents(): Observable<DatabaseEvent[]> {
     return this.dbService.getAllEvents()
   }
 
@@ -43,26 +74,52 @@ export class EventService {
     return this.dbService.deleteEvents(uuid)
   }
 
-  getDetailForm(): UntypedFormGroup {
-    return this.detailForm
-  }
-
-  initializeDetailForm() {
-    this.detailForm.setValue({
+  initializeFormGroup() {
+    this.formGroup.setValue({
       uuid: null,
-      date: new Date(),
       designation: '',
-      topic: '',
-      hostToggle: true,
-      school: null,
-      institution: null,
+      date: new Date(),
       category: [0],
-      level: [0],
-      amountStudents: 0,
-      annotations: '',
-      contactPerson: '',
-      report_btn: {value: '', disabled: true},
-      host_id: null
+      school: null,
+      semester: '',
+      contactPersonSchool: null,
+      contactPersonUniversity: null,
+      rating: '',
+      kaoa: false,
+      lastMinuteInformation: false,
+      generalStuOri: false,
+      runsStuOri: 0,
+      endMeeting: false,
+      planMeeting: false,
+      kaoaOther: false,
+      kaoaOtherText: '',
+      talentScouting: false,
+      meeting: false,
+      scouting: false,
+      tsOther: false,
+      tsOtherText: '',
+      thSpecific: false,
+      singleAppt: false,
+      singleConsulting: false,
+      singlePresentation: false,
+      singlePresentationTh: false,
+      singleRunsPresentation: 0,
+      singleInformation: false,
+      singleOther: false,
+      singleOtherText: '',
+      schoolFair: false,
+      fairConsulting: false,
+      fairPresentation: false,
+      fairPresentationTh: false,
+      fairRunsPresentation: 0,
+      fairInformation: false,
+      fairOther: false,
+      fairOtherText: '',
+      campusDays: false,
+      studentLab: false,
+      internOther: false,
+      internOtherText: '',
+      other: ''
     })
   }
 
@@ -114,52 +171,207 @@ export class EventService {
     }
     this.formGroup.setValue({
       uuid: event.uuid,
-      date: new Date(event.date),
       designation: event.designation,
-      topic: event.topic,
-      school: event.host.university_id,
-      institution: event.host.institution_id,
-      category: event.category,
-      level: event.level,
-      amountStudents: event.amountStudents,
-      annotations: event.annotations,
-      contactPerson: event.contactPerson,
-      report_btn: {value: '', disabled: true},
-      host_id: event.host_id
+      date: new Date(event.date),
+      category,
+      school: event.school,
+      semester: event.schoolyear,
+      contactPersonSchool: event.contact_school,
+      contactPersonUniversity: event.contact_university,
+      rating: event.rating,
+      kaoa,
+      lastMinuteInformation,
+      generalStuOri,
+      runsStuOri,
+      endMeeting,
+      planMeeting,
+      kaoaOther,
+      kaoaOtherText,
+      talentScouting,
+      meeting,
+      scouting,
+      tsOther,
+      tsOtherText,
+      thSpecific,
+      singleAppt,
+      singleConsulting,
+      singlePresentation,
+      singlePresentationTh,
+      singleRunsPresentation,
+      singleInformation,
+      singleOther,
+      singleOtherText,
+      schoolFair,
+      fairConsulting,
+      fairPresentation,
+      fairPresentationTh,
+      fairRunsPresentation,
+      fairInformation,
+      fairOther,
+      fairOtherText,
+      campusDays,
+      studentLab,
+      internOther,
+      internOtherText,
+      other: event.other
     })
+    console.log('campusDays')
+    console.log(campusDays)
   }
 
-  insertOrUpdateCurrentEvent() {
-    const eventForm = this.detailForm.value
-    eventForm.date = new Date(eventForm.date).toISOString()
+  // TODO: an Backend anpassen, insert und update aufteilen
+  insertOrUpdateCurrentEvent(isPost: boolean) {
+    const eventForm = this.formGroup.value
+    let discriminator = ''
+    switch (eventForm.category) {
+      case 'atSchool':
+        discriminator = 'AnSchuleTermin'
+        break
+      case 'intern':
+        discriminator = 'BeiUnsTermin'
+        break
+      case 'atThird':
+        discriminator = 'BeiDrittenTermin'
+        break
+    }
+    eventForm.date = formatDate(new Date(eventForm.date), 'yyyy-MM-dd', 'en-US')
+    // TODO: schöner
+    eventForm.schoolCategory = []
+    if (eventForm.kaoa) {
+      eventForm.schoolCategory.push('KAoA')
+    }
+    if (eventForm.talentScouting) {
+      eventForm.schoolCategory.push('Talentscouting')
+    }
+    if (eventForm.thSpecific) {
+      eventForm.schoolCategory.push('TH-spezifisch')
+    }
+    // KAoA
+    eventForm.kaoaCategory = []
+    if (eventForm.lastMinuteInformation) {
+      eventForm.kaoaCategory.push('Last Minute Information')
+    }
+    if (eventForm.generalStuOri) {
+      eventForm.kaoaCategory.push('Vortrag Allgemeine StuOri')
+    }
+    if (eventForm.endMeeting) {
+      eventForm.kaoaCategory.push('Schuljahresendgespräch')
+    }
+    if (eventForm.planMeeting) {
+      eventForm.kaoaCategory.push('Schuljahresplanungsgespräch')
+    }
+    if (eventForm.kaoaOther) {
+      eventForm.kaoaCategory.push('Sonstiges')
+    }
 
-            this.dbService.createEvent(eventForm)
-              .pipe(
-                tap(it => {
-                  if (it.uuid !== undefined) {
-                    this.notificationService.success(':: Termin erfolgreich erstellt.')
-                    this.router.navigate(['/', 'events'])
-                  } else {
-                    this.notificationService.failure('-- Termin konnte nicht erstellt werden.')
-                  }
-                })
-              ),
+    // Talentscout
+    eventForm.talentscoutCategory = []
+    if (eventForm.meeting) {
+      eventForm.talentscoutCategory.push('Gespräch')
+    }
+    if (eventForm.scouting) {
+      eventForm.talentscoutCategory.push('Scouting')
+    }
+    if (eventForm.tsOther) {
+      eventForm.talentscoutCategory.push('Sonstiges')
+    }
 
-            this.dbService.updateEvent(eventForm)
-              .pipe(
-                tap(
-                  it => {
-                    if (it.uuid !== undefined) {
-                      this.notificationService.success(':: Termin erfolgreich aktualisiert.')
-                      this.router.navigate(['/', 'events'])
-                    } else {
-                      this.notificationService.failure('-- Termin konnte nicht aktualisiert werden.')
-                    }
-                  })
-              )
-          )
-        })
-      )
-      .subscribe()
+    // TH-spezifisch
+    eventForm.thSpecificCategory = []
+    if (eventForm.singleAppt) {
+      eventForm.thSpecificCategory.push('Einzeltermin')
+    }
+    if (eventForm.singleConsulting) {
+      eventForm.thSpecificCategory.push('Beratung Einzeltermin')
+    }
+    if (eventForm.singlePresentation) {
+      eventForm.thSpecificCategory.push('Fachvortrag Einzeltermin')
+    }
+    if (eventForm.singlePresentationTh) {
+      eventForm.thSpecificCategory.push('Vortrag \'Technology, Arts, Sciences\' Einzeltermin')
+    }
+    if (eventForm.singleInformation) {
+      eventForm.thSpecificCategory.push('Informationsstand Einzeltermin')
+    }
+    if (eventForm.singleOther) {
+      eventForm.thSpecificCategory.push('Sonstiges Einzeltermin')
+    }
+    if (eventForm.schoolFair) {
+      eventForm.thSpecificCategory.push('Schulmesse')
+    }
+    if (eventForm.fairConsulting) {
+      eventForm.thSpecificCategory.push('Beratung Schulmesse')
+    }
+    if (eventForm.fairPresentation) {
+      eventForm.thSpecificCategory.push('Fachvortrag Schulmesse')
+    }
+    if (eventForm.fairPresentationTh) {
+      eventForm.thSpecificCategory.push('Vortrag \'Technology, Arts, Sciences\' Schulmesse')
+    }
+    if (eventForm.fairInformation) {
+      eventForm.thSpecificCategory.push('Informationsstand Schulmesse')
+    }
+    if (eventForm.fairOther) {
+      eventForm.thSpecificCategory.push('Sonstiges Schulmesse')
+    }
+
+    // Bei Uns
+    eventForm.internCategory = []
+    if (eventForm.campusDays) {
+      eventForm.internCategory.push('Campustag(e)')
+    }
+    if (eventForm.studentLab) {
+      eventForm.internCategory.push('Schülerlabor')
+    }
+    if (eventForm.internOther) {
+      eventForm.internCategory.push('Sonstiges')
+    }
+    const eventObject: DatabaseEvent = {
+      type: discriminator,
+      uuid: eventForm.uuid,
+      designation: eventForm.designation,
+      schoolyear: eventForm.semester,
+      date: eventForm.date,
+      contact_school: eventForm.contactPersonSchool,
+      contact_university: eventForm.contactPersonUniversity,
+      other: eventForm.other,
+      school_id: eventForm.school.id,
+      school: eventForm.school,
+      rating: eventForm.rating,
+      schoolCategory: eventForm.schoolCategory,
+      kAoACategory: eventForm.kaoaCategory,
+      kAoARuns: eventForm.runsStuOri,
+      kAoAOther: eventForm.kaoaOtherText,
+      talentscoutCategory: eventForm.talentscoutCategory,
+      talentscoutOther: eventForm.tsOtherText,
+      thSpecificCategory: eventForm.thSpecificCategory,
+      thRunsSingle: eventForm.singleRunsPresentation,
+      thOtherSingle: eventForm.singleOtherText,
+      thRunsFair: eventForm.fairRunsPresentation,
+      thOtherFair: eventForm.fairOtherText,
+      internCategory: eventForm.internCategory,
+      internOther: eventForm.internOtherText
+    }
+    if (isPost) {
+      this.dbService.createEvent(eventObject)
+        .pipe(
+          tap(
+            it => {
+              this.notificationService.success(':: Termin erfolgreich erstellt.')
+              this.router.navigate(['/', 'events'])
+            })
+        )
+        .subscribe()
+    } else {
+      this.dbService.updateEvent(eventObject)
+        .pipe(
+          tap(
+            it => {
+              this.notificationService.success(':: Termin erfolgreich aktualisiert.')
+              this.router.navigate(['/', 'events'])
+            })
+        )
+        .subscribe()
+    }
   }
 }

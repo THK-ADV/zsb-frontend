@@ -1,24 +1,13 @@
-<ng-container *ngIf="this.eventId === undefined; else edit">
-  <h1>Termin hinzufügen</h1>
-</ng-container>
-<ng-template #edit>
+<ng-container *ngIf="this.eventId != null; else newTermin">
   <h1>Termin bearbeiten</h1>
+</ng-container>
+<ng-template #newTermin>
+  <h1>Termin hinzufügen</h1>
 </ng-template>
 
-<form [formGroup]="service.getDetailForm()" class="event-form">
+<form [formGroup]="service.formGroup" class="event-form">
   <!-- uuid -->
   <input type="hidden" formControlName="uuid">
-
-  <!-- date-->
-  <mat-form-field appearance="">
-    <mat-label>Datum</mat-label>
-    <label>
-      <input matInput [matDatepicker]="picker" formControlName="date" (click)="picker.open()" readonly>
-    </label>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker disabled="false"></mat-datepicker>
-  </mat-form-field>
-  <br>
 
   <!-- designation -->
   <mat-form-field>
@@ -28,46 +17,39 @@
     <mat-error>Ihre Eingabe wird benötigt.</mat-error>
   </mat-form-field>
   <br>
+  <br>
 
-  <!-- topic -->
-  <mat-form-field>
-    <label>
-      <input formControlName="topic" matInput placeholder="Thema*">
-    </label>
-    <mat-error>Ihre Eingabe wird benötigt.</mat-error>
+  <!-- date-->
+  <mat-form-field appearance="fill">
+    <mat-label>Datum</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="date" (click)="picker.open()" readonly>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
   <br>
+  <br>
 
+  <!-- TODO: styling anpassen -->
+  <mat-form-field appearance="fill">
+    <mat-label>Terminart</mat-label>
+    <mat-select style="padding-top: 10px" (selectionChange)="onSelectionChange($event)" formControlName="category">
+      <mat-option value="atSchool">An Schule</mat-option>
+      <mat-option value="intern">Bei Uns</mat-option>
+      <mat-option value="atThird">An 3. Orten</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <br>
+  <br>
 
-  <!-- berichtBtn -->
-  <div *ngIf="this.eventId !== undefined">
-    <div *ngIf="report === undefined else adjustReport">
-      <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
-              (click)="editReport()">Bericht erstellen
-      </button>
-    </div>
-    <ng-template #adjustReport>
-      <button mat-stroked-button class="btn-span-full-table" color="secondary" type="button"
-              (click)="editReport(this.report)">Bericht anpassen
-      </button>
-    </ng-template>
+  <div>
+    <h2>Allgemeine Informationen</h2>
   </div>
-  <br>
-  <br>
 
-  <!-- veranstalterToggle -->
-  <mat-slide-toggle name="hostToggle" formControlName="hostToggle">
-    Veranstaltungsort ist Schule?
-  </mat-slide-toggle>
-  <br>
-  <br>
-
-  <mat-form-field *ngIf="hostIsSchool">
-    <!-- schule -->
-    <mat-label>Schule*</mat-label>
+  <mat-form-field>
+    <mat-label>Schule</mat-label>
     <input type="text"
-           placeholder="Schule*"
-           aria-label="Schule*"
+           placeholder="Schule"
+           aria-label="Schule"
            matInput
            formControlName="school"
            [matAutocomplete]="auto">
@@ -77,81 +59,182 @@
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
-  <mat-error *ngIf="!schoolIsSelected()">Bitte wählen Sie eine Schule aus.</mat-error> <!-- expand check to school only -->
+  <br>
 
-
-  <mat-form-field *ngIf="!hostIsSchool">
-    <!-- institution -->
-    <mat-label>Institution*</mat-label>
-      <input type="text"
-      placeholder="Institution*"
-      aria-label="Institution*"
-      matInput
-      formControlName="institution"
-      [matAutocomplete]="auto">
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFnInstitution">
-      <mat-option *ngFor="let it of filteredInstitutions | async" [value]="it">
-        {{displayFnInstitution(it)}}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-  <mat-error *ngIf="!institutionIsSelected()">Bitte wählen Sie eine Institution aus.</mat-error>
-
-
-  <!-- category -->
+  <!-- TODO: Format festlegen -->
   <mat-form-field>
-    <mat-select formControlName="category" placeholder="Kategorie" multiple>
-      <ng-container *ngFor="let it of categories | async">
-        <mat-option [value]="it.id">
-          {{it.desc}} <br>
-        </mat-option>
+    <mat-label>Halbjahr</mat-label>
+    <input type="text"
+           placeholder="Halbjahr"
+           aria-label="Halbjahr"
+           matInput
+           formControlName="semester">
+  </mat-form-field>
+  <br>
+
+  <!-- TODO: placeholder komplett anzeigen -->
+  <mat-form-field>
+    <label>
+      <input formControlName="contactPersonSchool" matInput placeholder="Verantwortliche*r Schule">
+    </label>
+  </mat-form-field>
+  <br>
+
+  <mat-form-field>
+    <label>
+      <input formControlName="contactPersonUniversity" matInput placeholder="Verantwortliche*r Hochschule">
+    </label>
+  </mat-form-field>
+  <br>
+
+  <mat-form-field>
+    <label>
+      <input formControlName="rating" matInput placeholder="Bewertung">
+    </label>
+  </mat-form-field>
+  <br>
+
+  <div>
+    <h2>Spezifische Informationen</h2>
+  </div>
+
+  <!-- TODO: property automatisch checken / subproperty disablen wenn unchecked -->
+  <div *ngIf="typeSelection === 'atSchool'">
+    <div *ngFor="let property of atSchoolProperty.properties">
+      <mat-slide-toggle [formControlName]="property.formControlName">
+        {{ property.name }}
+      </mat-slide-toggle>
+      <br>
+      <br>
+      <div *ngIf="property.properties && property.properties.length > 0">
+        <div *ngFor="let subProperty of property.properties" style="margin-left: 20px;">
+          <ng-container [ngSwitch]="subProperty.type">
+            <mat-checkbox *ngSwitchCase="'checkbox'"
+                          [checked]="getCheckboxValue(subProperty.formControlName)"
+                          (change)="updateCheckboxValue(subProperty.formControlName)">
+              {{subProperty.name}}
+            </mat-checkbox>
+            <div *ngSwitchCase="'integer'">
+              <mat-form-field>
+                <mat-label> {{ subProperty.name }} </mat-label>
+                <input [formControlName]="subProperty.formControlName" matInput type="number"/>
+              </mat-form-field>
+            </div>
+            <div *ngSwitchCase="'text'">
+              <mat-form-field>
+                <mat-label> {{ subProperty.name }} </mat-label>
+                <textarea formControlName="other" matInput placeholder="{{subProperty.name}}"></textarea>
+              </mat-form-field>
+            </div>
+            <div *ngSwitchDefault>
+              Element für unbekannten Typ: {{ subProperty.type }}
+            </div>
+          </ng-container>
+          <br>
+          <br>
+          <div *ngIf="subProperty.properties && subProperty.properties.length > 0">
+            <div *ngFor="let subSubProperty of subProperty.properties" style="margin-left: 20px;">
+              <ng-container [ngSwitch]="subSubProperty.type">
+                <mat-checkbox *ngSwitchCase="'checkbox'"
+                              [checked]="getCheckboxValue(subSubProperty.formControlName)"
+                              (change)="updateCheckboxValue(subSubProperty.formControlName)">
+                  {{subSubProperty.name}}
+                </mat-checkbox>
+                <div *ngSwitchCase="'integer'">
+                  <mat-form-field>
+                    <mat-label> {{ subSubProperty.name }} </mat-label>
+                    <input [formControlName]="subSubProperty.formControlName" matInput type="number"/>
+                  </mat-form-field>
+                </div>
+                <div *ngSwitchCase="'text'">
+                  <mat-form-field>
+                    <textarea [formControlName]="subSubProperty.formControlName" matInput
+                              placeholder="{{subSubProperty.name}}"></textarea>
+                  </mat-form-field>
+                </div>
+                <div *ngSwitchDefault>
+                  Element für unbekannten Typ: {{ subSubProperty.type }}
+                </div>
+              </ng-container>
+              <br>
+              <br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <br>
+  </div>
+
+  <div *ngIf="typeSelection === 'intern'">
+    <div *ngFor="let property of internProperty.properties">
+      <ng-container [ngSwitch]="property.type">
+        <mat-checkbox *ngSwitchCase="'checkbox'"
+                      [checked]="getCheckboxValue(property.formControlName)"
+                      (change)="updateCheckboxValue(property.formControlName)">
+          {{property.name}}
+        </mat-checkbox>
+        <div *ngSwitchCase="'integer'">
+          <mat-form-field>
+            <mat-label> {{ property.name }} </mat-label>
+            <input [formControlName]="property.formControlName" matInput type="number"/>
+          </mat-form-field>
+        </div>
+        <div *ngSwitchCase="'text'">
+          <mat-form-field>
+            <mat-label> {{ property.name }} </mat-label>
+            <textarea [formControlName]="property.formControlName" matInput placeholder="{{property.name}}"></textarea>
+          </mat-form-field>
+        </div>
+        <div *ngSwitchDefault>
+          Element für unbekannten Typ: {{ property.type }}
+        </div>
       </ng-container>
-    </mat-select>
-    <mat-error>Bitte wählen Sie eine Kategorie aus.</mat-error>
-  </mat-form-field>
-  <br>
+      <br>
+      <br>
+      <div *ngIf="property.properties && property.properties.length > 0">
+        <div *ngFor="let subProperty of property.properties" style="margin-left: 20px;">
+          <ng-container [ngSwitch]="subProperty.type">
+            <mat-checkbox *ngSwitchCase="'checkbox'"
+                          [checked]="getCheckboxValue(subProperty.formControlName)"
+                          (change)="updateCheckboxValue(subProperty.formControlName)">
+              {{subProperty.name}}
+            </mat-checkbox>
+            <div *ngSwitchCase="'integer'">
+              <mat-form-field>
+                <mat-label> {{ subProperty.name }} </mat-label>
+                <input [formControlName]="subProperty.formControlName" matInput type="number"/>
+              </mat-form-field>
+            </div>
+            <div *ngSwitchCase="'text'">
+              <mat-form-field>
+                    <textarea [formControlName]="subProperty.formControlName" matInput
+                              placeholder="{{subProperty.name}}"></textarea>
+              </mat-form-field>
+            </div>
+            <div *ngSwitchDefault>
+              Element für unbekannten Typ: {{ subProperty.type }}
+            </div>
+          </ng-container>
+          <br>
+          <br>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <!-- stufe -->
-  <mat-form-field>
-    <mat-select formControlName="level" placeholder="Stufe" multiple>
-      <ng-container *ngFor="let it of levels | async">
-        <mat-option [value]="it.id">
-          {{it.desc}} <br>
-        </mat-option>
-      </ng-container>
-    </mat-select>
-    <mat-error>Bitte wählen Sie eine Stufe aus.</mat-error>
-  </mat-form-field>
-  <br>
-
-  <!-- amountStudents -->
+  <!-- sonstiges -->
   <mat-form-field>
     <label>
-      <input formControlName="amountStudents" matInput placeholder="Anzahl SuS">
+      <textarea formControlName="other" matInput placeholder="Sonstiges"></textarea>
     </label>
   </mat-form-field>
-  <br>
-
-  <!-- anmerkungen -->
-  <mat-form-field>
-    <label>
-      <textarea formControlName="annotations" matInput placeholder="Anmerkungen"></textarea>
-    </label>
-  </mat-form-field>
-  <br>
-
-  <!-- verantwortliche:r th köln -->
-  <mat-form-field>
-    <label>
-      <input formControlName="contactPerson" matInput placeholder="Verantwortliche*r TH Köln">
-    </label>
-  </mat-form-field>
-  <br>
   <br>
 
   <div class="btn-row">
     <button mat-raised-button color="primary" type="submit" (click)="onSubmit()"
-            [disabled]="service.getDetailForm().invalid">Speichern
+            [disabled]="service.formGroup.invalid">Speichern
     </button>
     <button mat-raised-button color="warn" (click)="onClear()">Zurücksetzen</button>
   </div>

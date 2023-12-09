@@ -8,7 +8,7 @@ import {SchoolType} from '../zsb-school/schoolType'
 import {City} from '../zsb-address/city'
 import {Contact, ContactFunction, ContactSalutation} from '../zsb-contact/contact'
 import {environment} from '../../environments/environment'
-import {Event} from '../zsb-events/event'
+import {DatabaseEvent, Event} from '../zsb-events/event'
 import {Category} from '../zsb-events/category'
 import {Level} from '../zsb-events/level'
 import {PresentationType} from '../zsb-events/presentationType'
@@ -153,12 +153,12 @@ export class DatabaseService {
     return this.httpClient.get<ContactSalutation[]>(this.DB_URL + '/contacts/salutations')
   }
 
-  getAllEvents(): Observable<Event[]> {
-    return this.httpClient.get<Event[]>(this.DB_URL + '/events?resolve_ids=true')
+  getAllEvents(): Observable<DatabaseEvent[]> {
+    return this.httpClient.get<DatabaseEvent[]>(this.DB_URL + '/events?resolve_ids=true')
   }
 
-  getEventById(uuid: string): Observable<Event> {
-    return this.httpClient.get<Event>(this.DB_URL + '/events/' + uuid + '?resolve_ids=true')
+  getEventById(uuid: string): Observable<DatabaseEvent> {
+    return this.httpClient.get<DatabaseEvent>(this.DB_URL + '/events/' + uuid + '?resolve_ids=true')
   }
 
   deleteEvents(uuid: string): Observable<any> {
@@ -181,8 +181,8 @@ export class DatabaseService {
     return this.httpClient.put<DatabaseEvent>(this.DB_URL + '/events', event)
   }
 
-  createEvent(event: Event) {
-    return this.httpClient.post<Event>(this.DB_URL + '/events', event)
+  createEvent(event: DatabaseEvent) {
+    return this.httpClient.post<DatabaseEvent>(this.DB_URL + '/events', event)
   }
   getCooperationPartner() {
     return this.httpClient.get<CooperationPartner[]>(this.DB_URL + '/schools/cooperationPartner')
