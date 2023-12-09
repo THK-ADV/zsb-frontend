@@ -121,9 +121,6 @@ export class ZsbAddressComponent implements OnInit {
             if (result === undefined) {
               this.dialogRef.close(new AddressResult(null, AddressStatus.FAILURE))
             } else {
-              console.log('adress id')
-              console.log(result)
-              console.log(result.id)
               this.dbService.getAddressAtomicById(result.id).subscribe(atomicAddress => {
                 this.dialogRef.close(new AddressResult(atomicAddress, AddressStatus.UPDATED))
               })

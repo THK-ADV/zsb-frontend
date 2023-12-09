@@ -97,13 +97,10 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
     this.service.dbService.getEventById(uuid).subscribe(event => {
       this.service.loadFormData(event)
       this.typeSelection = this.service.formGroup.get('category').value
-      console.log(this.service.formGroup.get('campusDays').value)
     })
   }
 
   onSubmit() {
-    console.log('submit')
-    console.log(this.service.formGroup.value)
     let isPost = false
     if (!this.eventId) {
       isPost = true

@@ -134,6 +134,8 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   }
 
   updateDetailData() {
+    console.log(this.detailData.data)
+    console.log(this.expandedElement)
     this.detailData.data = this.expandedElement.events
   }
 
@@ -269,7 +271,6 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
 
   private buildCustomSorting() {
     this.listData.sortingDataAccessor = ({school}, id) => {
-      console.log('buildCustomSorting', school)
       switch (id) {
         case 'name':
           return school.name.toLocaleLowerCase()

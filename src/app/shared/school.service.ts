@@ -134,8 +134,6 @@ export class SchoolService {
   }
 
   updateSchoolWithoutNewAddress(schoolForm: any, notificationService: NotificationService) {
-    console.log('updateSchoolWithoutNewAddress')
-    console.log(schoolForm)
     const schoolObject: School = {
       id: schoolForm.school_id,
       name: schoolForm.name,
@@ -199,9 +197,6 @@ export class SchoolService {
       contacts_ids: schoolForm.contacts.map(it => it.contact_id),
       contacts: schoolForm.contacts,
     }
-    console.log('insertOrUpdateSchool')
-    console.log('schoolForm.city:')
-    console.log(schoolForm)
     const cityObservable = this.dbService.updateOrCreateCity(schoolForm.city)
     cityObservable.subscribe(newCity => {
       const address = {
@@ -218,8 +213,6 @@ export class SchoolService {
         schoolObject.address = null
         schoolObject.contacts_ids = schoolObject.contacts.map(it => it.contact_id)
 
-        console.log('School before request')
-        console.log(schoolObject)
         // check if school already exists
         if (schoolObject.id === undefined || schoolObject.id === null) {
           this.dbService.createSchool(schoolObject).subscribe(it => {
@@ -232,7 +225,6 @@ export class SchoolService {
             }
           })
         } else {
-          console.log('insertOrUpdateSchool')
           const result = this.dbService.updateSchool(schoolObject)
           result.subscribe(it => {
             if (it.id !== undefined) {

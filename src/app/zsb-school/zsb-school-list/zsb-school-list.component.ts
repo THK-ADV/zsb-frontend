@@ -212,7 +212,6 @@ export class ZsbSchoolListComponent implements OnInit, OnDestroy {
 
   private buildCustomSorting() {
     this.listData.sortingDataAccessor = (s, id) => {
-      console.log('buildCustomSorting', s)
       switch (id) {
         case 'name':
           return s.name.toLocaleLowerCase()

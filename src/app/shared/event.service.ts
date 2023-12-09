@@ -215,8 +215,6 @@ export class EventService {
       internOtherText,
       other: event.other
     })
-    console.log('campusDays')
-    console.log(campusDays)
   }
 
   // TODO: an Backend anpassen, insert und update aufteilen

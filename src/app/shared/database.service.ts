@@ -66,23 +66,18 @@ export class DatabaseService {
   }
 
   updateOrCreateCity(city: City) {
-    console.log('updateOrCreateCity')
     return this.httpClient.put<City>(this.DB_URL + '/cities', city)
   }
 
   createSchool(school: School) {
-    console.log('REQUEST: CREATE SCHULE')
-    console.log(school)
     return this.httpClient.post<School>(this.DB_URL + '/schools', school)
   }
 
   updateSchool(school: School) {
-    console.log('REQUEST: UPDATE SCHULE')
     return this.httpClient.put<School>(this.DB_URL + '/schools', school)
   }
 
   deleteSchool(uuid: string) {
-    console.log('REQUEST: DELETE SCHULE ->' + uuid)
     return this.httpClient.delete(this.DB_URL + '/schools/' + uuid)
   }
 

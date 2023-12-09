@@ -91,8 +91,6 @@ export class ZsbSchoolDetailComponent implements OnInit {
 
   onSubmit() {
     const school = this.service.formGroup.value
-    console.log('onSubmit')
-    console.log(school)
     const cleanedContacts = []
     school.contacts.forEach(it => {
       if (it != null) {
@@ -101,12 +99,10 @@ export class ZsbSchoolDetailComponent implements OnInit {
     })
     school.contacts = cleanedContacts
     if (school.address !== undefined) {
-      console.log('adresse hat sich geändert')
       school.city = this.address.city
       school.address = this.address
       this.service.insertOrUpdateSchool(school, this.notificationService)
     } else {
-      console.log('adresse unverändert')
       school.address_id = this.addressId
       this.service.updateSchoolWithoutNewAddress(school, this.notificationService)
     }
