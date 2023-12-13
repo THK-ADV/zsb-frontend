@@ -98,7 +98,7 @@ export class ZsbSchoolDetailComponent implements OnInit {
       }
     })
     school.contacts = cleanedContacts
-    if (school.address !== undefined) {
+    if (school.address !== undefined || school.school_id === null) {
       school.city = this.address.city
       school.address = this.address
       this.service.insertOrUpdateSchool(school, this.notificationService)
