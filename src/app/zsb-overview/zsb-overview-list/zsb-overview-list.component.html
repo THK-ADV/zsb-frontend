@@ -1,11 +1,17 @@
 <div class="container">
   <div class="actions-div">
     <button class="action-button" mat-raised-button [routerLink]="['/schools']" color="primary">
-      <mat-icon>add</mat-icon>Schule hinzufügen</button>
+      <mat-icon>add</mat-icon>
+      Schule hinzufügen
+    </button>
     <button class="action-button" mat-raised-button [routerLink]="['/events']" color="primary">
-      <mat-icon>add</mat-icon>Termin hinzufügen</button>
+      <mat-icon>add</mat-icon>
+      Termin hinzufügen
+    </button>
     <button class="action-button" mat-raised-button color="primary">
-      <mat-icon>filter_alt</mat-icon>Filtern</button>
+      <mat-icon>filter_alt</mat-icon>
+      Filtern
+    </button>
   </div>
 </div>
 
@@ -16,7 +22,7 @@
          matSort
          [dataSource]="listData">
 
-    <!-- schulname Column -->
+    <!-- select Column -->
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef [ngClass]="'w-02'">
         <mat-checkbox (change)="$event ? toggleSelectAll() : null"
@@ -40,7 +46,7 @@
     <ng-container matColumnDef="type">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Schulform</th>
       <td mat-cell [routerLink]="['/schools', row.school.id]"
-                *matCellDef="let row">{{getSchoolTypeById(row.school.type)}}</td>
+          *matCellDef="let row">{{getSchoolTypeById(row.school.type)}}</td>
     </ng-container>
 
     <!-- address column -->
@@ -53,7 +59,8 @@
     <!-- city column column -->
     <ng-container matColumnDef="city">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Ort</th>
-      <td mat-cell [routerLink]="['/schools', row.school.id]" *matCellDef="let row">{{row.school.address.city.postcode}},
+      <td mat-cell [routerLink]="['/schools', row.school.id]" *matCellDef="let row">{{row.school.address.city.postcode}}
+        ,
         {{row.school.address.city.designation}}</td>
     </ng-container>
 
@@ -67,7 +74,8 @@
         <button mat-icon-button [routerLink]="['/schools/edit', row.school.id]" matTooltip="Schule editieren">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button color="warn" matTooltip="Schule entfernen" (click)="deleteSchool(row.school.name, row.school.id)">
+        <button mat-icon-button color="warn" matTooltip="Schule entfernen"
+                (click)="deleteSchool(row.school.name, row.school.id)">
           <mat-icon>delete_outline</mat-icon>
         </button>
       </td>
@@ -76,7 +84,8 @@
     <ng-container matColumnDef="expand">
       <th mat-header-cell *matHeaderCellDef aria-label="row actions"></th>
       <td mat-cell *matCellDef="let element">
-        <button mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation(); updateDetailData()">
+        <button mat-icon-button aria-label="expand row"
+                (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation(); updateDetailData()">
           <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
           <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
         </button>
@@ -88,7 +97,8 @@
       <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
         <div class="element-detail"
              [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-          <table *ngIf="detailData.data.length > 0; else noDetails" mat-table [dataSource]="detailData" class="mat-elevation-z8">
+          <table *ngIf="detailData.data.length > 0; else noDetails" mat-table [dataSource]="detailData"
+                 class="mat-elevation-z8">
             <ng-container matColumnDef="detailDesignation">
               <th mat-header-cell *matHeaderCellDef>Bezeichnung</th>
               <td mat-cell *matCellDef="let event"> {{event.designation}} </td>
@@ -111,7 +121,8 @@
                 <button mat-icon-button [routerLink]="['/events', event.uuid]" matTooltip="Termin bearbeiten">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button color="warn" matTooltip="Termin entfernen" (click)="deleteEvent(event.designation, event.uuid)">
+                <button mat-icon-button color="warn" matTooltip="Termin entfernen"
+                        (click)="deleteEvent(event.designation, event.uuid)">
                   <mat-icon>delete_outline</mat-icon>
                 </button>
               </td>

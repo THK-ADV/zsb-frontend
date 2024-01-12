@@ -97,8 +97,8 @@ export class DatabaseService {
       )
   }
 
-  getSchoolByIdAtomic(id: string) {
-    return this.httpClient.get<School>(this.DB_URL + '/schools/' + id + '?resolve_ids=true')
+  getSchoolById(id: string) {
+    return this.httpClient.get<School>(this.DB_URL + '/schools/' + id)
   }
 
   getSchoolType() {

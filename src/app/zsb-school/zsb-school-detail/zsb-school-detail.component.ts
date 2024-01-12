@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core'
 import {ActivatedRoute} from '@angular/router'
 import {DatabaseService} from '../../shared/database.service'
-import {Observable, Subscription} from 'rxjs'
+import {forkJoin, Observable, Subscription} from 'rxjs'
 import {Address} from '../../zsb-address/address'
 import {SchoolService} from '../../shared/school.service'
 import {NotificationService} from '../../shared/notification.service'
@@ -77,15 +77,18 @@ export class ZsbSchoolDetailComponent implements OnInit {
   }
 
   private loadSchool(uuid: string) {
-    this.service.dbService.getSchoolByIdAtomic(uuid).subscribe(school => {
-      this.service.loadFormData(school)
+    this.service.dbService.getSchoolById(uuid).subscribe(school => {
       this.addressId = school.address_id
       this.subs.push(
-        this.addressObservable.subscribe(it => {
-          this.address = this.dbService.getAddressFromArrayByAddressId(it, this.addressId)
+        this.dbService.getAddressAtomicById(this.addressId).subscribe(address => {
+          this.address = address
+          const contactsIds = school.contacts_ids === undefined ? [] : school.contacts_ids
+          forkJoin(contactsIds.map(id => this.dbService.getContactById(id))).subscribe(contacts => {
+            this.service.loadFormData(school, this.address, contacts)
+            this.addressUndefined = false
+          })
         })
       )
-      this.addressUndefined = false
     })
   }
 
@@ -136,6 +139,7 @@ export class ZsbSchoolDetailComponent implements OnInit {
           )
           this.addressUndefined = false
         }
+        console.log(this.addressUndefined)
       })
   }
 

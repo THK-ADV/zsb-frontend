@@ -13,10 +13,9 @@ import {DatePipe} from '@angular/common'
 import {buildCustomFilter} from '../../shared/keywordsearch'
 import {ZsbLetterComponent} from '../../zsb-communication/zsb-letter/zsb-letter.component'
 import {ZsbEmailComponent} from '../../zsb-communication/zsb-email/zsb-email.component'
-import {generateTitle, saveBlobAsFile} from '../../shared/downloads'
 import {MatRadioChange} from '@angular/material/radio'
 import {animate, state, style, transition, trigger} from '@angular/animations'
-import {DatabaseEvent, Event} from '../../zsb-events/event'
+import {DatabaseEvent} from '../../zsb-events/event'
 
 type SchoolFilterOption = 'Alle' | 'Name' | 'Schulform' | 'Straße' | 'Stadt' | 'Kontakte'
 type SchoolWithEvents = {
@@ -37,6 +36,13 @@ type SchoolWithEvents = {
 })
 
 export class ZsbOverviewListComponent implements OnInit, OnDestroy {
+
+  constructor(private service: DatabaseService,
+              private notificationService: NotificationService,
+              private dialog: MatDialog,
+              private datePipe: DatePipe
+  ) {
+  }
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
   searchKey = ''
@@ -70,15 +76,9 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   selectedFilterOption: SchoolFilterOption = this.filterOptions[0]
   showFilterOptions = false
 
-  constructor(private service: DatabaseService,
-              private notificationService: NotificationService,
-              private dialog: MatDialog,
-              private datePipe: DatePipe
-  ) {
-  }
+  protected readonly console = console
 
   ngOnInit() {
-
     this.sub = zip(
       this.service.getSchoolsAtomic(),
       this.service.getSchoolType(),
@@ -294,6 +294,4 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
     this.selectedFilterOption = event.value
     this.applyFilter()
   }
-
-  protected readonly console = console
 }

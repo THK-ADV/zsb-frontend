@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core'
-import {AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
+import {AbstractControl, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {School} from '../zsb-school/school'
 import {DatabaseService} from './database.service'
-import {Observable} from 'rxjs'
+import {forkJoin, Observable} from 'rxjs'
 import {Address} from '../zsb-address/address'
 import {City} from '../zsb-address/city'
 import {NotificationService} from './notification.service'
@@ -78,9 +78,13 @@ export class SchoolService {
     })
   }
 
-  loadFormData(school: School) {
+  loadFormData(school: School, address: Address, contacts: Contact[]) {
+    //console.log('schulid loadformdata')
+    //console.log(school)
     this.contacts.clear()
-    this.addContacts(school.contacts)
+    contacts.forEach(contact => this.addContact(contact))
+    /*this.address.setValue('')
+    this.getAddress(school.address_id)*/
     this.formGroup.setValue({
       school_id: school.id,
       name: school.name,
@@ -92,15 +96,21 @@ export class SchoolService {
       amount_students11: school.amount_students11,
       amount_students12: school.amount_students12,
       amount_students13: school.amount_students13,
-      address: getReadableAddress(school.address, school.address.city),
-      city: school.address.city,
-      contacts: school.contacts,
+      address: getReadableAddress(address, address.city),
+      city: address.city,
+      contacts,
       cooperationContract: school.cooperationcontract,
       cooperationPartner: school.cooperationpartner,
       kaoaSupervisor: school.kaoaSupervisor,
       talentScout: school.talentscout,
     })
   }
+
+  /*getAddress(addressId: string) {
+    this.dbService.getAddressAtomicById(addressId).subscribe(address => {
+      this.address.setValue(getReadableAddress(address, address.city))
+    })
+  }*/
 
   addContact(contact: Contact) {
     const contactAlreadyExists = this.contacts.controls.some(c => c.value.contact_id === contact.contact_id)
@@ -109,8 +119,12 @@ export class SchoolService {
     }
   }
 
-  private addContacts(contacts: Contact[]) {
-    contacts.forEach(c => this.addContact(c))
+  private addContacts(contactsIds: string[]) {
+    contactsIds.forEach(id => {
+      this.dbService.getContactById(id).subscribe(contact => {
+        this.addContact(contact)
+      })
+    })
   }
 
   removeContact(control: AbstractControl) {
@@ -124,7 +138,9 @@ export class SchoolService {
     const index = formContacts.findIndex(it => it.contact_id === updated.contact_id)
     formContacts[index] = updated
     this.contacts.clear()
-    this.addContacts(formContacts)
+    formContacts.forEach(contact => {
+      this.addContact(contact)
+    })
   }
 
   /** get all contacts from form */
