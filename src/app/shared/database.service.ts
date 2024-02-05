@@ -8,19 +8,15 @@ import {SchoolType} from '../zsb-school/schoolType'
 import {City} from '../zsb-address/city'
 import {Contact, ContactFunction, ContactSalutation} from '../zsb-contact/contact'
 import {environment} from '../../environments/environment'
-import {Event} from '../zsb-events/event'
+import {DatabaseEvent, Event} from '../zsb-events/event'
 import {Category} from '../zsb-events/category'
 import {Level} from '../zsb-events/level'
 import {PresentationType} from '../zsb-events/presentationType'
-import {Institution} from '../zsb-institutions/institution'
-import {Host} from '../zsb-events/host'
-import {Report} from '../zsb-events/zsb-report/report'
 import {CooperationPartner} from '../zsb-school/cooperationPartner'
 import {Signature} from '../zsb-communication/zsb-letter/signature'
 import {Letter} from '../zsb-communication/zsb-letter/letter'
 import {Email} from '../zsb-communication/zsb-email/email'
 import {KaoaSupervisor} from '../zsb-school/kaoaSupervisor'
-import {KAoAWork} from '../zsb-school/kAoAWork'
 
 @Injectable({
   providedIn: 'root'
@@ -73,18 +69,15 @@ export class DatabaseService {
     return this.httpClient.put<City>(this.DB_URL + '/cities', city)
   }
 
-  createSchool(school) {
-    console.log('REQUEST: CREATE SCHULE')
+  createSchool(school: School) {
     return this.httpClient.post<School>(this.DB_URL + '/schools', school)
   }
 
-  updateSchool(school) {
-    console.log('REQUEST: UPDATE SCHULE')
+  updateSchool(school: School) {
     return this.httpClient.put<School>(this.DB_URL + '/schools', school)
   }
 
   deleteSchool(uuid: string) {
-    console.log('REQUEST: DELETE SCHULE ->' + uuid)
     return this.httpClient.delete(this.DB_URL + '/schools/' + uuid)
   }
 
@@ -104,12 +97,8 @@ export class DatabaseService {
       )
   }
 
-  getSchoolByIdAtomic(id: string) {
-    return this.httpClient.get<School>(this.DB_URL + '/schools/' + id + '?resolve_ids=true')
-  }
-
-  getKAoAWorkBySchoolId(id: string) {
-    return this.httpClient.get<KAoAWork[]>(`${this.DB_URL}/schools/${id}/kAoAWork`)
+  getSchoolById(id: string) {
+    return this.httpClient.get<School>(this.DB_URL + '/schools/' + id)
   }
 
   getSchoolType() {
@@ -123,7 +112,7 @@ export class DatabaseService {
   getAddressFromArrayByAddressId(addresses: Address[], id: string): Address {
     let result = null
     addresses.forEach(it => {
-      if (it.address_id === id) {
+      if (it.id === id) {
         result = it
       }
     })
@@ -159,12 +148,12 @@ export class DatabaseService {
     return this.httpClient.get<ContactSalutation[]>(this.DB_URL + '/contacts/salutations')
   }
 
-  getAllEvents(): Observable<Event[]> {
-    return this.httpClient.get<Event[]>(this.DB_URL + '/events?resolve_ids=true')
+  getAllEvents(): Observable<DatabaseEvent[]> {
+    return this.httpClient.get<DatabaseEvent[]>(this.DB_URL + '/events?resolve_ids=true')
   }
 
-  getEventById(uuid: string): Observable<Event> {
-    return this.httpClient.get<Event>(this.DB_URL + '/events/' + uuid + '?resolve_ids=true')
+  getEventById(uuid: string): Observable<DatabaseEvent> {
+    return this.httpClient.get<DatabaseEvent>(this.DB_URL + '/events/' + uuid + '?resolve_ids=true')
   }
 
   deleteEvents(uuid: string): Observable<any> {
@@ -183,42 +172,13 @@ export class DatabaseService {
     return this.httpClient.get<PresentationType[]>(this.DB_URL + '/events/presentationtypes')
   }
 
-  getAllInstitutions() {
-    return this.httpClient.get<Institution[]>(this.DB_URL + '/institutions?resolve_ids=true')
+  updateEvent(event: DatabaseEvent) {
+    return this.httpClient.put<DatabaseEvent>(this.DB_URL + '/events', event)
   }
 
-  updateEvent(event: Event) {
-    return this.httpClient.put<Event>(this.DB_URL + '/events', event)
+  createEvent(event: DatabaseEvent) {
+    return this.httpClient.post<DatabaseEvent>(this.DB_URL + '/events', event)
   }
-
-  createEvent(event: Event) {
-    return this.httpClient.post<Event>(this.DB_URL + '/events', event)
-  }
-
-  createHost(host: Host) {
-    return this.httpClient.post<Host>(this.DB_URL + '/hosts', host)
-  }
-
-  updateHost(host: Host) {
-    return this.httpClient.put<Host>(this.DB_URL + '/hosts', host)
-  }
-
-  getAllReports() {
-    return this.httpClient.get<Report[]>(this.DB_URL + '/reports')
-  }
-
-  getReportById(uuid: string) {
-    return this.httpClient.get<Report>(this.DB_URL + '/reports/' + uuid)
-  }
-
-  createReport(report: Report) {
-    return this.httpClient.post<Report>(this.DB_URL + '/reports', report)
-  }
-
-  updateReport(report: Report) {
-    return this.httpClient.put<Report>(this.DB_URL + '/reports', report)
-  }
-
   getCooperationPartner() {
     return this.httpClient.get<CooperationPartner[]>(this.DB_URL + '/schools/cooperationPartner')
   }
@@ -229,22 +189,6 @@ export class DatabaseService {
 
   getTalentScouts() {
     return this.httpClient.get<KaoaSupervisor[]>(this.DB_URL + '/schools/talentScouts')
-  }
-
-  deleteInstitution(uuid: string): Observable<any> {
-    return this.httpClient.delete(this.DB_URL + '/institutions/' + uuid)
-  }
-
-  getInstitutionAtomic(uuid: string) {
-    return this.httpClient.get(this.DB_URL + '/institutions/' + uuid + '?resolve_ids=true')
-  }
-
-  createInstitution(institution: Institution) {
-    return this.httpClient.post<Institution>(this.DB_URL + '/institutions', institution)
-  }
-
-  updateInstitution(institution: Institution) {
-    return this.httpClient.put<Institution>(this.DB_URL + '/institutions', institution)
   }
 
   getSignatures() {
@@ -271,9 +215,5 @@ export class DatabaseService {
 
   createEmail(email: Email) {
     return this.httpClient.post<Email>(this.DB_URL + '/email', email)
-  }
-
-  getInstitutionByIdAtomic(institutionId: string) {
-    return this.httpClient.get<Institution>(this.DB_URL + '/institutions/' + institutionId + this.ATOMIC)
   }
 }

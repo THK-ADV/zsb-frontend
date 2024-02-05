@@ -16,8 +16,8 @@ import {MatIconModule} from '@angular/material/icon'
 import {MatPaginatorModule} from '@angular/material/paginator'
 import {MatSortModule} from '@angular/material/sort'
 import {MatDialogModule} from '@angular/material/dialog'
-import {ZsbSchoolListComponent} from './zsb-school/zsb-school-list/zsb-school-list.component'
-import {ZsbSchoolEditComponent} from './zsb-school/zsb-school-edit/zsb-school-edit.component'
+// import {ZsbSchoolListComponent} from './zsb-school/zsb-school-list/zsb-school-list.component'
+import {ZsbSchoolDetailComponent} from './zsb-school/zsb-school-detail/zsb-school-detail.component'
 import {MatFormFieldModule} from '@angular/material/form-field'
 import {MatSelectModule} from '@angular/material/select'
 import {MatInputModule} from '@angular/material/input'
@@ -39,38 +39,31 @@ import {ZsbEventsDetailComponent} from './zsb-events/zsb-events-detail/zsb-event
 import {MatDatepickerModule} from '@angular/material/datepicker'
 import {MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core'
 import {MatTooltipModule} from '@angular/material/tooltip'
-import {ZsbReportComponent} from './zsb-events/zsb-report/zsb-report.component'
-import {ZsbInstitutionsComponent} from './zsb-institutions/zsb-institutions.component'
-import {ZsbInstitutionsListComponent} from './zsb-institutions/zsb-institutions-list/zsb-institutions-list.component'
-import {ZsbInstitutionsDetailComponent} from './zsb-institutions/zsb-institutions-detail/zsb-institutions-detail.component'
 import {ZsbLetterComponent} from './zsb-communication/zsb-letter/zsb-letter.component'
 import {ZsbEmailComponent} from './zsb-communication/zsb-email/zsb-email.component'
 import {MatRadioModule} from '@angular/material/radio'
 import {MatCardModule} from '@angular/material/card'
-import {ZsbSchoolDetailComponent} from './zsb-school/zsb-school-detail/zsb-school-detail.component'
+import {ZsbSchoolEventDetailComponent} from './zsb-overview/zsb-school-event-detail/zsb-school-event-detail.component'
 import {appRoutes} from './routes'
 import { ZsbOverviewListComponent } from './zsb-overview/zsb-overview-list/zsb-overview-list.component'
 import { ZsbOverviewComponent } from './zsb-overview/zsb-overview.component'
+import {MatExpansionModule} from '@angular/material/expansion'
 
 @NgModule({
   declarations: [
     AppComponent,
     ZsbSchoolComponent,
-    ZsbSchoolListComponent,
-    ZsbSchoolEditComponent,
+    // ZsbSchoolListComponent,
+    ZsbSchoolDetailComponent,
     ZsbAddressComponent,
     ZsbContactDetailComponent,
     ZsbContactSearchComponent,
     ZsbEventsComponent,
     ZsbEventsListComponent,
     ZsbEventsDetailComponent,
-    ZsbReportComponent,
-    ZsbInstitutionsComponent,
-    ZsbInstitutionsListComponent,
-    ZsbInstitutionsDetailComponent,
     ZsbLetterComponent,
     ZsbEmailComponent,
-    ZsbSchoolDetailComponent,
+    ZsbSchoolEventDetailComponent,
     ZsbOverviewListComponent,
     ZsbOverviewComponent
   ],
@@ -109,7 +102,8 @@ import { ZsbOverviewComponent } from './zsb-overview/zsb-overview.component'
     MatNativeDateModule,
     MatTooltipModule,
     MatRadioModule,
-    MatCardModule
+    MatCardModule,
+    MatExpansionModule
   ],
   providers: [
     DatePipe,
@@ -125,7 +119,7 @@ import { ZsbOverviewComponent } from './zsb-overview/zsb-overview.component'
     // }
   ],
   bootstrap: [AppComponent]
-  // entryComponents: [ZsbSchoolDetailComponent]
+  // entryComponents: [ZsbSchoolEventDetailComponent]
 })
 export class AppModule {
 }
