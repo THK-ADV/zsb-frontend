@@ -47,7 +47,8 @@ import {ZsbSchoolEventDetailComponent} from './zsb-overview/zsb-school-event-det
 import {appRoutes} from './routes'
 import { ZsbOverviewListComponent } from './zsb-overview/zsb-overview-list/zsb-overview-list.component'
 import { ZsbOverviewComponent } from './zsb-overview/zsb-overview.component'
-import {MatExpansionModule} from '@angular/material/expansion'
+import {MatExpansionModule} from '@angular/material/expansion';
+import { ZsbFilterComponent } from './zsb-overview/zsb-overview-list/zsb-filter/zsb-filter.component'
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import {MatExpansionModule} from '@angular/material/expansion'
     ZsbEmailComponent,
     ZsbSchoolEventDetailComponent,
     ZsbOverviewListComponent,
-    ZsbOverviewComponent
+    ZsbOverviewComponent,
+    ZsbFilterComponent
   ],
   imports: [
     BrowserModule,

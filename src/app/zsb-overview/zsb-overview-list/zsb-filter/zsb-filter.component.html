@@ -1,0 +1,21 @@
+<!--<p>zsb-filter works!</p>-->
+<div class="container">
+  <h1>Filter / Suche</h1>
+  <form #searchForm="ngForm">
+    <div class="form-group">
+      <mat-checkbox [(ngModel)]="schoolNameChecked" (ngModelChange)="onInputChange()" id="schoolNameCheckbox" name="schoolNameCheckbox">
+        Schulname
+      </mat-checkbox>
+      <mat-form-field appearance="fill">
+        <input matInput type="text" id="schoolName" name="schoolName" [(ngModel)]="schoolName">
+      </mat-form-field>
+    </div>
+    <!-- Weitere Kriterien hier hinzufügen -->
+  </form>
+  <div class="btn-row">
+    <button mat-raised-button color="primary" (click)="onSubmit()">
+      Anwenden
+    </button>
+    <button mat-raised-button color="warn" (click)="onCancel()">Abbrechen</button>
+  </div>
+</div>

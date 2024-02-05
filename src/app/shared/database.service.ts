@@ -17,6 +17,7 @@ import {Signature} from '../zsb-communication/zsb-letter/signature'
 import {Letter} from '../zsb-communication/zsb-letter/letter'
 import {Email} from '../zsb-communication/zsb-email/email'
 import {KaoaSupervisor} from '../zsb-school/kaoaSupervisor'
+import {SchoolWithEvents} from '../zsb-overview/zsb-overview-list/zsb-overview-list.component'
 
 @Injectable({
   providedIn: 'root'

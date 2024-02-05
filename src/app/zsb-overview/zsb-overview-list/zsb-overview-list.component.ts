@@ -16,9 +16,11 @@ import {ZsbEmailComponent} from '../../zsb-communication/zsb-email/zsb-email.com
 import {MatRadioChange} from '@angular/material/radio'
 import {animate, state, style, transition, trigger} from '@angular/animations'
 import {DatabaseEvent} from '../../zsb-events/event'
+import {generateTitle, saveBlobAsFile} from '../../shared/downloads'
+import {ZsbFilterComponent} from './zsb-filter/zsb-filter.component'
 
 type SchoolFilterOption = 'Alle' | 'Name' | 'Schulform' | 'Straße' | 'Stadt' | 'Kontakte'
-type SchoolWithEvents = {
+export type SchoolWithEvents = {
   school: School,
   events: DatabaseEvent[]
 }
@@ -47,6 +49,7 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort
   searchKey = ''
 
+  schoolWithEvents: SchoolWithEvents[] = []
   listData: MatTableDataSource<SchoolWithEvents>
   detailData: MatTableDataSource<DatabaseEvent>
   schoolTypes: SchoolType[]
@@ -84,7 +87,6 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
       this.service.getSchoolType(),
       this.service.getAllEvents()
     ).subscribe(([schools, schoolTypes, events]) => {
-      const schoolWithEvents: SchoolWithEvents[] = []
       schools.forEach((school) => {
         const schoolEvents = events.filter((event) => {
           return (event.school_id === school.id)
@@ -93,9 +95,9 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
           school,
           events: schoolEvents
         }
-        schoolWithEvents.push(schoolWithEvent)
+        this.schoolWithEvents.push(schoolWithEvent)
       })
-      this.listData = new MatTableDataSource(schoolWithEvents)
+      this.listData = new MatTableDataSource(this.schoolWithEvents)
       this.detailData = new MatTableDataSource([])
       this.listData.sort = this.sort
       this.listData.paginator = this.paginator
@@ -237,6 +239,18 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
     return false
   }
 
+  openFilterDialog() {
+    const dialogConfig = new MatDialogConfig()
+    dialogConfig.disableClose = true
+    dialogConfig.width = '90%'
+    dialogConfig.data = { schoolWithEvents: this.schoolWithEvents }
+    const dialogRef = this.dialog.open(ZsbFilterComponent, dialogConfig)
+    dialogRef.afterClosed().subscribe(result => {
+      this.schoolWithEvents = result
+      this.listData = new MatTableDataSource(this.schoolWithEvents)
+    })
+  }
+
   openLetterDialog() {
     if (this.warnIfSelectedSchoolsIsEmpty()) return
     const dialogConfig = new MatDialogConfig()
@@ -256,9 +270,14 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   }
 
   exportAddresses() {
-    /*if (this.warnIfSelectedSchoolsIsEmpty()) return
-    this.service.createSheet(this.selectedSchoolsIds.map(id => this.getSchoolWithEventsById(id)).filter(({school}) => school !== null))
-      .subscribe(result => saveBlobAsFile(
+    if (this.warnIfSelectedSchoolsIsEmpty()) return
+    this.service.createSheet(
+      this.selectedSchoolsIds
+        .map(id => this.getSchoolWithEventsById(id))
+        .filter(schoolWithEvents => schoolWithEvents !== null)
+        .map(schoolWithEvents => schoolWithEvents.school)
+        .filter(school => school !== null)
+    ).subscribe(result => saveBlobAsFile(
         result,
         generateTitle(
           this.selectedSchoolsIds,
@@ -266,7 +285,7 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
           '.xlsx',
           this.datePipe
         )
-      ))*/
+      ))
   }
 
   private buildCustomSorting() {
