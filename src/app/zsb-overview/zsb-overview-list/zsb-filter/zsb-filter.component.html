@@ -3,7 +3,7 @@
   <h1>Filter / Suche</h1>
   <form #searchForm="ngForm">
     <div class="form-group">
-      <mat-checkbox [(ngModel)]="schoolNameChecked" (ngModelChange)="onSchoolNameChange()" id="schoolNameCheckbox" name="schoolNameCheckbox">
+      <mat-checkbox style="margin-right: 10px" [(ngModel)]="schoolNameChecked" (ngModelChange)="onSchoolNameChange()" id="schoolNameCheckbox" name="schoolNameCheckbox">
         Schulname
       </mat-checkbox>
       <mat-form-field appearance="fill">
@@ -11,7 +11,7 @@
       </mat-form-field>
     </div>
     <div class="form-group">
-      <mat-checkbox [(ngModel)]="schoolTypeChecked" (ngModelChange)="onSchoolTypeChange()" id="schoolTypeCheckbox" name="schoolTypeCheckbox">
+      <mat-checkbox style="margin-right: 10px" [(ngModel)]="schoolTypeChecked" (ngModelChange)="onSchoolTypeChange()" id="schoolTypeCheckbox" name="schoolTypeCheckbox">
         Schulform
       </mat-checkbox>
       <mat-select appearance="fill" [(value)]="selectedTypeId">
@@ -19,7 +19,7 @@
       </mat-select>
     </div>
     <div class="form-group">
-      <mat-checkbox [(ngModel)]="governmentDistrictChecked" (ngModelChange)="onGovernmentDistrictChange()" id="governmentDistrictCheckbox" name="governmentDistrictCheckbox">
+      <mat-checkbox style="margin-right: 10px" [(ngModel)]="governmentDistrictChecked" (ngModelChange)="onGovernmentDistrictChange()" id="governmentDistrictCheckbox" name="governmentDistrictCheckbox">
         Regierungsbezirk
       </mat-checkbox>
       <mat-select appearance="fill" [(value)]="governmentDistrict">
@@ -27,7 +27,7 @@
       </mat-select>
     </div>
     <div class="form-group">
-      <mat-checkbox [(ngModel)]="constituencyChecked" (ngModelChange)="onConstituencyChange()" id="constituencyCheckbox" name="constituencyCheckbox">
+      <mat-checkbox style="margin-right: 10px" [(ngModel)]="constituencyChecked" (ngModelChange)="onConstituencyChange()" id="constituencyCheckbox" name="constituencyCheckbox">
         Kreis
       </mat-checkbox>
       <mat-select appearance="fill" [(value)]="constituency">
@@ -35,24 +35,37 @@
       </mat-select>
     </div>
     <div class="form-group">
-      <mat-checkbox [(ngModel)]="designationChecked" (ngModelChange)="onDesignationChange()" id="designationCheckbox" name="designationCheckbox">
+      <mat-checkbox style="margin-right: 10px" [(ngModel)]="designationChecked" (ngModelChange)="onDesignationChange()" id="designationCheckbox" name="designationCheckbox">
         Ort
       </mat-checkbox>
       <mat-select appearance="fill" [(value)]="designation">
         <mat-option *ngFor="let designation of designations | async" [value]="designation">{{ designation }}</mat-option>
       </mat-select>
     </div>
+    <div class="form-group" style="display: flex; align-items: center;">
+      <mat-checkbox style="margin-right: 10px;" [(ngModel)]="amountChecked" (ngModelChange)="onAmountChange()" id="amountCheckbox" name="amountCheckbox">
+        Anzahl SuS
+      </mat-checkbox>
+      <mat-form-field appearance="fill" style="margin-right: 5px; width: 100px;">
+        <mat-label>Von</mat-label>
+        <input matInput type="number" [(ngModel)]="lowerBound" name="lowerBound">
+      </mat-form-field>
+      <span style="margin: 0 5px;">-</span>
+      <mat-form-field appearance="fill" style="margin-right: 5px; width: 100px;">
+        <mat-label>Bis</mat-label>
+        <input matInput type="number" [(ngModel)]="upperBound" name="upperBound">
+      </mat-form-field>
+    </div>
   </form>
-  <!-- Anzahl SuS -->
-  <span>
+  <div>
     <mat-checkbox [(ngModel)]="kaoa">KAoA Hochschule</mat-checkbox>
-  </span>
-  <span>
+  </div>
+  <div>
     <mat-checkbox [(ngModel)]="talentscouting">Talentscouting</mat-checkbox>
-  </span>
-  <span>
+  </div>
+  <div>
     <mat-checkbox [(ngModel)]="cooperation">Kooperation TH Köln</mat-checkbox>
-  </span>
+  </div>
   <div class="btn-row">
     <button mat-raised-button color="primary" (click)="onSubmit()">
       Anwenden

@@ -1,76 +1,116 @@
 import {SchoolWithEvents} from '../zsb-overview-list.component'
+import {from} from 'rxjs'
 
 interface Filter {
-  filter(data: SchoolWithEvents[], criteria: any): SchoolWithEvents[]
+  filter(data: SchoolWithEvents): boolean
 }
 
 export class SchoolNameFilter implements Filter {
-  filter(data: SchoolWithEvents[], criteria: string): SchoolWithEvents[] {
-    const schoolName = criteria
-    return data.filter(item => item.school.name.toLowerCase().includes(schoolName.toLowerCase()))
+  private schoolName: string
+  constructor(schoolName: string) {
+    this.schoolName = schoolName
+  }
+  filter(data: SchoolWithEvents): boolean {
+    return data.school.name.toLowerCase().includes(this.schoolName.toLowerCase())
   }
 }
 
 export class SchoolTypeFilter implements Filter {
-  filter(data: SchoolWithEvents[], criteria: number): SchoolWithEvents[] {
-    const schoolType = criteria
-    return data.filter(item => item.school.type === schoolType)
+  private schoolType: number
+
+  constructor(schoolType: number) {
+    this.schoolType = schoolType
+  }
+  filter(data: SchoolWithEvents): boolean {
+    return data.school.type === this.schoolType
   }
 }
 
-export class GovernmentDisctrictFilter implements Filter {
-  filter(data: SchoolWithEvents[], criteria: string): SchoolWithEvents[] {
-    const governmentDistrict = criteria
-    return data.filter(item => item.school.address.city.governmentDistrict === governmentDistrict )
+export class GovernmentDistrictFilter implements Filter {
+  private governmentDistrict: string
+
+  constructor(governmentDistrict: string) {
+    this.governmentDistrict = governmentDistrict
+  }
+  filter(data: SchoolWithEvents): boolean {
+    return data.school.address.city.governmentDistrict === this.governmentDistrict
   }
 }
 
 export class ConstituencyFilter implements Filter {
-  filter(data: SchoolWithEvents[], criteria: string): SchoolWithEvents[] {
-    const constituency = criteria
-    return data.filter(item => item.school.address.city.constituency === constituency )
+  private constituency: string
+
+  constructor(constituency: string) {
+    this.constituency = constituency
+  }
+  filter(data: SchoolWithEvents): boolean {
+    return data.school.address.city.constituency === this.constituency
   }
 }
 
 export class DesignationFilter implements Filter {
-  filter(data: SchoolWithEvents[], criteria: string): SchoolWithEvents[] {
-    const designation = criteria
-    return data.filter(item => item.school.address.city.designation === designation )
+  private designation: string
+
+  constructor(designation: string) {
+    this.designation = designation
+  }
+  filter(data: SchoolWithEvents): boolean {
+    return data.school.address.city.designation === this.designation
   }
 }
 
-/*export class AmountStudentsFilter implements Filter {
-  filter(data: SchoolWithEvents[], criteria: number[]): SchoolWithEvents[] {
-    // TODO
+export class AmountStudentsFilter implements Filter {
+  private lower: number
+  private upper: number
+
+  constructor(lower: number, upper: number) {
+    this.lower = lower
+    this.upper = upper
   }
-}*/
+  filter(data: SchoolWithEvents): boolean {
+    const  sum = data.school.amount_students11 + data.school.amount_students12 + data.school.amount_students13
+    return this.lower <= sum && sum <= this.upper
+  }
+}
 
 export class KAoAFilter implements Filter {
-  filter(data: SchoolWithEvents[], criteria: boolean): SchoolWithEvents[] {
-    const kaoa = criteria
-    if (kaoa === false) {
-      return data.filter(item => item.school.kaoaSupervisor === 0)
+  private kaoa: boolean
+
+  constructor(kaoa: boolean) {
+    this.kaoa = kaoa
+  }
+  filter(data: SchoolWithEvents): boolean {
+    if (this.kaoa === false) {
+      return data.school.kaoaSupervisor === 0
     } else {
-      return data.filter(item => item.school.kaoaSupervisor > 0)
+      return data.school.kaoaSupervisor > 0
     }
   }
 }
 
 export class TalentscoutingFilter implements Filter {
-  filter(data: SchoolWithEvents[], criteria: boolean): SchoolWithEvents[] {
-    const talentscout = criteria
-    if (talentscout === false) {
-      return data.filter(item => item.school.talentscout === 0)
+  private talentscout: boolean
+
+  constructor(talentscout: boolean) {
+    this.talentscout = talentscout
+  }
+  filter(data: SchoolWithEvents): boolean {
+    if (this.talentscout === false) {
+      return data.school.talentscout === 0
     } else {
-      return data.filter(item => item.school.talentscout > 0)
+      return data.school.talentscout > 0
     }
   }
 }
 
 export class CooperationFilter implements Filter {
-  filter(data: SchoolWithEvents[], criteria: boolean): SchoolWithEvents[] {
-    const cooperationcontract = criteria
-    return data.filter(item => item.school.cooperationcontract === cooperationcontract)
+  private cooperationcontract: boolean
+
+  constructor(cooperationcontract: boolean) {
+    this.cooperationcontract = cooperationcontract
+  }
+  filter(data: SchoolWithEvents): boolean {
+    return data.school.cooperationcontract === this.cooperationcontract
   }
 }
 
@@ -80,14 +120,10 @@ export class CompositeFilter implements Filter {
   constructor(filters: Filter[]) {
     this.filters = filters
   }
-
-  filter(data: SchoolWithEvents[], criteria: any): SchoolWithEvents[] {
-    let filteredData = [...data]
-
+  filter(data: SchoolWithEvents): boolean {
     for (const filter of this.filters) {
-      filteredData = filter.filter(filteredData, criteria)
+      if (!filter.filter(data)) return false
     }
-
-    return filteredData
+    return true
   }
 }
