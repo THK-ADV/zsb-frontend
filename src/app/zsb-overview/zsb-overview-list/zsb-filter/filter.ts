@@ -1,7 +1,6 @@
 import {SchoolWithEvents} from '../zsb-overview-list.component'
-import {from} from 'rxjs'
 
-interface Filter {
+export interface Filter {
   filter(data: SchoolWithEvents): boolean
 }
 
@@ -121,9 +120,6 @@ export class CompositeFilter implements Filter {
     this.filters = filters
   }
   filter(data: SchoolWithEvents): boolean {
-    for (const filter of this.filters) {
-      if (!filter.filter(data)) return false
-    }
-    return true
+    return this.filters.every(f => f.filter(data))
   }
 }

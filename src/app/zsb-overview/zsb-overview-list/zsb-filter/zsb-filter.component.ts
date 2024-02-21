@@ -4,7 +4,7 @@ import {
   AmountStudentsFilter,
   CompositeFilter,
   ConstituencyFilter, CooperationFilter,
-  DesignationFilter,
+  DesignationFilter, Filter,
   GovernmentDistrictFilter, KAoAFilter,
   SchoolNameFilter,
   SchoolTypeFilter, TalentscoutingFilter
@@ -29,6 +29,10 @@ export class ZsbFilterComponent {
   constituencyChecked = false
   designationChecked = false
   amountChecked = false
+  terminChecked = false
+  datumChecked = false
+  personSchoolChecked = false
+  personUniversityChecked = false
   schoolName = ''
   schoolTypes: Observable<SchoolType[]>
   addressesObservable: Observable<Address[]>
@@ -38,14 +42,18 @@ export class ZsbFilterComponent {
   designations: Observable<string[]>
   schoolWithEvents: SchoolWithEvents[]
   selectedTypeId: number
-  governmentDistrict: string
-  constituency: string
-  designation: string
+  governmentDistrict: ''
+  constituency: ''
+  designation: ''
   lowerBound: number
   upperBound: number
   kaoa: boolean
   talentscouting: boolean
   cooperation: boolean
+  termin: ''
+  selectedDate: Date
+  selectedPersonSchool: ''
+  selectedPersonUniversity: ''
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               public dialogRef: MatDialogRef<ZsbFilterComponent>,
@@ -69,7 +77,6 @@ export class ZsbFilterComponent {
         filterDuplicates(adressen.map(it => it.city.constituency.trim())))
       this.designations = filterOptions(controls.governmentDistrict,
         filterDuplicates(adressen.map(it => it.city.designation.trim())))
-      console.log(this.governmentDistricts)
     })
   }
 
@@ -94,33 +101,49 @@ export class ZsbFilterComponent {
   onAmountChange() {}
 
   onSubmit() {
-    const schoolNameFilter = new SchoolNameFilter(this.schoolName)
-    const schoolTypeFilter = new SchoolTypeFilter(this.selectedTypeId)
-    const governmentDistrictFilter = new GovernmentDistrictFilter(this.governmentDistrict)
-    const constituencyFilter = new ConstituencyFilter(this.constituency)
-    const designationFilter = new DesignationFilter(this.designation)
-    const amountFilter = new AmountStudentsFilter(this.lowerBound, this.upperBound)
-    const kaoaFilter = new KAoAFilter(this.kaoa)
-    const talentscoutingFilter = new TalentscoutingFilter(this.talentscouting)
-    const cooperationFilter = new CooperationFilter(this.cooperation)
-    const compositeFilter = new CompositeFilter([
-      schoolNameFilter,
-      schoolTypeFilter,
-      governmentDistrictFilter,
-      constituencyFilter,
-      designationFilter,
-      amountFilter,
-      kaoaFilter,
-      talentscoutingFilter,
-      cooperationFilter
-    ])
+    const filters: Filter[] = []
+    if (this.schoolName !== undefined && this.schoolName !== '') {
+      filters.push(new SchoolNameFilter(this.schoolName))
+    }
+    if (this.selectedTypeId !== undefined) {
+      filters.push(new SchoolTypeFilter(this.selectedTypeId))
+    }
+    if (this.governmentDistrict !== undefined && this.governmentDistrict !== '') {
+      filters.push(new GovernmentDistrictFilter(this.governmentDistrict))
+    }
+    if (this.constituency !== undefined && this.constituency !== '') {
+      filters.push(new GovernmentDistrictFilter(this.governmentDistrict))
+    }
+    if (this.designation !== undefined && this.designation !== '') {
+      filters.push(new DesignationFilter(this.designation))
+    }
+    if (this.lowerBound !== undefined && this.lowerBound >= 0
+      && this.upperBound !== undefined && this.upperBound > 0) {
+      filters.push(new AmountStudentsFilter(this.lowerBound, this.upperBound))
+    }
+    if (this.kaoa !== undefined) {
+      filters.push(new KAoAFilter(this.kaoa))
+    }
+    if (this.talentscouting !== undefined) {
+      filters.push(new TalentscoutingFilter(this.talentscouting))
+    }
+    if (this.cooperation !== undefined) {
+      filters.push(new CooperationFilter(this.cooperation))
+    }
+    const compositeFilter = new CompositeFilter(filters)
     console.log(this.schoolName)
+    console.log(this.selectedTypeId)
+    console.log(this.governmentDistrict)
+    console.log(this.constituency)
+    console.log(this.designation)
+    console.log(this.lowerBound)
+    console.log(this.upperBound)
+    console.log(this.kaoa)
+    console.log(this.talentscouting)
+    console.log(this.cooperation)
     const result = this.schoolWithEvents.filter(e => {
-      console.log(schoolNameFilter.filter(e))
-      schoolNameFilter.filter(e)
+      return compositeFilter.filter(e)
     })
-    console.log('result')
-    console.log(result)
     this.dialogRef.close(result)
   }
 
