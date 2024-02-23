@@ -4,10 +4,10 @@ import {
   AmountStudentsFilter,
   CompositeFilter,
   ConstituencyFilter, CooperationFilter,
-  DesignationFilter, Filter,
-  GovernmentDistrictFilter, KAoAFilter,
+  DesignationFilter, EventDateFilter, EventNameFilter, Filter,
+  GovernmentDistrictFilter, KAoAFilter, SchoolContactFilter,
   SchoolNameFilter,
-  SchoolTypeFilter, TalentscoutingFilter
+  SchoolTypeFilter, TalentscoutingFilter, UniversityContactFilter
 } from './filter'
 import {SchoolWithEvents} from '../zsb-overview-list.component'
 import {SchoolType} from '../../../zsb-school/schoolType'
@@ -31,8 +31,8 @@ export class ZsbFilterComponent {
   amountChecked = false
   terminChecked = false
   datumChecked = false
-  personSchoolChecked = false
-  personUniversityChecked = false
+  contactSchoolChecked = false
+  contactUniversityChecked = false
   schoolName = ''
   schoolTypes: Observable<SchoolType[]>
   addressesObservable: Observable<Address[]>
@@ -50,10 +50,10 @@ export class ZsbFilterComponent {
   kaoa: boolean
   talentscouting: boolean
   cooperation: boolean
-  termin: ''
-  selectedDate: Date
-  selectedPersonSchool: ''
-  selectedPersonUniversity: ''
+  eventName: ''
+  date: Date
+  contactPersonSchool: ''
+  contactPersonUniversity: ''
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               public dialogRef: MatDialogRef<ZsbFilterComponent>,
@@ -112,7 +112,7 @@ export class ZsbFilterComponent {
       filters.push(new GovernmentDistrictFilter(this.governmentDistrict))
     }
     if (this.constituency !== undefined && this.constituency !== '') {
-      filters.push(new GovernmentDistrictFilter(this.governmentDistrict))
+      filters.push(new ConstituencyFilter(this.constituency))
     }
     if (this.designation !== undefined && this.designation !== '') {
       filters.push(new DesignationFilter(this.designation))
@@ -129,6 +129,18 @@ export class ZsbFilterComponent {
     }
     if (this.cooperation !== undefined) {
       filters.push(new CooperationFilter(this.cooperation))
+    }
+    if (this.eventName !== undefined && this.eventName !== '') {
+      filters.push(new EventNameFilter(this.eventName))
+    }
+    if (this.date !== undefined) {
+      filters.push(new EventDateFilter(this.date))
+    }
+    if (this.contactPersonSchool !== undefined && this.contactPersonSchool !== '') {
+      filters.push(new EventNameFilter(this.contactPersonSchool))
+    }
+    if (this.contactPersonUniversity !== undefined && this.contactPersonUniversity !== '') {
+      filters.push(new EventNameFilter(this.contactPersonUniversity))
     }
     const compositeFilter = new CompositeFilter(filters)
     console.log(this.schoolName)

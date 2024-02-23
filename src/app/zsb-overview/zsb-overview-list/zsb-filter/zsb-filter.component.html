@@ -88,7 +88,7 @@
             Termin
           </mat-checkbox>
           <mat-form-field appearance="fill">
-            <input matInput type="text" id="termin" name="termin" [(ngModel)]="termin">
+            <input matInput type="text" id="eventName" name="eventName" [(ngModel)]="eventName">
           </mat-form-field>
         </div>
         <div class="form-group">
@@ -96,29 +96,31 @@
             Datum
           </mat-checkbox>
           <mat-form-field appearance="fill">
-            <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="selectedDate"
+            <input matInput [matDatepicker]="picker" placeholder="Choose a date"
+                   [(ngModel)]="date"
                    name="selectedDate">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
         </div>
         <div class="form-group">
-          <mat-checkbox style="margin-right: 10px" [(ngModel)]="personSchoolChecked" id="personSchoolCheckbox"
-                        name="personSchoolCheckbox">
+          <mat-checkbox style="margin-right: 10px" [(ngModel)]="contactSchoolChecked" id="contactSchoolCheckbox"
+                        name="contactSchoolCheckbox">
             Verantwortliche*r Schule
           </mat-checkbox>
           <mat-form-field appearance="fill">
-            <input matInput type="text" id="personSchool" name="personSchool" [(ngModel)]="selectedPersonSchool">
+            <input matInput type="text" id="contactSchool" name="contactSchool"
+                   [(ngModel)]="contactPersonSchool">
           </mat-form-field>
         </div>
         <div class="form-group">
-          <mat-checkbox style="margin-right: 10px" [(ngModel)]="personUniversityChecked" id="personUniversityCheckbox"
-                        name="personUniversityCheckbox">
+          <mat-checkbox style="margin-right: 10px" [(ngModel)]="contactUniversityChecked" id="contactUniversityCheckbox"
+                        name="contactUniversityCheckbox">
             Verantwortliche*r Hochschule
           </mat-checkbox>
           <mat-form-field appearance="fill">
-            <input matInput type="text" id="personUniversity" name="personUniversity"
-                   [(ngModel)]="selectedPersonUniversity">
+            <input matInput type="text" id="contactUniversity" name="contactUniversity"
+                   [(ngModel)]="contactPersonUniversity">
           </mat-form-field>
         </div>
       </div>

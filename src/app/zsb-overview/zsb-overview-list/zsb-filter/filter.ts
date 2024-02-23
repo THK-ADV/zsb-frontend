@@ -1,4 +1,5 @@
 import {SchoolWithEvents} from '../zsb-overview-list.component'
+import {formatDate} from '@angular/common'
 
 export interface Filter {
   filter(data: SchoolWithEvents): boolean
@@ -110,6 +111,58 @@ export class CooperationFilter implements Filter {
   }
   filter(data: SchoolWithEvents): boolean {
     return data.school.cooperationcontract === this.cooperationcontract
+  }
+}
+
+export class EventNameFilter implements Filter {
+  private eventName: string
+
+  constructor(eventName: string) {
+    this.eventName = eventName
+  }
+  filter(data: SchoolWithEvents): boolean {
+    for (const event of data.events) {
+      return event.designation.toLowerCase().includes(this.eventName.toLowerCase())
+    }
+  }
+}
+
+export class EventDateFilter implements Filter {
+  private date: string
+
+  constructor(date: Date) {
+    this.date = formatDate(date, 'yyyy-MM-dd', 'en-US')
+  }
+  filter(data: SchoolWithEvents): boolean {
+    for (const event of data.events) {
+      return event.date.toLowerCase().includes(this.date.toLowerCase())
+    }
+  }
+}
+
+export class SchoolContactFilter implements Filter {
+  private contactName: string
+
+  constructor(contactName: string) {
+    this.contactName = contactName
+  }
+  filter(data: SchoolWithEvents): boolean {
+    for (const event of data.events) {
+      return event.contact_school.toLowerCase().includes(this.contactName.toLowerCase())
+    }
+  }
+}
+
+export class UniversityContactFilter implements Filter {
+  private contactName: string
+
+  constructor(contactName: string) {
+    this.contactName = contactName
+  }
+  filter(data: SchoolWithEvents): boolean {
+    for (const event of data.events) {
+      return event.contact_university.toLowerCase().includes(this.contactName.toLowerCase())
+    }
   }
 }
 
