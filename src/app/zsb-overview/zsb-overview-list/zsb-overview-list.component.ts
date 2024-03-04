@@ -82,10 +82,19 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   protected readonly console = console
 
   ngOnInit() {
+    this.pullData()
+    this.selectedSchoolsIds = []
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe()
+  }
+
+  pullData() {
     this.sub = zip(
       this.service.getSchoolsAtomic(),
       this.service.getSchoolType(),
-      this.service.getAllEvents()
+      this.service.getEvents()
     ).subscribe(([schools, schoolTypes, events]) => {
       schools.forEach((school) => {
         const schoolEvents = events.filter((event) => {
@@ -101,43 +110,12 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
       this.detailData = new MatTableDataSource([])
       this.listData.sort = this.sort
       this.listData.paginator = this.paginator
-      this.listData.filterPredicate = buildCustomFilter(({school}) => {
-          switch (this.selectedFilterOption) {
-            case 'Alle':
-              return completeSchoolAsString(
-                school,
-                schoolTypes,
-              )
-            case 'Name':
-              return school.name
-            case 'Schulform':
-              return schoolTypeDescById(school.type, schoolTypes)
-            case 'Straße':
-              return school.address.street + school.address.houseNumber
-            case 'Stadt':
-              return school.address.city.postcode +
-                school.address.city.designation +
-                school.address.city.governmentDistrict +
-                school.address.city.constituency
-            case 'Kontakte':
-              return school.contacts.map(c => c.surname).join()
-          }
-        }
-      )
       this.buildCustomSorting()
-
       this.schoolTypes = schoolTypes
     })
-    this.selectedSchoolsIds = []
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe()
   }
 
   updateDetailData() {
-    console.log(this.detailData.data)
-    console.log(this.expandedElement)
     this.detailData.data = this.expandedElement.events
   }
 
@@ -185,14 +163,13 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   }
 
   deleteSchool(schoolName: string, uuid: string) {
-    console.log('schoolName, uuid')
-    console.log(schoolName, uuid)
     if (confirm('Seid ihr sicher, dass ihr "' + schoolName + '" löschen möchtet?')) {
       this.service.deleteSchool(uuid).subscribe(it => {
         if (it !== undefined) {
           this.notificationService.success(':: Schule wurde erfolgreich entfernt.')
           // remove schule from table
-          this.ngOnInit()
+          this.pullData()
+          this.listData = new MatTableDataSource(this.schoolWithEvents)
         } else {
           this.notificationService.failure('-- Schule konnte nicht entfernt werden.')
         }
@@ -201,11 +178,8 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   }
 
   deleteEvent(eventName: string, uuid: string) {
-    console.log('Termin löschen')
-    console.log(eventName, uuid)
     if (confirm('Seid ihr sicher, dass ihr "' + eventName + '" löschen möchtet?')) {
       this.service.deleteEvents(uuid).subscribe(it => {
-        console.log('Termin löschen 2')
         if (it !== undefined) {
           this.notificationService.success(':: Termin wurde erfolgreich entfernt.')
           // remove event from table

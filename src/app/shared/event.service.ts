@@ -67,7 +67,7 @@ export class EventService {
   }
 
   getEvents(): Observable<DatabaseEvent[]> {
-    return this.dbService.getAllEvents()
+    return this.dbService.getEvents()
   }
 
   deleteEvent(uuid: string) {

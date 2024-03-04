@@ -10,7 +10,18 @@
             Schulname
           </mat-checkbox>
           <mat-form-field appearance="fill">
-            <input matInput type="text" id="schoolName" name="schoolName" [(ngModel)]="schoolName">
+            <input
+              matInput
+              type="text"
+              id="schoolName"
+              name="schoolName"
+              [(ngModel)]="schoolName"
+              [matAutocomplete]="autoSchoolName">
+            <mat-autocomplete autoActiveFirstOption #autoSchoolName="matAutocomplete">
+              <mat-option *ngFor="let option of schoolNames" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
         </div>
         <div>
@@ -88,7 +99,18 @@
             Termin
           </mat-checkbox>
           <mat-form-field appearance="fill">
-            <input matInput type="text" id="eventName" name="eventName" [(ngModel)]="eventName">
+            <input
+              matInput
+              type="text"
+              id="eventName"
+              name="eventName"
+              [(ngModel)]="eventName"
+              [matAutocomplete]="autoEventName">
+            <mat-autocomplete autoActiveFirstOption #autoEventName="matAutocomplete">
+              <mat-option *ngFor="let option of eventNames" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
         </div>
         <div class="form-group">

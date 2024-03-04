@@ -12,10 +12,11 @@ import {
 import {SchoolWithEvents} from '../zsb-overview-list.component'
 import {SchoolType} from '../../../zsb-school/schoolType'
 import {DatabaseService} from '../../../shared/database.service'
-import {Observable} from 'rxjs'
+import {Observable, Subscription} from 'rxjs'
 import {filterDuplicates, filterOptions} from '../../../shared/functions'
 import {Address} from '../../../zsb-address/address'
 import {AddressService} from '../../../shared/address.service'
+import {School} from '../../../zsb-school/school'
 
 @Component({
   selector: 'app-zsb-filter',
@@ -23,6 +24,7 @@ import {AddressService} from '../../../shared/address.service'
   styleUrls: ['./zsb-filter.component.css']
 })
 export class ZsbFilterComponent {
+  subs: Subscription[] = []
   schoolNameChecked = false
   schoolTypeChecked = false
   governmentDistrictChecked = false
@@ -34,6 +36,7 @@ export class ZsbFilterComponent {
   contactSchoolChecked = false
   contactUniversityChecked = false
   schoolName = ''
+  schoolNames: string[] = []
   schoolTypes: Observable<SchoolType[]>
   addressesObservable: Observable<Address[]>
   addresses: Address[]
@@ -51,6 +54,7 @@ export class ZsbFilterComponent {
   talentscouting: boolean
   cooperation: boolean
   eventName: ''
+  eventNames: string[] = []
   date: Date
   contactPersonSchool: ''
   contactPersonUniversity: ''
@@ -78,6 +82,16 @@ export class ZsbFilterComponent {
       this.designations = filterOptions(controls.governmentDistrict,
         filterDuplicates(adressen.map(it => it.city.designation.trim())))
     })
+    this.subs.push(
+      this.dbService.getSchoolsAtomic().subscribe(schools =>
+        schools.forEach(school => this.schoolNames.push(school.name))
+      )
+    )
+    this.subs.push(
+      this.dbService.getEvents().subscribe(events =>
+        events.forEach(event => this.eventNames.push(event.designation))
+      )
+    )
   }
 
   onSchoolNameChange() {
@@ -92,13 +106,17 @@ export class ZsbFilterComponent {
     }*/
   }
 
-  onGovernmentDistrictChange() { }
+  onGovernmentDistrictChange() {
+  }
 
-  onConstituencyChange() { }
+  onConstituencyChange() {
+  }
 
-  onDesignationChange() { }
+  onDesignationChange() {
+  }
 
-  onAmountChange() {}
+  onAmountChange() {
+  }
 
   onSubmit() {
     const filters: Filter[] = []
@@ -137,22 +155,12 @@ export class ZsbFilterComponent {
       filters.push(new EventDateFilter(this.date))
     }
     if (this.contactPersonSchool !== undefined && this.contactPersonSchool !== '') {
-      filters.push(new EventNameFilter(this.contactPersonSchool))
+      filters.push(new SchoolContactFilter(this.contactPersonSchool))
     }
     if (this.contactPersonUniversity !== undefined && this.contactPersonUniversity !== '') {
-      filters.push(new EventNameFilter(this.contactPersonUniversity))
+      filters.push(new UniversityContactFilter(this.contactPersonUniversity))
     }
     const compositeFilter = new CompositeFilter(filters)
-    console.log(this.schoolName)
-    console.log(this.selectedTypeId)
-    console.log(this.governmentDistrict)
-    console.log(this.constituency)
-    console.log(this.designation)
-    console.log(this.lowerBound)
-    console.log(this.upperBound)
-    console.log(this.kaoa)
-    console.log(this.talentscouting)
-    console.log(this.cooperation)
     const result = this.schoolWithEvents.filter(e => {
       return compositeFilter.filter(e)
     })

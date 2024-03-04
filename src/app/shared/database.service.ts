@@ -149,7 +149,7 @@ export class DatabaseService {
     return this.httpClient.get<ContactSalutation[]>(this.DB_URL + '/contacts/salutations')
   }
 
-  getAllEvents(): Observable<DatabaseEvent[]> {
+  getEvents(): Observable<DatabaseEvent[]> {
     return this.httpClient.get<DatabaseEvent[]>(this.DB_URL + '/events?resolve_ids=true')
   }
 
