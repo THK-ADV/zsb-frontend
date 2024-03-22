@@ -8,10 +8,9 @@ export function filterDuplicates(array: string[]) {
   return array.filter((it, index) => array.indexOf(it) === index)
 }
 
-export function filterOptions(control: AbstractControl, options: string[]): Observable<string[]> {
-  return control.valueChanges.pipe(
-    startWith(''),
-    map(it => _filter(it, options))
+export function filterOptions(control: AbstractControl, options: string[]): string[] {
+  return options.filter(option =>
+    option.toLowerCase().includes(control.value.trim().toLowerCase())
   )
 }
 

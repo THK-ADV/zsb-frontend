@@ -1,76 +1,99 @@
 <!--<p>zsb-filter works!</p>-->
 <div class="container">
   <h1>Filter / Suche</h1>
+  <button mat-raised-button color="primary" (click)="resetFilters()">
+    Zurücksetzen
+  </button>
   <div class="two-column-form">
     <div class="left-column">
       <form #searchForm="ngForm">
-        <div class="form-group">
-          <mat-checkbox style="margin-right: 10px" [(ngModel)]="schoolNameChecked"
-                        (ngModelChange)="onSchoolNameChange()" id="schoolNameCheckbox" name="schoolNameCheckbox">
-            Schulname
-          </mat-checkbox>
-          <mat-form-field appearance="fill">
+        <div>
+          <mat-label for="schulname">Schulname:</mat-label>
+          <mat-form-field id="schulname" appearance="fill">
             <input
               matInput
               type="text"
-              id="schoolName"
               name="schoolName"
               [(ngModel)]="schoolName"
               [matAutocomplete]="autoSchoolName">
             <mat-autocomplete autoActiveFirstOption #autoSchoolName="matAutocomplete">
-              <mat-option *ngFor="let option of schoolNames" [value]="option">
-                {{option}}
+              <mat-option *ngFor="let option of filteredSchoolNames" [value]="option">
+                {{ option }}
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
         </div>
         <div>
-          <mat-checkbox style="margin-right: 10px" [(ngModel)]="schoolTypeChecked"
-                        (ngModelChange)="onSchoolTypeChange()" id="schoolTypeCheckbox" name="schoolTypeCheckbox">
-            Schulform
-          </mat-checkbox>
-          <mat-select appearance="fill" [(value)]="selectedTypeId">
-            <mat-option *ngFor="let type of schoolTypes | async" [value]="type.id">{{ type.desc }}</mat-option>
-          </mat-select>
+          <mat-label for="schulform">Schulform:</mat-label>
+          <mat-form-field id="schulform" appearance="fill">
+            <input
+              matInput
+              type="text"
+              name="schoolType"
+              [(ngModel)]="schoolType"
+              [matAutocomplete]="autoSchoolType">
+            <mat-autocomplete autoActiveFirstOption #autoSchoolType="matAutocomplete"
+                              (optionSelected)="onSchoolTypeSelected($event)">
+              <mat-option *ngFor="let option of filteredSchoolTypes" [value]="option">
+                {{ option.desc }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
         </div>
         <div>
-          <mat-checkbox style="margin-right: 10px" [(ngModel)]="governmentDistrictChecked"
-                        (ngModelChange)="onGovernmentDistrictChange()" id="governmentDistrictCheckbox"
-                        name="governmentDistrictCheckbox">
-            Regierungsbezirk
-          </mat-checkbox>
-          <mat-select appearance="fill" [(value)]="governmentDistrict">
-            <mat-option *ngFor="let governmentDistrict of governmentDistricts | async"
-                        [value]="governmentDistrict">{{ governmentDistrict }}
-            </mat-option>
-          </mat-select>
+          <mat-label for="regierungsbezirk">Regierungsbezirk:</mat-label>
+          <mat-form-field id="regierungsbezirk" appearance="fill">
+            <input
+              matInput
+              type="text"
+              name="governmentDistrict"
+              [(ngModel)]="governmentDistrict"
+              [matAutocomplete]="autoGovernmentDistrict"
+            >
+            <mat-autocomplete autoActiveFirstOption #autoGovernmentDistrict="matAutocomplete">
+              <mat-option *ngFor="let option of filteredGovernmentDistricts" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
         </div>
         <div>
-          <mat-checkbox style="margin-right: 10px" [(ngModel)]="constituencyChecked"
-                        (ngModelChange)="onConstituencyChange()" id="constituencyCheckbox" name="constituencyCheckbox">
-            Kreis
-          </mat-checkbox>
-          <mat-select appearance="fill" [(value)]="constituency">
-            <mat-option *ngFor="let constituency of constituencies | async" [value]="constituency">{{ constituency }}
-            </mat-option>
-          </mat-select>
+          <mat-label for="kreis">Kreis:</mat-label>
+          <mat-form-field id="kreis" appearance="fill">
+            <input
+              matInput
+              type="text"
+              name="constituency"
+              [(ngModel)]="constituency"
+              [matAutocomplete]="autoConstituency"
+            >
+            <mat-autocomplete autoActiveFirstOption #autoConstituency="matAutocomplete">
+              <mat-option *ngFor="let option of filteredConstituencies" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
         </div>
         <div>
-          <mat-checkbox style="margin-right: 10px" [(ngModel)]="designationChecked"
-                        (ngModelChange)="onDesignationChange()" id="designationCheckbox" name="designationCheckbox">
-            Ort
-          </mat-checkbox>
-          <mat-select appearance="fill" [(value)]="designation">
-            <mat-option *ngFor="let designation of designations | async" [value]="designation">{{ designation }}
-            </mat-option>
-          </mat-select>
+          <mat-label for="ort">Ort:</mat-label>
+          <mat-form-field id="ort" appearance="fill">
+            <input
+              matInput
+              type="text"
+              name="designation"
+              [(ngModel)]="designation"
+              [matAutocomplete]="autoDesignation"
+            >
+            <mat-autocomplete autoActiveFirstOption #autoDesignation="matAutocomplete">
+              <mat-option *ngFor="let option of filteredDesignations" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
         </div>
         <div style="display: flex; align-items: center;">
-          <mat-checkbox style="margin-right: 10px;" [(ngModel)]="amountChecked" (ngModelChange)="onAmountChange()"
-                        id="amountCheckbox" name="amountCheckbox">
-            Anzahl SuS
-          </mat-checkbox>
-          <mat-form-field appearance="fill" style="margin-right: 5px; width: 100px;">
+          <mat-label for="anzahlSuS">Anzahl SuS:</mat-label>
+          <mat-form-field id="anzahlSuS" appearance="fill" style="margin-right: 5px; width: 100px;">
             <mat-label>Von</mat-label>
             <input matInput type="number" [(ngModel)]="lowerBound" name="lowerBound">
           </mat-form-field>
@@ -80,25 +103,43 @@
             <input matInput type="number" [(ngModel)]="upperBound" name="upperBound">
           </mat-form-field>
         </div>
+        <div>
+          <mat-label for="kaoa">KAoA Hochschule:</mat-label>
+          <mat-form-field id="kaoa">
+            <mat-select [(ngModel)]="kaoa" name="kaoa">
+              <mat-option [value]="undefined"> </mat-option>
+              <mat-option [value]="true">Ja</mat-option>
+              <mat-option [value]="false">Nein</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-label for="talentscouting">Talentscouting:</mat-label>
+          <mat-form-field id="talentscouting">
+            <mat-select [(ngModel)]="talentscouting" name="talentscouting">
+              <mat-option [value]="undefined"> </mat-option>
+              <mat-option [value]="true">Ja</mat-option>
+              <mat-option [value]="false">Nein</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-label for="cooperation">Kooperation TH Köln:</mat-label>
+          <mat-form-field id="cooperation">
+            <mat-select [(ngModel)]="cooperation" name="cooperation">
+              <mat-option [value]="undefined"> </mat-option>
+              <mat-option [value]="true">Ja</mat-option>
+              <mat-option [value]="false">Nein</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </form>
-      <div>
-        <mat-checkbox [(ngModel)]="kaoa">KAoA Hochschule</mat-checkbox>
-      </div>
-      <div>
-        <mat-checkbox [(ngModel)]="talentscouting">Talentscouting</mat-checkbox>
-      </div>
-      <div>
-        <mat-checkbox [(ngModel)]="cooperation">Kooperation TH Köln</mat-checkbox>
-      </div>
     </div>
     <div class="right-column">
       <div style="margin-top: 20px;">
         <div class="form-group">
-          <mat-checkbox style="margin-right: 10px" [(ngModel)]="terminChecked" id="terminCheckbox"
-                        name="terminCheckbox">
-            Termin
-          </mat-checkbox>
-          <mat-form-field appearance="fill">
+          <mat-label for="termin">Termin:</mat-label>
+          <mat-form-field id="termin" appearance="fill">
             <input
               matInput
               type="text"
@@ -107,17 +148,15 @@
               [(ngModel)]="eventName"
               [matAutocomplete]="autoEventName">
             <mat-autocomplete autoActiveFirstOption #autoEventName="matAutocomplete">
-              <mat-option *ngFor="let option of eventNames" [value]="option">
-                {{option}}
+              <mat-option *ngFor="let option of filteredEventNames" [value]="option">
+                {{ option }}
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
         </div>
         <div class="form-group">
-          <mat-checkbox style="margin-right: 10px" [(ngModel)]="datumChecked" id="datumCheckbox" name="datumCheckbox">
-            Datum
-          </mat-checkbox>
-          <mat-form-field appearance="fill">
+          <mat-label for="datum">Datum:</mat-label>
+          <mat-form-field id="datum" appearance="fill">
             <input matInput [matDatepicker]="picker" placeholder="Choose a date"
                    [(ngModel)]="date"
                    name="selectedDate">
@@ -126,21 +165,15 @@
           </mat-form-field>
         </div>
         <div class="form-group">
-          <mat-checkbox style="margin-right: 10px" [(ngModel)]="contactSchoolChecked" id="contactSchoolCheckbox"
-                        name="contactSchoolCheckbox">
-            Verantwortliche*r Schule
-          </mat-checkbox>
-          <mat-form-field appearance="fill">
+          <mat-label for="kontaktSchule">Verantwortliche*r Schule:</mat-label>
+          <mat-form-field id="kontaktSchule" appearance="fill">
             <input matInput type="text" id="contactSchool" name="contactSchool"
                    [(ngModel)]="contactPersonSchool">
           </mat-form-field>
         </div>
         <div class="form-group">
-          <mat-checkbox style="margin-right: 10px" [(ngModel)]="contactUniversityChecked" id="contactUniversityCheckbox"
-                        name="contactUniversityCheckbox">
-            Verantwortliche*r Hochschule
-          </mat-checkbox>
-          <mat-form-field appearance="fill">
+          <mat-label for="kontaktHS">Verantwortliche*r Hochschule:</mat-label>
+          <mat-form-field id="kontaktHS" appearance="fill">
             <input matInput type="text" id="contactUniversity" name="contactUniversity"
                    [(ngModel)]="contactPersonUniversity">
           </mat-form-field>

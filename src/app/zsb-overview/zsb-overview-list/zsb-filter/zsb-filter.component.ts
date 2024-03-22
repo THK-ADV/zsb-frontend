@@ -12,11 +12,11 @@ import {
 import {SchoolWithEvents} from '../zsb-overview-list.component'
 import {SchoolType} from '../../../zsb-school/schoolType'
 import {DatabaseService} from '../../../shared/database.service'
-import {Observable, Subscription} from 'rxjs'
+import {Observable, Subscription, zip} from 'rxjs'
 import {filterDuplicates, filterOptions} from '../../../shared/functions'
 import {Address} from '../../../zsb-address/address'
 import {AddressService} from '../../../shared/address.service'
-import {School} from '../../../zsb-school/school'
+import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete'
 
 @Component({
   selector: 'app-zsb-filter',
@@ -25,35 +25,26 @@ import {School} from '../../../zsb-school/school'
 })
 export class ZsbFilterComponent {
   subs: Subscription[] = []
-  schoolNameChecked = false
-  schoolTypeChecked = false
-  governmentDistrictChecked = false
-  constituencyChecked = false
-  designationChecked = false
-  amountChecked = false
-  terminChecked = false
-  datumChecked = false
-  contactSchoolChecked = false
-  contactUniversityChecked = false
   schoolName = ''
   schoolNames: string[] = []
-  schoolTypes: Observable<SchoolType[]>
-  addressesObservable: Observable<Address[]>
+  schoolTypes: SchoolType[] = []
   addresses: Address[]
-  governmentDistricts: Observable<string[]>
-  constituencies: Observable<string[]>
-  designations: Observable<string[]>
+  governmentDistricts: string[] = []
+  constituencies: string[] = []
+  designations: string[] = []
   schoolWithEvents: SchoolWithEvents[]
-  selectedTypeId: number
-  governmentDistrict: ''
-  constituency: ''
-  designation: ''
+  allSchoolsWithEvents: SchoolWithEvents[]
+  schoolType = ''
+  selectedType: SchoolType
+  governmentDistrict = ''
+  constituency = ''
+  designation = ''
   lowerBound: number
   upperBound: number
-  kaoa: boolean
-  talentscouting: boolean
-  cooperation: boolean
-  eventName: ''
+  kaoa: boolean = undefined
+  talentscouting: boolean = undefined
+  cooperation: boolean = undefined
+  eventName = ''
   eventNames: string[] = []
   date: Date
   contactPersonSchool: ''
@@ -70,52 +61,99 @@ export class ZsbFilterComponent {
 
   ngOnInit(): void {
     const controls = this.service.formGroup.controls
-    this.schoolTypes = this.dbService.getSchoolType()
-    this.addressesObservable = this.dbService.getAddressesAtomic()
-    this.addressesObservable.subscribe(addresses => this.addresses = addresses)
-    this.addressesObservable.subscribe(adressen => {
-      // get all values and filter duplicates
-      this.governmentDistricts = filterOptions(controls.governmentDistrict,
-        filterDuplicates(adressen.map(it => it.city.governmentDistrict.trim())))
-      this.constituencies = filterOptions(controls.governmentDistrict,
-        filterDuplicates(adressen.map(it => it.city.constituency.trim())))
-      this.designations = filterOptions(controls.governmentDistrict,
-        filterDuplicates(adressen.map(it => it.city.designation.trim())))
+
+    this.dbService.getAddressesAtomic().subscribe(addresses => {
+      this.addresses = addresses
+
+      const governmentDistricts = filterDuplicates(addresses.map(it => it.city.governmentDistrict.trim()))
+      const constituencies = filterDuplicates(addresses.map(it => it.city.constituency.trim()))
+      const designations = filterDuplicates(addresses.map(it => it.city.designation.trim()))
+
+      this.governmentDistricts = filterOptions(controls.governmentDistrict, governmentDistricts)
+      this.constituencies = filterOptions(controls.constituency, constituencies)
+      this.designations = filterOptions(controls.designation, designations)
     })
+
+    this.subs.push(
+      this.dbService.getSchoolType().subscribe(types =>
+        this.schoolTypes = types
+      )
+    )
+
     this.subs.push(
       this.dbService.getSchoolsAtomic().subscribe(schools =>
-        schools.forEach(school => this.schoolNames.push(school.name))
+        this.schoolNames = schools.map(school => school.name)
       )
     )
+
     this.subs.push(
       this.dbService.getEvents().subscribe(events =>
-        events.forEach(event => this.eventNames.push(event.designation))
+        this.eventNames = events.map(event => event.designation)
       )
+    )
+
+    this.subs.push(
+      zip(
+        this.dbService.getSchoolsAtomic(),
+        this.dbService.getEvents()
+      ).subscribe(([schools, events]) => {
+        this.schoolWithEvents = schools.map(school => ({
+          school,
+          events: events.filter(event => event.school_id === school.id)
+        }))
+      })
     )
   }
 
-  onSchoolNameChange() {
-    if (this.schoolName.trim() !== '') {
-      this.schoolNameChecked = true
+  get filteredSchoolNames(): string[] {
+    return this.schoolNames.filter(option =>
+      option.trim().toLowerCase().includes(this.schoolName.trim().toLowerCase())
+    )
+  }
+
+  get filteredSchoolTypes(): SchoolType[] {
+    if (!this.schoolType) {
+      return this.schoolTypes
     }
+    const filteredList = this.schoolTypes.filter(option => {
+      return option.desc.trim().toLowerCase().includes(this.schoolType.trim().toLowerCase())
+    })
+    return filteredList
   }
 
-  onSchoolTypeChange() {
-    /*if (this.type.trim() !== '') {
-      this.schoolNameChecked = true
-    }*/
+  get filteredGovernmentDistricts(): string[] {
+    return this.governmentDistricts.filter(option =>
+      option.trim().toLowerCase().includes(this.governmentDistrict.trim().toLowerCase())
+    )
   }
 
-  onGovernmentDistrictChange() {
+  get filteredConstituencies(): string[] {
+    return this.constituencies.filter(option =>
+      option.trim().toLowerCase().includes(this.constituency.trim().toLowerCase())
+    )
   }
 
-  onConstituencyChange() {
+  get filteredDesignations(): string[] {
+    return this.designations.filter(option =>
+      option.trim().toLowerCase().includes(this.designation.trim().toLowerCase())
+    )
   }
 
-  onDesignationChange() {
+  get filteredEventNames(): string[] {
+    return this.eventNames.filter(option =>
+      option.trim().toLowerCase().includes(this.eventName.trim().toLowerCase())
+    )
   }
 
-  onAmountChange() {
+  onSchoolTypeSelected(event: MatAutocompleteSelectedEvent) {
+    this.selectedType = event.option.value
+    this.schoolType = this.selectedType.desc
+    console.log('type', this.selectedType)
+  }
+
+  resetFilters() {
+    console.log(this.allSchoolsWithEvents)
+    this.dialogRef.close(this.allSchoolsWithEvents)
   }
 
   onSubmit() {
@@ -123,8 +161,14 @@ export class ZsbFilterComponent {
     if (this.schoolName !== undefined && this.schoolName !== '') {
       filters.push(new SchoolNameFilter(this.schoolName))
     }
-    if (this.selectedTypeId !== undefined) {
-      filters.push(new SchoolTypeFilter(this.selectedTypeId))
+    if (!this.selectedType && this.schoolType) {
+      const extractedType = this.schoolTypes.find(option =>
+        option.desc.toLowerCase().includes(this.schoolType.toLowerCase())
+      )
+      this.selectedType = extractedType
+    }
+    if (this.selectedType !== undefined) {
+      filters.push(new SchoolTypeFilter(this.selectedType.id))
     }
     if (this.governmentDistrict !== undefined && this.governmentDistrict !== '') {
       filters.push(new GovernmentDistrictFilter(this.governmentDistrict))
@@ -161,10 +205,10 @@ export class ZsbFilterComponent {
       filters.push(new UniversityContactFilter(this.contactPersonUniversity))
     }
     const compositeFilter = new CompositeFilter(filters)
-    const result = this.schoolWithEvents.filter(e => {
+    const filteredSchoolWithEvents = this.schoolWithEvents.filter(e => {
       return compositeFilter.filter(e)
     })
-    this.dialogRef.close(result)
+    this.dialogRef.close({schoolWithEvents: filteredSchoolWithEvents, amount: filters.length})
   }
 
   onCancel() {

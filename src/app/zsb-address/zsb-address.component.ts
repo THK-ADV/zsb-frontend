@@ -32,17 +32,17 @@ export class ZsbAddressComponent implements OnInit {
 
   // options for all autocomplete inputs
   governmentDistrictOptions: string[] = []
-  filteredGovernmentDistrictOptions: Observable<string[]>
+  filteredGovernmentDistrictOptions: string[]
   constituencyOptions: string[] = []
-  filteredConstituencyOptions: Observable<string[]>
+  filteredConstituencyOptions: string[]
   postcodeOptions: string[] = []
-  filteredPostcodeOptions: Observable<string[]>
+  filteredPostcodeOptions: string[]
   designationOptions: string[] = []
-  filteredDesignationOptions: Observable<string[]>
+  filteredDesignationOptions: string[]
   streetOptions: string[] = []
-  filteredStreetOptions: Observable<string[]>
+  filteredStreetOptions: string[]
   houseNumberOptions: string[] = []
-  filteredHouseNumberOptions: Observable<string[]>
+  filteredHouseNumberOptions: string[]
 
   private static equalsWithoutId(addressA: Address, addressB: Address): boolean {
     return addressA.street === addressB.street
@@ -113,7 +113,6 @@ export class ZsbAddressComponent implements OnInit {
       console.log('Nothing changed here.')
       this.dialogRef.close(new AddressResult(this.address, AddressStatus.NO_CHANGES))
     } else {
-      console.log('return new/updated address')
       this.dbService.updateOrCreateCity(newCity).subscribe(city => {
         newAddress.city_id = city.id
         this.dbService.updateOrCreateAddress(newAddress)
