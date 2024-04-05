@@ -16,9 +16,11 @@ import {ZsbEmailComponent} from '../../zsb-communication/zsb-email/zsb-email.com
 import {MatRadioChange} from '@angular/material/radio'
 import {animate, state, style, transition, trigger} from '@angular/animations'
 import {DatabaseEvent} from '../../zsb-events/event'
+import {generateTitle, saveBlobAsFile} from '../../shared/downloads'
+import {ZsbFilterComponent} from './zsb-filter/zsb-filter.component'
 
 type SchoolFilterOption = 'Alle' | 'Name' | 'Schulform' | 'Straße' | 'Stadt' | 'Kontakte'
-type SchoolWithEvents = {
+export type SchoolWithEvents = {
   school: School,
   events: DatabaseEvent[]
 }
@@ -46,7 +48,9 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
   searchKey = ''
-
+  activeFilterAmount = 0
+  noFiltersActive = this.activeFilterAmount === 0
+  schoolWithEvents: SchoolWithEvents[] = []
   listData: MatTableDataSource<SchoolWithEvents>
   detailData: MatTableDataSource<DatabaseEvent>
   schoolTypes: SchoolType[]
@@ -82,9 +86,8 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
     this.sub = zip(
       this.service.getSchoolsAtomic(),
       this.service.getSchoolType(),
-      this.service.getAllEvents()
+      this.service.getEvents()
     ).subscribe(([schools, schoolTypes, events]) => {
-      const schoolWithEvents: SchoolWithEvents[] = []
       schools.forEach((school) => {
         const schoolEvents = events.filter((event) => {
           return (event.school_id === school.id)
@@ -93,37 +96,13 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
           school,
           events: schoolEvents
         }
-        schoolWithEvents.push(schoolWithEvent)
+        this.schoolWithEvents.push(schoolWithEvent)
       })
-      this.listData = new MatTableDataSource(schoolWithEvents)
+      this.listData = new MatTableDataSource(this.schoolWithEvents)
       this.detailData = new MatTableDataSource([])
       this.listData.sort = this.sort
       this.listData.paginator = this.paginator
-      this.listData.filterPredicate = buildCustomFilter(({school}) => {
-          switch (this.selectedFilterOption) {
-            case 'Alle':
-              return completeSchoolAsString(
-                school,
-                schoolTypes,
-              )
-            case 'Name':
-              return school.name
-            case 'Schulform':
-              return schoolTypeDescById(school.type, schoolTypes)
-            case 'Straße':
-              return school.address.street + school.address.houseNumber
-            case 'Stadt':
-              return school.address.city.postcode +
-                school.address.city.designation +
-                school.address.city.governmentDistrict +
-                school.address.city.constituency
-            case 'Kontakte':
-              return school.contacts.map(c => c.surname).join()
-          }
-        }
-      )
       this.buildCustomSorting()
-
       this.schoolTypes = schoolTypes
     })
     this.selectedSchoolsIds = []
@@ -134,8 +113,6 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   }
 
   updateDetailData() {
-    console.log(this.detailData.data)
-    console.log(this.expandedElement)
     this.detailData.data = this.expandedElement.events
   }
 
@@ -183,14 +160,12 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   }
 
   deleteSchool(schoolName: string, uuid: string) {
-    console.log('schoolName, uuid')
-    console.log(schoolName, uuid)
     if (confirm('Seid ihr sicher, dass ihr "' + schoolName + '" löschen möchtet?')) {
       this.service.deleteSchool(uuid).subscribe(it => {
         if (it !== undefined) {
           this.notificationService.success(':: Schule wurde erfolgreich entfernt.')
           // remove schule from table
-          this.ngOnInit()
+          this.listData = new MatTableDataSource(this.schoolWithEvents)
         } else {
           this.notificationService.failure('-- Schule konnte nicht entfernt werden.')
         }
@@ -199,11 +174,8 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   }
 
   deleteEvent(eventName: string, uuid: string) {
-    console.log('Termin löschen')
-    console.log(eventName, uuid)
     if (confirm('Seid ihr sicher, dass ihr "' + eventName + '" löschen möchtet?')) {
       this.service.deleteEvents(uuid).subscribe(it => {
-        console.log('Termin löschen 2')
         if (it !== undefined) {
           this.notificationService.success(':: Termin wurde erfolgreich entfernt.')
           // remove event from table
@@ -237,6 +209,25 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
     return false
   }
 
+  openFilterDialog() {
+    const dialogConfig = new MatDialogConfig()
+    dialogConfig.disableClose = true
+    dialogConfig.width = '90%'
+    dialogConfig.data = { schoolWithEvents: this.schoolWithEvents }
+    const dialogRef = this.dialog.open(ZsbFilterComponent, dialogConfig)
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (result.schoolWithEvents) {
+          this.listData = new MatTableDataSource(result.schoolWithEvents)
+        } else {
+          this.listData = new MatTableDataSource(this.schoolWithEvents)
+        }
+        this.activeFilterAmount = result.amount
+        this.noFiltersActive = this.activeFilterAmount === 0
+      }
+    })
+  }
+
   openLetterDialog() {
     if (this.warnIfSelectedSchoolsIsEmpty()) return
     const dialogConfig = new MatDialogConfig()
@@ -256,9 +247,14 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   }
 
   exportAddresses() {
-    /*if (this.warnIfSelectedSchoolsIsEmpty()) return
-    this.service.createSheet(this.selectedSchoolsIds.map(id => this.getSchoolWithEventsById(id)).filter(({school}) => school !== null))
-      .subscribe(result => saveBlobAsFile(
+    if (this.warnIfSelectedSchoolsIsEmpty()) return
+    this.service.createSheet(
+      this.selectedSchoolsIds
+        .map(id => this.getSchoolWithEventsById(id))
+        .filter(schoolWithEvents => schoolWithEvents !== null)
+        .map(schoolWithEvents => schoolWithEvents.school)
+        .filter(school => school !== null)
+    ).subscribe(result => saveBlobAsFile(
         result,
         generateTitle(
           this.selectedSchoolsIds,
@@ -266,7 +262,7 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
           '.xlsx',
           this.datePipe
         )
-      ))*/
+      ))
   }
 
   private buildCustomSorting() {

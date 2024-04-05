@@ -1,3 +1,5 @@
+import {ContactSchool, ContactUniversity} from './eventContacts'
+
 export interface Event {
   uuid: string
   designation: string
@@ -51,8 +53,10 @@ export interface DatabaseEvent {
   uuid: string
   schoolyear: string
   date: string
-  contact_school: string
-  contact_university: string
+  contact_school_id: string
+  contact_school: ContactSchool
+  contact_university_id: string
+  contact_university: ContactUniversity
   other: string
   school_id: string
   school: string

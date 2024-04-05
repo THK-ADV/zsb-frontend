@@ -12,6 +12,8 @@ import {map, startWith} from 'rxjs/operators'
 import {atSchoolProperty} from './event-properties'
 import {internProperty} from './event-properties'
 import {ChangeDetectorRef} from '@angular/core'
+import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete'
+import {ContactSchool, ContactUniversity} from '../eventContacts'
 
 @Component({
   selector: 'app-zsb-events-detail',
@@ -29,6 +31,12 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
   typeSelection = ''
   protected readonly atSchoolProperty = atSchoolProperty
   protected readonly internProperty = internProperty
+  contactPersonSchool = ''
+  contactPersonSchoolId = ''
+  schoolContacts: ContactSchool[] = []
+  contactPersonUniversity = ''
+  contactPersonUniversityId = ''
+  universityContacts: ContactUniversity[] = []
 
   constructor(
     public service: EventService,
@@ -66,6 +74,72 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
         map(value => typeof value === 'string' ? value : this.displayFnSchool(value)),
         map(name => name ? this.schoolFilter(name) : this.schools.slice())
       )
+
+    this.subs.push(
+      this.dbService.getSchoolContacts().subscribe(contacts =>
+        this.schoolContacts = contacts
+      )
+    )
+
+    this.subs.push(
+      this.dbService.getUniversityContacts().subscribe(contacts =>
+        this.universityContacts = contacts
+      )
+    )
+  }
+
+  get filteredSchoolContacts(): string[] {
+    const filteredContacts = this.schoolContacts.map(contact => contact.name).filter(option =>
+      option.trim().toLowerCase().includes(this.contactPersonSchool.trim().toLowerCase())
+    )
+    return filteredContacts
+  }
+
+  get filteredUniversityContacts(): string[] {
+    const filteredContacts = this.universityContacts.map(contact => contact.name).filter(option =>
+      option.trim().toLowerCase().includes(this.contactPersonUniversity.trim().toLowerCase())
+    )
+    return filteredContacts
+  }
+
+  onSchoolContactSelected(event: MatAutocompleteSelectedEvent): void {
+    const selectedContactName = event.option.value
+    const selectedContact = this.schoolContacts.find(contact => contact.name === selectedContactName)
+    if (selectedContact) {
+      this.contactPersonSchool = selectedContact.name
+      this.contactPersonSchoolId = selectedContact.id
+    }
+  }
+
+  onUniversityContactSelected(event: MatAutocompleteSelectedEvent): void {
+    const selectedContactName = event.option.value
+    const selectedContact = this.universityContacts.find(contact => contact.name === selectedContactName)
+    if (selectedContact) {
+      this.contactPersonUniversity = selectedContact.name
+      this.contactPersonUniversityId = selectedContact.id
+    }
+  }
+
+  createSchoolContact() {
+    const contact: ContactSchool = {
+      id: null,
+      name: this.contactPersonSchool
+    }
+    this.dbService.createSchoolContact(contact).subscribe((response) => {
+      this.contactPersonSchoolId = response.id
+      this.onSubmit()
+    })
+  }
+
+  createUniversityContact() {
+    const contact: ContactUniversity = {
+      id: null,
+      name: this.contactPersonUniversity
+    }
+    this.dbService.createUniversityContact(contact).subscribe((response) => {
+      this.contactPersonUniversityId = response.id
+      this.onSubmit()
+    })
   }
 
   onSelectionChange(event: any) {
@@ -75,6 +149,7 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subs.forEach(s => s.unsubscribe())
   }
+
   displayFnSchool(school: School): string {
     return school?.name ?? ''
   }
@@ -97,15 +172,25 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
     this.service.dbService.getEventById(uuid).subscribe(event => {
       this.service.loadFormData(event)
       this.typeSelection = this.service.formGroup.get('category').value
+      this.contactPersonSchool = this.service.formGroup.get('contactPersonSchool').value
+      this.contactPersonUniversity = this.service.formGroup.get('contactPersonUniversity').value
     })
   }
 
   onSubmit() {
+    if (this.contactPersonSchoolId === '') {
+      this.createSchoolContact()
+    }
+    if (this.contactPersonUniversityId === '') {
+      this.createUniversityContact()
+    }
+    console.log('else')
     let isPost = false
     if (!this.eventId) {
       isPost = true
     }
-    this.service.insertOrUpdateCurrentEvent(isPost)
+    console.log('test', this.contactPersonSchoolId)
+    this.service.insertOrUpdateCurrentEvent(isPost, this.contactPersonSchoolId, this.contactPersonUniversityId)
   }
 
   onClear() {

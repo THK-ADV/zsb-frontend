@@ -21,6 +21,7 @@
         </mat-form-field>
 
         <mat-form-field>
+          <mat-label>Schulform*</mat-label>
           <mat-select formControlName="schooltype" placeholder="Schulform*">
             <mat-option *ngFor="let schulform of schoolTypes | async" [value]="schulform.id">
               {{schulform.desc}}
@@ -155,6 +156,7 @@
         </div>
 
         <mat-form-field>
+          <mat-label>Betreuende Hochschule KAoA/Talentscouting*</mat-label>
           <mat-select formControlName="cooperationPartner" placeholder="Betreuende Hochschule KAoA/Talentscouting*">
             <mat-option *ngFor="let cooperationpartner of cooperationPartners | async" [value]="cooperationpartner.id">
               {{cooperationpartner.desc}}
@@ -164,6 +166,7 @@
         </mat-form-field>
 
         <mat-form-field>
+          <mat-label>KAoA Betreuer*in*</mat-label>
           <mat-select formControlName="kaoaSupervisor" placeholder="KAoA Betreuer*in*">
             <mat-option *ngFor="let kaoaSupervisor of kaoaSupervisors | async" [value]="kaoaSupervisor.id">
               {{kaoaSupervisor.desc}}
@@ -173,6 +176,7 @@
         </mat-form-field>
 
         <mat-form-field>
+          <mat-label>Talentscout*</mat-label>
           <mat-select formControlName="talentScout" placeholder="Talentscout*">
             <mat-option *ngFor="let talentscout of talentScouts | async" [value]="talentscout.id">
               {{talentscout.desc}}
@@ -196,7 +200,6 @@
           </button>
           <button mat-raised-button color="warn" (click)="onClear()">Zurücksetzen</button>
         </div>
-
       </div>
     </div>
   </div>

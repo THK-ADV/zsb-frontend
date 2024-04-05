@@ -47,7 +47,9 @@ import {ZsbSchoolEventDetailComponent} from './zsb-overview/zsb-school-event-det
 import {appRoutes} from './routes'
 import { ZsbOverviewListComponent } from './zsb-overview/zsb-overview-list/zsb-overview-list.component'
 import { ZsbOverviewComponent } from './zsb-overview/zsb-overview.component'
-import {MatExpansionModule} from '@angular/material/expansion'
+import {MatExpansionModule} from '@angular/material/expansion';
+import { ZsbFilterComponent } from './zsb-overview/zsb-overview-list/zsb-filter/zsb-filter.component'
+import {MatBadgeModule} from '@angular/material/badge'
 
 @NgModule({
   declarations: [
@@ -65,46 +67,48 @@ import {MatExpansionModule} from '@angular/material/expansion'
     ZsbEmailComponent,
     ZsbSchoolEventDetailComponent,
     ZsbOverviewListComponent,
-    ZsbOverviewComponent
+    ZsbOverviewComponent,
+    ZsbFilterComponent
   ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    RouterModule.forRoot(
-      appRoutes
-      // {enableTracing: true} // debugging
-    ),
-    BrowserAnimationsModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatSliderModule,
-    FormsModule,
-    NgbModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatIconModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatGridListModule,
-    MatSnackBarModule,
-    MatAutocompleteModule,
-    MatListModule,
-    MatButtonToggleModule,
-    MatSlideToggleModule,
-    MatSidenavModule,
-    KeycloakAngularModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatTooltipModule,
-    MatRadioModule,
-    MatCardModule,
-    MatExpansionModule
-  ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        RouterModule.forRoot(
+            appRoutes
+            // {enableTracing: true} // debugging
+        ),
+        BrowserAnimationsModule,
+        MatButtonModule,
+        MatToolbarModule,
+        MatSliderModule,
+        FormsModule,
+        NgbModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatGridListModule,
+        MatSnackBarModule,
+        MatAutocompleteModule,
+        MatListModule,
+        MatButtonToggleModule,
+        MatSlideToggleModule,
+        MatSidenavModule,
+        KeycloakAngularModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatTooltipModule,
+        MatRadioModule,
+        MatCardModule,
+        MatExpansionModule,
+        MatBadgeModule
+    ],
   providers: [
     DatePipe,
     {

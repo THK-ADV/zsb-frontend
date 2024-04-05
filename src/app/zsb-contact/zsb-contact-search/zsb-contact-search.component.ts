@@ -15,7 +15,7 @@ import {filterOptions} from '../../shared/functions'
 export class ZsbContactSearchComponent implements OnInit, OnDestroy {
 
   currentContacts: Contact[]
-  filteredContactNames: Observable<string[]>
+  filteredContactNames: string[]
 
   private subs: Subscription[] = []
 

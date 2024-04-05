@@ -18,7 +18,7 @@
             formControlName="governmentDistrict"
             [matAutocomplete]="autoGovernmentDistrict">
           <mat-autocomplete autoActiveFirstOption #autoGovernmentDistrict="matAutocomplete">
-            <mat-option *ngFor="let option of filteredGovernmentDistrictOptions | async" [value]="option">
+            <mat-option *ngFor="let option of filteredGovernmentDistrictOptions" [value]="option">
               {{option}}
             </mat-option>
           </mat-autocomplete>
@@ -34,7 +34,7 @@
             formControlName="postcode"
             [matAutocomplete]="autoPostcode">
           <mat-autocomplete autoActiveFirstOption #autoPostcode="matAutocomplete">
-            <mat-option *ngFor="let option of filteredPostcodeOptions | async" [value]="option">
+            <mat-option *ngFor="let option of filteredPostcodeOptions" [value]="option">
               {{option}}
             </mat-option>
           </mat-autocomplete>
@@ -51,7 +51,7 @@
             formControlName="street"
             [matAutocomplete]="autoStreet">
           <mat-autocomplete autoActiveFirstOption #autoStreet="matAutocomplete" >
-            <mat-option *ngFor="let option of filteredStreetOptions | async" [value]="option">
+            <mat-option *ngFor="let option of filteredStreetOptions" [value]="option">
               {{option}}
             </mat-option>
           </mat-autocomplete>
@@ -71,7 +71,7 @@
             formControlName="constituency"
             [matAutocomplete]="autoConstituency">
           <mat-autocomplete autoActiveFirstOption #autoConstituency="matAutocomplete">
-            <mat-option *ngFor="let option of filteredConstituencyOptions | async" [value]="option">
+            <mat-option *ngFor="let option of filteredConstituencyOptions" [value]="option">
               {{option}}
             </mat-option>
           </mat-autocomplete>
@@ -87,7 +87,7 @@
             formControlName="designation"
             [matAutocomplete]="autoOrt">
           <mat-autocomplete autoActiveFirstOption #autoOrt="matAutocomplete" >
-            <mat-option *ngFor="let option of filteredDesignationOptions | async" [value]="option">
+            <mat-option *ngFor="let option of filteredDesignationOptions" [value]="option">
               {{option}}
             </mat-option>
           </mat-autocomplete>
@@ -104,7 +104,7 @@
             formControlName="houseNumber"
             [matAutocomplete]="autoHousenumber">
           <mat-autocomplete autoActiveFirstOption #autoHousenumber="matAutocomplete" >
-            <mat-option *ngFor="let option of filteredHouseNumberOptions | async" [value]="option">
+            <mat-option *ngFor="let option of filteredHouseNumberOptions" [value]="option">
               {{option}}
             </mat-option>
           </mat-autocomplete>

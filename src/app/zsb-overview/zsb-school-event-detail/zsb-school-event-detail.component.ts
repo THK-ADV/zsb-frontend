@@ -96,12 +96,11 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
               this.dbService.getContactById(id).subscribe(contact => {
                 this.contacts.push(contact)
               })
-              console.log(this.contacts)
             })
             this.dbService.getAddressAtomicById(school.address_id).subscribe(address => {
               this.address = address
             })
-            this.dbService.getAllEvents().subscribe(events => {
+            this.dbService.getEvents().subscribe(events => {
               const eventsAtSchool: DatabaseEvent[] = []
               events.forEach((event) => {
                 if (event.school_id === this.schoolId) {
@@ -111,7 +110,6 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
               this.listData = new MatTableDataSource(eventsAtSchool)
               this.listData.sort = this.sort
               this.listData.paginator = this.paginator
-              console.log(eventsAtSchool)
             })
           })
         }
@@ -140,11 +138,6 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
     } else {
       this.cooperation.cooperationContract = 'nein'
     }
-    console.log('cooperation')
-    console.log(this.school.cooperationcontract)
-    console.log(this.school.cooperationpartner)
-    console.log(this.school.kaoaSupervisor)
-    console.log(this.school.talentscout)
   }
 
   // TODO: Anpassen

@@ -72,19 +72,52 @@
   </mat-form-field>
   <br>
 
-  <!-- TODO: placeholder komplett anzeigen -->
-  <mat-form-field>
-    <label>
-      <input formControlName="contactPersonSchool" matInput placeholder="Verantwortliche*r Schule">
-    </label>
-  </mat-form-field>
+  <!-- TODO: UI -->
+  <div>
+    <mat-label for="kontaktSchule">Verantwortliche*r Schule:</mat-label>
+    <mat-form-field id="kontaktSchule" appearance="fill">
+      <input
+        matInput
+        type="text"
+        id="contactSchool"
+        name="contactSchool"
+        [(ngModel)]="contactPersonSchool"
+        [ngModelOptions]="{standalone: true}"
+        [matAutocomplete]="autoContactSchool">
+      <mat-autocomplete
+        autoActiveFirstOption
+        #autoContactSchool="matAutocomplete"
+        (optionSelected)="onSchoolContactSelected($event)"
+      >
+        <mat-option *ngFor="let option of filteredSchoolContacts" [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
   <br>
-
-  <mat-form-field>
-    <label>
-      <input formControlName="contactPersonUniversity" matInput placeholder="Verantwortliche*r Hochschule">
-    </label>
-  </mat-form-field>
+  <div>
+    <mat-label for="kontaktHochschule">Verantwortliche*r Hochschule:</mat-label>
+    <mat-form-field id="kontaktHochschule" appearance="fill">
+      <input
+        matInput
+        type="text"
+        id="contactUniversity"
+        name="contactUniversity"
+        [(ngModel)]="contactPersonUniversity"
+        [ngModelOptions]="{standalone: true}"
+        [matAutocomplete]="autoContactUniversity">
+      <mat-autocomplete
+        autoActiveFirstOption
+        #autoContactUniversity="matAutocomplete"
+        (optionSelected)="onUniversityContactSelected($event)"
+      >
+        <mat-option *ngFor="let option of filteredUniversityContacts" [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
   <br>
 
   <mat-form-field>
