@@ -8,8 +8,8 @@
       <mat-icon>add</mat-icon>
       Termin hinzufügen
     </button>
-    <button class="action-button" mat-raised-button (click)="openFilterDialog()" color="primary">
-      <mat-icon>filter_alt</mat-icon>
+    <button mat-raised-button color="primary" class="action-button" [matBadge]="activeFilterAmount" matBadgeColor="warn" [matBadgeHidden]="noFiltersActive" (click)="openFilterDialog()">
+    <mat-icon>filter_alt</mat-icon>
       Filtern
     </button>
   </div>

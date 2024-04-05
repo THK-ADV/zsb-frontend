@@ -12,7 +12,7 @@ import {
 import {SchoolWithEvents} from '../zsb-overview-list.component'
 import {SchoolType} from '../../../zsb-school/schoolType'
 import {DatabaseService} from '../../../shared/database.service'
-import {Observable, Subscription, zip} from 'rxjs'
+import {Subscription, zip} from 'rxjs'
 import {filterDuplicates, filterOptions} from '../../../shared/functions'
 import {Address} from '../../../zsb-address/address'
 import {AddressService} from '../../../shared/address.service'
@@ -46,9 +46,11 @@ export class ZsbFilterComponent {
   cooperation: boolean = undefined
   eventName = ''
   eventNames: string[] = []
+  contactPersonSchool = ''
+  schoolContacts: string[] = []
+  contactPersonUniversity = ''
+  universityContacts: string[] = []
   date: Date
-  contactPersonSchool: ''
-  contactPersonUniversity: ''
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               public dialogRef: MatDialogRef<ZsbFilterComponent>,
@@ -56,6 +58,7 @@ export class ZsbFilterComponent {
               public service: AddressService,
   ) {
     this.schoolWithEvents = data.schoolWithEvents
+    this.allSchoolsWithEvents = [...data.schoolWithEvents]
     console.log(this.schoolWithEvents)
   }
 
@@ -93,16 +96,36 @@ export class ZsbFilterComponent {
     )
 
     this.subs.push(
-      zip(
-        this.dbService.getSchoolsAtomic(),
-        this.dbService.getEvents()
-      ).subscribe(([schools, events]) => {
-        this.schoolWithEvents = schools.map(school => ({
-          school,
-          events: events.filter(event => event.school_id === school.id)
-        }))
-      })
+      this.dbService.getSchoolContacts().subscribe(contacts =>
+        this.schoolContacts = contacts.map(contact => contact.name)
+      )
     )
+
+    this.subs.push(
+      this.dbService.getUniversityContacts().subscribe(contacts =>
+        this.universityContacts = contacts.map(contact => contact.name)
+      )
+    )
+
+    // this.subs.push(
+    //   zip(
+    //     this.dbService.getSchoolsAtomic(),
+    //     this.dbService.getSchoolType(),
+    //     this.dbService.getEvents()
+    //   ).subscribe(([schools, schoolTypes, events]) => {
+    //       schools.forEach((school) => {
+    //         const schoolEvents = events.filter((event) => {
+    //           return (event.school_id === school.id)
+    //         })
+    //         const schoolWithEvent: SchoolWithEvents = {
+    //           school,
+    //           events: schoolEvents
+    //         }
+    //         this.allSchoolsWithEvents.push(schoolWithEvent)
+    //       })
+    //     }
+    //   )
+    // )
   }
 
   get filteredSchoolNames(): string[] {
@@ -145,6 +168,20 @@ export class ZsbFilterComponent {
     )
   }
 
+  get filteredSchoolContacts(): string[] {
+    console.log('this', this.contactPersonSchool)
+    console.log('list', this.schoolContacts)
+    return this.schoolContacts.filter(option =>
+      option.trim().toLowerCase().includes(this.contactPersonSchool.trim().toLowerCase())
+    )
+  }
+
+  get filteredUniversityContacts(): string[] {
+    return this.universityContacts.filter(option =>
+      option.trim().toLowerCase().includes(this.contactPersonUniversity.trim().toLowerCase())
+    )
+  }
+
   onSchoolTypeSelected(event: MatAutocompleteSelectedEvent) {
     this.selectedType = event.option.value
     this.schoolType = this.selectedType.desc
@@ -152,8 +189,11 @@ export class ZsbFilterComponent {
   }
 
   resetFilters() {
-    console.log(this.allSchoolsWithEvents)
-    this.dialogRef.close(this.allSchoolsWithEvents)
+    const resetData = {
+      schoolWithEvents: null,
+      amount: 0
+    }
+    this.dialogRef.close(resetData)
   }
 
   onSubmit() {

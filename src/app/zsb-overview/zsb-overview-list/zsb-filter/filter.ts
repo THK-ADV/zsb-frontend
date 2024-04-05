@@ -148,7 +148,7 @@ export class SchoolContactFilter implements Filter {
   }
   filter(data: SchoolWithEvents): boolean {
     for (const event of data.events) {
-      return event.contact_school.toLowerCase().includes(this.contactName.toLowerCase())
+      return event.contact_school.name.toLowerCase().includes(this.contactName.toLowerCase())
     }
   }
 }
@@ -161,7 +161,7 @@ export class UniversityContactFilter implements Filter {
   }
   filter(data: SchoolWithEvents): boolean {
     for (const event of data.events) {
-      return event.contact_university.toLowerCase().includes(this.contactName.toLowerCase())
+      return event.contact_university.name.toLowerCase().includes(this.contactName.toLowerCase())
     }
   }
 }

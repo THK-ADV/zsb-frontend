@@ -23,9 +23,11 @@ export class EventService {
       designation: new UntypedFormControl('', Validators.required),
       date: new UntypedFormControl(new Date(), Validators.required),
       category: new UntypedFormControl([0], Validators.required),
-      school: new UntypedFormControl(null),
+      school: new UntypedFormControl(null, Validators.required),
       semester: new UntypedFormControl(''),
+      contactPersonSchoolId: new UntypedFormControl(''),
       contactPersonSchool: new UntypedFormControl(null),
+      contactPersonUniversityId: new UntypedFormControl(''),
       contactPersonUniversity: new UntypedFormControl(null),
       rating: new UntypedFormControl(''),
       kaoa: new UntypedFormControl(false),
@@ -82,7 +84,9 @@ export class EventService {
       category: [0],
       school: null,
       semester: '',
+      contactPersonSchoolId: '',
       contactPersonSchool: null,
+      contactPersonUniversityId: '',
       contactPersonUniversity: null,
       rating: '',
       kaoa: false,
@@ -124,6 +128,8 @@ export class EventService {
   }
 
   loadFormData(event: DatabaseEvent) {
+    const contactPersonSchool = event.contact_school.name
+    const contactPersonUniversity = event.contact_university.name
     const kaoa = event.schoolCategory?.includes('KAOA') ?? false
     const talentScouting = event.schoolCategory?.includes('TALENTSCOUT') ?? false
     const thSpecific = event.schoolCategory?.includes('THSPECIFIC') ?? false
@@ -176,8 +182,10 @@ export class EventService {
       category,
       school: event.school,
       semester: event.schoolyear,
-      contactPersonSchool: event.contact_school,
-      contactPersonUniversity: event.contact_university,
+      contactPersonSchoolId: event.contact_school_id,
+      contactPersonSchool,
+      contactPersonUniversityId: event.contact_university_id,
+      contactPersonUniversity,
       rating: event.rating,
       kaoa,
       lastMinuteInformation,
@@ -218,7 +226,7 @@ export class EventService {
   }
 
   // TODO: an Backend anpassen, insert und update aufteilen
-  insertOrUpdateCurrentEvent(isPost: boolean) {
+  insertOrUpdateCurrentEvent(isPost: boolean, schoolContactId: string, universityContactId: string) {
     const eventForm = this.formGroup.value
     let discriminator = ''
     switch (eventForm.category) {
@@ -330,8 +338,10 @@ export class EventService {
       designation: eventForm.designation,
       schoolyear: eventForm.semester,
       date: eventForm.date,
-      contact_school: eventForm.contactPersonSchool,
-      contact_university: eventForm.contactPersonUniversity,
+      contact_school_id: schoolContactId,
+      contact_school: eventForm.contactPersonSchool.name,
+      contact_university_id: universityContactId,
+      contact_university: eventForm.contactPersonUniversity.name,
       other: eventForm.other,
       school_id: eventForm.school.id,
       school: eventForm.school,

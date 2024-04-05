@@ -17,7 +17,7 @@ import {Signature} from '../zsb-communication/zsb-letter/signature'
 import {Letter} from '../zsb-communication/zsb-letter/letter'
 import {Email} from '../zsb-communication/zsb-email/email'
 import {KaoaSupervisor} from '../zsb-school/kaoaSupervisor'
-import {SchoolWithEvents} from '../zsb-overview/zsb-overview-list/zsb-overview-list.component'
+import {ContactSchool, ContactUniversity} from '../zsb-events/eventContacts'
 
 @Injectable({
   providedIn: 'root'
@@ -190,6 +190,24 @@ export class DatabaseService {
 
   getTalentScouts() {
     return this.httpClient.get<KaoaSupervisor[]>(this.DB_URL + '/schools/talentScouts')
+  }
+
+  getSchoolContacts() {
+    return this.httpClient.get<ContactSchool[]>(this.DB_URL + '/schoolContacts')
+  }
+
+  createSchoolContact(contact: ContactSchool) {
+    console.log('schoolContact', contact)
+    return this.httpClient.post<ContactSchool>(this.DB_URL + '/schoolContacts', contact)
+  }
+
+  getUniversityContacts() {
+    return this.httpClient.get<ContactUniversity[]>(this.DB_URL + '/universityContacts')
+  }
+
+  createUniversityContact(contact: ContactUniversity) {
+    console.log('universityContact', contact)
+    return this.httpClient.post<ContactUniversity>(this.DB_URL + '/universityContacts', contact)
   }
 
   getSignatures() {

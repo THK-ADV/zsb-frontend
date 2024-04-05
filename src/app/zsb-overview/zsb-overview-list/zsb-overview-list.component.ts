@@ -48,7 +48,8 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
   searchKey = ''
-
+  activeFilterAmount = 0
+  noFiltersActive = this.activeFilterAmount === 0
   schoolWithEvents: SchoolWithEvents[] = []
   listData: MatTableDataSource<SchoolWithEvents>
   detailData: MatTableDataSource<DatabaseEvent>
@@ -82,15 +83,6 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   protected readonly console = console
 
   ngOnInit() {
-    this.pullData()
-    this.selectedSchoolsIds = []
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe()
-  }
-
-  pullData() {
     this.sub = zip(
       this.service.getSchoolsAtomic(),
       this.service.getSchoolType(),
@@ -113,6 +105,11 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
       this.buildCustomSorting()
       this.schoolTypes = schoolTypes
     })
+    this.selectedSchoolsIds = []
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe()
   }
 
   updateDetailData() {
@@ -168,7 +165,6 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
         if (it !== undefined) {
           this.notificationService.success(':: Schule wurde erfolgreich entfernt.')
           // remove schule from table
-          this.pullData()
           this.listData = new MatTableDataSource(this.schoolWithEvents)
         } else {
           this.notificationService.failure('-- Schule konnte nicht entfernt werden.')
@@ -220,8 +216,15 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
     dialogConfig.data = { schoolWithEvents: this.schoolWithEvents }
     const dialogRef = this.dialog.open(ZsbFilterComponent, dialogConfig)
     dialogRef.afterClosed().subscribe(result => {
-      this.schoolWithEvents = result
-      this.listData = new MatTableDataSource(this.schoolWithEvents)
+      if (result) {
+        if (result.schoolWithEvents) {
+          this.listData = new MatTableDataSource(result.schoolWithEvents)
+        } else {
+          this.listData = new MatTableDataSource(this.schoolWithEvents)
+        }
+        this.activeFilterAmount = result.amount
+        this.noFiltersActive = this.activeFilterAmount === 0
+      }
     })
   }
 

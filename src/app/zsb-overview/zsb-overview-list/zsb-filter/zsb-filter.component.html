@@ -107,7 +107,7 @@
           <mat-label for="kaoa">KAoA Hochschule:</mat-label>
           <mat-form-field id="kaoa">
             <mat-select [(ngModel)]="kaoa" name="kaoa">
-              <mat-option [value]="undefined"> </mat-option>
+              <mat-option [value]="undefined"></mat-option>
               <mat-option [value]="true">Ja</mat-option>
               <mat-option [value]="false">Nein</mat-option>
             </mat-select>
@@ -117,7 +117,7 @@
           <mat-label for="talentscouting">Talentscouting:</mat-label>
           <mat-form-field id="talentscouting">
             <mat-select [(ngModel)]="talentscouting" name="talentscouting">
-              <mat-option [value]="undefined"> </mat-option>
+              <mat-option [value]="undefined"></mat-option>
               <mat-option [value]="true">Ja</mat-option>
               <mat-option [value]="false">Nein</mat-option>
             </mat-select>
@@ -127,7 +127,7 @@
           <mat-label for="cooperation">Kooperation TH Köln:</mat-label>
           <mat-form-field id="cooperation">
             <mat-select [(ngModel)]="cooperation" name="cooperation">
-              <mat-option [value]="undefined"> </mat-option>
+              <mat-option [value]="undefined"></mat-option>
               <mat-option [value]="true">Ja</mat-option>
               <mat-option [value]="false">Nein</mat-option>
             </mat-select>
@@ -167,15 +167,35 @@
         <div class="form-group">
           <mat-label for="kontaktSchule">Verantwortliche*r Schule:</mat-label>
           <mat-form-field id="kontaktSchule" appearance="fill">
-            <input matInput type="text" id="contactSchool" name="contactSchool"
-                   [(ngModel)]="contactPersonSchool">
+            <input
+              matInput
+              type="text"
+              id="contactSchool"
+              name="contactSchool"
+              [(ngModel)]="contactPersonSchool"
+              [matAutocomplete]="autoContactSchool">
+            <mat-autocomplete autoActiveFirstOption #autoContactSchool="matAutocomplete">
+              <mat-option *ngFor="let option of filteredSchoolContacts" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
         </div>
         <div class="form-group">
-          <mat-label for="kontaktHS">Verantwortliche*r Hochschule:</mat-label>
-          <mat-form-field id="kontaktHS" appearance="fill">
-            <input matInput type="text" id="contactUniversity" name="contactUniversity"
-                   [(ngModel)]="contactPersonUniversity">
+          <mat-label for="kontaktHochschule">Verantwortliche*r Hochschule:</mat-label>
+          <mat-form-field id="kontaktHochschule" appearance="fill">
+            <input
+              matInput
+              type="text"
+              id="contactUniversity"
+              name="contactUniversity"
+              [(ngModel)]="contactPersonUniversity"
+              [matAutocomplete]="autoContactUniversity">
+            <mat-autocomplete autoActiveFirstOption #autoContactUniversity="matAutocomplete">
+              <mat-option *ngFor="let option of filteredUniversityContacts" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
         </div>
       </div>
