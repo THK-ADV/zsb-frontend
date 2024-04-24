@@ -53,7 +53,7 @@ export class ZsbLetterComponent implements OnInit {
     console.log(letter)
 
     this.dbService.createLetter(letter).subscribe(result => {
-      saveBlobAsFile(result, generateTitle(this.addresseesIds, 'serienbrief', '.doc', this.datePipe))
+      saveBlobAsFile(result, generateTitle(this.addresseesIds, 'serienbrief', '.zip', this.datePipe))
     })
 
     this.dialogRef.close()
