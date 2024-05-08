@@ -77,17 +77,25 @@ export class ZsbSchoolDetailComponent implements OnInit {
   }
 
   private loadSchool(uuid: string) {
+    console.log('load school')
     this.service.dbService.getSchoolById(uuid).subscribe(school => {
       this.addressId = school.address_id
       this.subs.push(
         this.dbService.getAddressAtomicById(this.addressId).subscribe(address => {
           this.address = address
           const contactsIds = school.contacts_ids === undefined ? [] : school.contacts_ids
-          forkJoin(contactsIds.map(id => this.dbService.getContactById(id))).subscribe(contacts => {
+          if (contactsIds.length === 0) { // Wenn keine Kontakte vorhanden sind
+            console.log('load form data without contacts')
+            this.service.loadFormData(school, this.address, []);
+            this.addressUndefined = false;
+          } else {
+            console.log('get address')
+            forkJoin(contactsIds.map(id => this.dbService.getContactById(id))).subscribe(contacts => {
+            console.log('loadformdata')
             this.service.loadFormData(school, this.address, contacts)
             this.addressUndefined = false
           })
-        })
+        }})
       )
     })
   }
