@@ -50,6 +50,7 @@ import { ZsbOverviewComponent } from './zsb-overview/zsb-overview.component'
 import {MatExpansionModule} from '@angular/material/expansion';
 import { ZsbFilterComponent } from './zsb-overview/zsb-overview-list/zsb-filter/zsb-filter.component'
 import {MatBadgeModule} from '@angular/material/badge'
+import {MatChipsModule} from '@angular/material/chips'
 
 @NgModule({
   declarations: [
@@ -107,7 +108,8 @@ import {MatBadgeModule} from '@angular/material/badge'
         MatRadioModule,
         MatCardModule,
         MatExpansionModule,
-        MatBadgeModule
+        MatBadgeModule,
+        MatChipsModule
     ],
   providers: [
     DatePipe,
