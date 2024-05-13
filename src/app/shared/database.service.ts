@@ -90,6 +90,10 @@ export class DatabaseService {
       )
   }
 
+  createMailAddressees(schools: School[]) {
+    return this.httpClient.post<string[]>(this.DB_URL + '/email/addressees', schools)
+  }
+
   getSchools() {
     return this.httpClient.get<School[]>(this.DB_URL + '/schools')
       .pipe(

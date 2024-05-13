@@ -2,14 +2,12 @@ import {Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core'
 import {FormControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {DatabaseService} from '../../shared/database.service'
 import {MatDialogRef} from '@angular/material/dialog'
-import {DatePipe} from '@angular/common'
-import {School} from '../../zsb-school/school'
 import {Email} from './email'
 import {NotificationService} from '../../shared/notification.service'
-import {Observable} from 'rxjs'
+import {forkJoin, Observable} from 'rxjs'
 import {map, startWith} from 'rxjs/operators'
-import {MatChipInputEvent} from '@angular/material/chips'
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete'
+import {School} from '../../zsb-school/school'
 
 @Component({
   selector: 'app-zsb-email',
@@ -19,12 +17,7 @@ import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete'
 export class ZsbEmailComponent implements OnInit {
   recipientCtrl = new FormControl()
   filteredRecipients: Observable<string[]>
-  availableRecipients: string[] = [
-    'Standard',
-    'Schulleitung',
-    'Sekretariat',
-    'Lehrer*in'
-  ]
+  availableRecipients: string[] = []
   recipients: string[] = []
 
   @ViewChild('recipientInput') fruitInput: ElementRef<HTMLInputElement>
@@ -32,8 +25,7 @@ export class ZsbEmailComponent implements OnInit {
   constructor(
     private dbService: DatabaseService,
     public dialogRef: MatDialogRef<ZsbEmailComponent>,
-    private notificationService: NotificationService,
-    private datePipe: DatePipe) {
+    private notificationService: NotificationService) {
     this.filteredRecipients = this.recipientCtrl.valueChanges.pipe(
       startWith(null),
       map((recipient: string | null) => (recipient ? this._filter(recipient) : this.availableRecipients.slice()))
@@ -41,20 +33,11 @@ export class ZsbEmailComponent implements OnInit {
   }
 
   public addresseesIds: string[] = []
-  private addressees: string[] = []
+  private schools: School[]
   public formGroup: UntypedFormGroup = new UntypedFormGroup({
     msg: new UntypedFormControl('', Validators.required),
     subject: new UntypedFormControl('', Validators.required)
   })
-
-  add(recipient: MatChipInputEvent): void {
-    const value = (recipient.value || '').trim()
-    if (value) {
-      this.recipients.push(value)
-    }
-    recipient.chipInput.clear()
-    this.recipientCtrl.setValue(null)
-  }
 
   remove(recipient: string): void {
     const index = this.recipients.indexOf(recipient)
@@ -75,26 +58,33 @@ export class ZsbEmailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dbService.getSchoolsAtomic().subscribe(schools => {
-      this.resolveMails(schools)
-    })
-    console.log('send stuff to schools with mail adresses:')
-    console.log(this.addresseesIds)
-  }
-
-  resolveMails(schools: School[]) {
-    schools.forEach(it => {
-      if (this.addresseesIds.some(id => id === it.id)) {
-        // TODO: checken an wen die mails gehen
-        this.addressees.push(it.email)
-        it.contacts.forEach(c => this.addressees.push(c.email))
+    // TODO
+    // funktionen direkt anzeigen
+    // anzeigen, an welche Schulen nicht versendet werden konnte
+    const observables = this.addresseesIds.map(id => this.dbService.getSchoolById(id))
+    forkJoin(observables).subscribe(
+      schools => {
+        this.schools = schools
+        console.log('Schulen:', this.schools)
+        this.dbService.createMailAddressees(schools).subscribe(
+          functions => {
+            this.availableRecipients = functions
+            console.log('Schulen mit Mail-Adressen:', this.availableRecipients)
+          },
+          error => {
+            console.error('Fehler beim Abrufen verfügbarer Funktionen:', error)
+          }
+        )
+      },
+      error => {
+        console.error('Fehler beim Abrufen von Schulen:', error)
       }
-    })
+    )
   }
 
   onSubmit() {
     const formValue = this.formGroup.value
-    const email = new Email(formValue.msg, this.addressees, formValue.subject)
+    const email = new Email(formValue.msg, this.recipients, this.schools, formValue.subject)
 
     console.log('create email')
     console.log(email)
