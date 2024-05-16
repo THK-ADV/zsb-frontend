@@ -74,10 +74,10 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "zsb-frontend:build:production"
+              "buildTarget": "zsb-frontend:build:production"
             },
             "development": {
-              "browserTarget": "zsb-frontend:build:development"
+              "buildTarget": "zsb-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -85,7 +85,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "zsb-frontend:build"
+            "buildTarget": "zsb-frontend:build"
           }
         },
         "test": {
