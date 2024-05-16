@@ -1,15 +1,12 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core'
+import {Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core'
 import {FormControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {DatabaseService} from '../../shared/database.service'
-// @ts-ignore
 import {MatDialogRef} from '@angular/material/dialog'
-import {DatePipe} from '@angular/common'
 import {Email} from './email'
 import {NotificationService} from '../../shared/notification.service'
 import {forkJoin, Observable} from 'rxjs'
 import {map, startWith} from 'rxjs/operators'
-// @ts-ignore
-import {MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material/autocomplete'
+import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete'
 import {School} from '../../zsb-school/school'
 
 @Component({
@@ -22,10 +19,8 @@ export class ZsbEmailComponent implements OnInit {
   filteredRecipients: Observable<string[]>
   availableRecipients: string[] = []
   recipients: string[] = []
-  schools: School[] = []
 
   @ViewChild('recipientInput') fruitInput: ElementRef<HTMLInputElement>
-  @ViewChild('trigger') autoTrigger: MatAutocompleteTrigger
 
   constructor(
     private dbService: DatabaseService,
@@ -38,15 +33,34 @@ export class ZsbEmailComponent implements OnInit {
   }
 
   public addresseesIds: string[] = []
-  private addressees: string[] = []
+  private schools: School[]
   public formGroup: UntypedFormGroup = new UntypedFormGroup({
     msg: new UntypedFormControl('', Validators.required),
     subject: new UntypedFormControl('', Validators.required)
   })
 
+  remove(recipient: string): void {
+    const index = this.recipients.indexOf(recipient)
+    if (index >= 0) {
+      this.recipients.splice(index, 1)
+    }
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.recipients.push(event.option.viewValue)
+    this.fruitInput.nativeElement.value = ''
+    this.recipientCtrl.setValue(null)
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase()
+    return this.availableRecipients.filter(recipient => recipient.toLowerCase().includes(filterValue))
+  }
+
   ngOnInit(): void {
     // TODO
     // funktionen direkt anzeigen
+    // anzeigen, an welche Schulen nicht versendet werden konnte
     const observables = this.addresseesIds.map(id => this.dbService.getSchoolById(id))
     forkJoin(observables).subscribe(
       schools => {
@@ -64,12 +78,13 @@ export class ZsbEmailComponent implements OnInit {
       },
       error => {
         console.error('Fehler beim Abrufen von Schulen:', error)
-      })
+      }
+    )
   }
 
   onSubmit() {
     const formValue = this.formGroup.value
-    const email = new Email(formValue.msg, this.addressees, formValue.subject)
+    const email = new Email(formValue.msg, this.recipients, this.schools, formValue.subject)
 
     console.log('create email')
     console.log(email)

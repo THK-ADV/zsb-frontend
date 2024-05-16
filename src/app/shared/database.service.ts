@@ -90,18 +90,6 @@ export class DatabaseService {
       )
   }
 
-  /*getFunctionsForSchools(schools: School[]): Observable<string[]> {
-    const params = new HttpParams().set('schools', JSON.stringify(schools))
-    return this.httpClient.get<string[]>(`${this.DB_URL}/email/functions`, { params })
-      .pipe(
-        catchError(this.handleError)
-      )
-  }*/
-
-  /*getAvailableFunctions() {
-    return this.httpClient.get<string[]>(this.DB_URL + '/email/functions')
-  }*/
-
   createMailAddressees(schools: School[]) {
     return this.httpClient.post<string[]>(this.DB_URL + '/email/addressees', schools)
   }
