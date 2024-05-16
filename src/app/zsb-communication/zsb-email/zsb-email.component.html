@@ -1,43 +1,36 @@
-<!--p>zsb-email works!</p-->
-<h1>E-Mail versenden</h1>
-<form [formGroup]="formGroup" class="mail-form">
-  <div class="controls-container">
-    <mat-form-field class="full-width">
-      <mat-label>An:</mat-label>
-      <mat-chip-grid #chipGrid aria-label="Adressaten">
-        <mat-chip-row *ngFor="let recipient of recipients"
-                      (removed)="remove(recipient)">
-          {{ recipient }}
-          <button matChipRemove [attr.aria-label]="'remove ' + recipient">
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </mat-chip-row>
-      </mat-chip-grid>
-      <input placeholder="Hinzufügen" #recipientInput [formControl]="recipientCtrl"
-             [matChipInputFor]="chipGrid" [matAutocomplete]="auto"/>
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-        <mat-option *ngFor="let recipient of filteredRecipients | async" [value]="recipient">{{recipient}}</mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-  </div>
-  <div class="controls-container">
-    <mat-form-field class="full-width">
-      <mat-label>Betreff</mat-label>
-      <input formControlName="subject" matInput placeholder="Betreff">
-    </mat-form-field>
-  </div>
-  <div class="controls-container">
-    <mat-form-field class="full-width">
-      <label>
-        <textarea formControlName="msg" matInput placeholder="Nachricht"></textarea>
-      </label>
-    </mat-form-field>
-
-    <div class="btn-row">
-      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="formGroup.invalid">
-        E-Mail(s) senden
-      </button>
-      <button mat-raised-button color="warn" (click)="onCancel()">Abbrechen</button>
+<div class="standard-padding">
+  <h1>E-Mail versenden</h1>
+  <form [formGroup]="formGroup" class="standard-form">
+    <div class="controls-container">
+      <mat-form-field class="full-width">
+        <mat-chip-grid #chipGrid aria-label="Adressaten" placeholder="An:">
+          <mat-chip-row *ngFor="let recipient of recipients"
+                        (removed)="remove(recipient)">
+            {{ recipient }}
+            <button matChipRemove [attr.aria-label]="'remove ' + recipient">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        </mat-chip-grid>
+        <input matInput placeholder="Adressaten hinzufügen" #recipientInput [formControl]="recipientCtrl"
+               [matChipInputFor]="chipGrid" #trigger="matAutocompleteTrigger" [matAutocomplete]="auto"/>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+          <mat-option *ngFor="let recipient of filteredRecipients | async" [value]="recipient">{{ recipient }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <input formControlName="subject" matInput placeholder="Betreff">
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <textarea formControlName="msg" matInput placeholder="Nachricht" class="full-width"></textarea>
+      </mat-form-field>
+      <div class="btn-row">
+        <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="formGroup.invalid">
+          E-Mail(s) senden
+        </button>
+        <button mat-raised-button color="warn" (click)="onCancel()">Abbrechen</button>
+      </div>
     </div>
-  </div>
-</form>
+  </form>
+</div>

@@ -90,9 +90,16 @@ export class ZsbEmailComponent implements OnInit {
     console.log(email)
 
     this.dbService.createEmail(email).subscribe(result => {
-      this.notificationService.success('Sendevorgang erfolgreich')
+      if (result && result.length > 0) {
+        let unsendableSchoolsNames = 'Konnte an folgende Schulen nicht versendet werden:\n'
+        result.forEach(schule => {
+          unsendableSchoolsNames += schule.name + '\n'
+        })
+        this.notificationService.failure(unsendableSchoolsNames)
+      } else {
+        this.notificationService.success('Sendevorgang erfolgreich')
+      }
     })
-
     this.dialogRef.close()
   }
 
@@ -100,4 +107,7 @@ export class ZsbEmailComponent implements OnInit {
     this.dialogRef.close()
   }
 
+  private _filter(recipient: string) {
+    return []
+  }
 }
