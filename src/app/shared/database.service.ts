@@ -90,6 +90,22 @@ export class DatabaseService {
       )
   }
 
+  /*getFunctionsForSchools(schools: School[]): Observable<string[]> {
+    const params = new HttpParams().set('schools', JSON.stringify(schools))
+    return this.httpClient.get<string[]>(`${this.DB_URL}/email/functions`, { params })
+      .pipe(
+        catchError(this.handleError)
+      )
+  }*/
+
+  /*getAvailableFunctions() {
+    return this.httpClient.get<string[]>(this.DB_URL + '/email/functions')
+  }*/
+
+  createMailAddressees(schools: School[]) {
+    return this.httpClient.post<string[]>(this.DB_URL + '/email/addressees', schools)
+  }
+
   getSchools() {
     return this.httpClient.get<School[]>(this.DB_URL + '/schools')
       .pipe(
@@ -233,6 +249,6 @@ export class DatabaseService {
   }
 
   createEmail(email: Email) {
-    return this.httpClient.post<Email>(this.DB_URL + '/email', email)
+    return this.httpClient.post<School[]>(this.DB_URL + '/email', email)
   }
 }
