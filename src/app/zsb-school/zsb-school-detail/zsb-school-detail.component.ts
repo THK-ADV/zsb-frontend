@@ -86,8 +86,8 @@ export class ZsbSchoolDetailComponent implements OnInit {
           const contactsIds = school.contacts_ids === undefined ? [] : school.contacts_ids
           if (contactsIds.length === 0) { // Wenn keine Kontakte vorhanden sind
             console.log('load form data without contacts')
-            this.service.loadFormData(school, this.address, []);
-            this.addressUndefined = false;
+            this.service.loadFormData(school, this.address, [])
+            this.addressUndefined = false
           } else {
             console.log('get address')
             forkJoin(contactsIds.map(id => this.dbService.getContactById(id))).subscribe(contacts => {
@@ -196,6 +196,7 @@ export class ZsbSchoolDetailComponent implements OnInit {
   private createDialog(): MatDialogRef<ZsbContactSearchComponent, Contact> {
     const dialogConfig = new MatDialogConfig()
     dialogConfig.disableClose = true
+    dialogConfig.width = '30%'
     return this.dialog.open(ZsbContactSearchComponent, dialogConfig)
   }
 

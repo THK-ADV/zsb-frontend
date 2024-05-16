@@ -45,7 +45,7 @@ snack-bar-container.notification simple-snack-bar {
 
 .controls-container {
   width: 100%;
-  padding: 5%;
+  padding: 0 5% 5%;
 }
 
 .flex-container {
