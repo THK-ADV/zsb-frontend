@@ -169,8 +169,6 @@ export class ZsbFilterComponent {
   }
 
   get filteredSchoolContacts(): string[] {
-    console.log('this', this.contactPersonSchool)
-    console.log('list', this.schoolContacts)
     return this.schoolContacts.filter(option =>
       option.trim().toLowerCase().includes(this.contactPersonSchool.trim().toLowerCase())
     )
