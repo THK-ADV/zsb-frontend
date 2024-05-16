@@ -1,7 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
-
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.full-width {
+  width: 100%;
+}
 
 .hidden-color {
   color: #eee;
@@ -29,4 +32,59 @@ snack-bar-container.failure {
 snack-bar-container.notification simple-snack-bar {
   font-size: 18px !important;
   font-weight: bold;
+}
+
+.standard-padding {
+  padding: 10px;
+}
+
+.standard-form {
+  max-width: 512px;
+  width: 100%;
+}
+
+.controls-container {
+  width: 100%;
+  padding: 5%;
+}
+
+.flex-container {
+  display: flex;
+  width: 100%;
+}
+
+.left-column {
+  margin-right: 20px;
+  flex-grow: 1;
+}
+
+.right-column {
+  margin-left: 20px;
+  flex-grow: 1;
+}
+
+.btn-row {
+  width: 100%;
+}
+
+.mat-accent {
+  --mat-option-selected-state-label-text-color: #ffd740
+}
+
+.mat-warn {
+  --mat-option-selected-state-label-text-color: #f44336
+}
+
+html {
+  --mat-autocomplete-background-color: white
+}
+
+.mat-label {
+  white-space: nowrap;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+input.mat-mdc-chip-input {
+  margin-left: 0 !important;
 }

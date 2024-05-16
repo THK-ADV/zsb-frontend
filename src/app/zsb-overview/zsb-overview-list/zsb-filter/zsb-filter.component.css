@@ -7,11 +7,3 @@
   display: flex;
 }
 
-.left-column {
-  flex: 1;
-  margin-right: 20px; /* Platz zwischen den Spalten */
-}
-
-.right-column {
-  flex: 1;
-}

@@ -1,11 +1,9 @@
 form.normal-form {
+  padding: 10px;
   margin: 10px;
 }
 
-.controls-container {
-  width: 100%;
-  padding: 5%;
-}
+
 
 .controls-container > * {
   width: 100%;
@@ -19,7 +17,7 @@ form.normal-form {
   margin-bottom: 5px;
 }
 
-.sec1, .sec2 {
+.sec1, .sec2, .sec {
   margin: 20px;
 }
 
