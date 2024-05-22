@@ -21,7 +21,7 @@ export class ZsbLetterComponent implements OnInit {
   public signatures: Observable<Signature[]>
   public formGroup: UntypedFormGroup = new UntypedFormGroup({
     msg: new UntypedFormControl('', Validators.required),
-    signature_id: new UntypedFormControl(0)
+    signature_id: new UntypedFormControl(null)
   })
 
   constructor(private dbService: DatabaseService, public dialogRef: MatDialogRef<ZsbLetterComponent>, private datePipe: DatePipe) {

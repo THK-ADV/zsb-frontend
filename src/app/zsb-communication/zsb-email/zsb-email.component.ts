@@ -106,8 +106,4 @@ export class ZsbEmailComponent implements OnInit {
   onCancel() {
     this.dialogRef.close()
   }
-
-  private _filter(recipient: string) {
-    return []
-  }
 }

@@ -1,7 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
-
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.full-width {
+  width: 100%;
+}
 
 .hidden-color {
   color: #eee;
@@ -29,4 +32,71 @@ snack-bar-container.failure {
 snack-bar-container.notification simple-snack-bar {
   font-size: 18px !important;
   font-weight: bold;
+}
+
+.standard-padding {
+  padding: 10px;
+}
+
+.standard-form {
+  max-width: 512px;
+  width: 100%;
+}
+
+.controls-container {
+  width: 100%;
+  padding: 5%;
+}
+
+.flex-container {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.left-column, .right-column {
+  flex: 1;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.btn-row {
+  width: 100%;
+}
+
+.detail-form {
+  min-width: 512px;
+  padding: 5% 10%;
+}
+
+.detail-form mat-form-field {
+  width: 100%;
+}
+
+.detail-form mat-form-field textarea {
+  min-height: max-content;
+  height: 100px;
+  width: 100%;
+}
+
+.sec {
+  padding: 2% 0;
+}
+
+.mat-accent {
+  --mat-option-selected-state-label-text-color: #ffd740
+}
+
+.mat-warn {
+  --mat-option-selected-state-label-text-color: #f44336
+}
+
+.mat-label {
+  white-space: nowrap;
+  padding: 5px 0;
+}
+
+input.mat-mdc-chip-input {
+  margin-left: 0 !important;
 }

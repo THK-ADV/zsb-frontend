@@ -1,41 +1,21 @@
-form.normal-form {
-  margin: 10px;
-}
-
-.controls-container {
-  width: 100%;
-  padding: 5%;
-}
-
 .controls-container > * {
   width: 100%;
 }
 
-.add-bottom-padding {
-  padding-bottom: 10px;
-}
-
-.single-btn-row {
-  margin-bottom: 5px;
-}
-
-.sec1, .sec2 {
-  margin: 20px;
-}
-
-.header-row th {
+th {
   text-align: left;
+  font-size: medium;
 }
 
-tr.border_bottom td {
-  border-bottom: 1px dashed #24292e;
-  padding: 2px 3px 2px 2px;
-}
-
-.contact-table {
-  width: 100%;
+.noContacts {
+  padding: 2%;
+  font-size: medium;
 }
 
 .btn-span-full-table {
   width: 100%;
+}
+
+.vertical-space {
+  margin-top: 20px;
 }

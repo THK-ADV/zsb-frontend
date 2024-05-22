@@ -1,123 +1,123 @@
-<!--<p>zsb-address works!</p>-->
-<h1>Adresse verwalten</h1>
-<form [formGroup]="service.formGroup" class="normal-form example-form"> <!--  (submit)="onSubmit()" -->
+<div class="standard-padding">
+  <form [formGroup]="service.formGroup">
+    <div class="controls-container">
+      <h1>Adresse verwalten</h1>
+      <input type="hidden" formControlName="addressId">
+      <div class="flex-container">
+        <!-- left side -->
+        <div class="left-column">
+          <mat-form-field>
+            <input
+              name="governmentDistrict"
+              type="text"
+              placeholder="Regierungsbezirk"
+              aria-label="Number"
+              matInput
+              formControlName="governmentDistrict"
+              [matAutocomplete]="autoGovernmentDistrict">
+            <mat-autocomplete autoActiveFirstOption #autoGovernmentDistrict="matAutocomplete">
+              <mat-option *ngFor="let option of filteredGovernmentDistrictOptions" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <br>
 
-  <div class="controls-container">
-    <input type="hidden" formControlName="addressId">
+          <mat-form-field>
+            <input
+              name="postcode"
+              type="number"
+              placeholder="PLZ"
+              aria-label="Number"
+              matInput
+              formControlName="postcode"
+              [matAutocomplete]="autoPostcode">
+            <mat-autocomplete autoActiveFirstOption #autoPostcode="matAutocomplete">
+              <mat-option *ngFor="let option of filteredPostcodeOptions" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <br>
 
-    <div class="" fxLayout="row" fxLayout.xs="column" fxFlexFill>
-      <!-- left side -->
-      <div class="sec1" fxFlex="100" fxFlex.xs="55">
-        <mat-form-field class="example-full-width">
-          <input
-            name="governmentDistrict"
-            type="text"
-            placeholder="Regierungsbezirk"
-            aria-label="Number"
-            matInput
-            formControlName="governmentDistrict"
-            [matAutocomplete]="autoGovernmentDistrict">
-          <mat-autocomplete autoActiveFirstOption #autoGovernmentDistrict="matAutocomplete">
-            <mat-option *ngFor="let option of filteredGovernmentDistrictOptions" [value]="option">
-              {{option}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
+          <mat-form-field>
+            <input
+              name="street"
+              type="text"
+              placeholder="Strasse"
+              aria-label="Text"
+              matInput
+              formControlName="street"
+              [matAutocomplete]="autoStreet">
+            <mat-autocomplete autoActiveFirstOption #autoStreet="matAutocomplete">
+              <mat-option *ngFor="let option of filteredStreetOptions" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <br>
+        </div>
 
-        <mat-form-field class="example-full-width">
-          <input
-            name="postcode"
-            type="number"
-            placeholder="PLZ"
-            aria-label="Number"
-            matInput
-            formControlName="postcode"
-            [matAutocomplete]="autoPostcode">
-          <mat-autocomplete autoActiveFirstOption #autoPostcode="matAutocomplete">
-            <mat-option *ngFor="let option of filteredPostcodeOptions" [value]="option">
-              {{option}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <br>
+        <!-- right side -->
+        <div class="right-column">
+          <mat-form-field>
+            <input
+              name="constituency"
+              type="text"
+              placeholder="Kreis"
+              aria-label="Number"
+              matInput
+              formControlName="constituency"
+              [matAutocomplete]="autoConstituency">
+            <mat-autocomplete autoActiveFirstOption #autoConstituency="matAutocomplete">
+              <mat-option *ngFor="let option of filteredConstituencyOptions" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
 
-        <mat-form-field class="example-full-width">
-          <input
-            name="street"
-            type="text"
-            placeholder="Strasse"
-            aria-label="Text"
-            matInput
-            formControlName="street"
-            [matAutocomplete]="autoStreet">
-          <mat-autocomplete autoActiveFirstOption #autoStreet="matAutocomplete" >
-            <mat-option *ngFor="let option of filteredStreetOptions" [value]="option">
-              {{option}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <br>
+          <mat-form-field>
+            <input
+              name="city"
+              type="text"
+              placeholder="Ort"
+              aria-label="Text"
+              matInput
+              formControlName="designation"
+              [matAutocomplete]="autoOrt">
+            <mat-autocomplete autoActiveFirstOption #autoOrt="matAutocomplete">
+              <mat-option *ngFor="let option of filteredDesignationOptions" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <br>
 
+          <mat-form-field>
+            <input
+              name="housenumber"
+              type="text"
+              placeholder="Hausnummer"
+              aria-label="Text"
+              matInput
+              formControlName="houseNumber"
+              [matAutocomplete]="autoHousenumber">
+            <mat-autocomplete autoActiveFirstOption #autoHousenumber="matAutocomplete">
+              <mat-option *ngFor="let option of filteredHouseNumberOptions" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
       </div>
-      <!-- right side -->
-      <div class="sec2" fxFlex="100" fxFlex.xs="55">
-        <mat-form-field class="example-full-width">
-          <input
-            name="constituency"
-            type="text"
-            placeholder="Kreis"
-            aria-label="Number"
-            matInput
-            formControlName="constituency"
-            [matAutocomplete]="autoConstituency">
-          <mat-autocomplete autoActiveFirstOption #autoConstituency="matAutocomplete">
-            <mat-option *ngFor="let option of filteredConstituencyOptions" [value]="option">
-              {{option}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
 
-        <mat-form-field class="example-full-width">
-          <input
-            name="city"
-            type="text"
-            placeholder="Ort"
-            aria-label="Text"
-            matInput
-            formControlName="designation"
-            [matAutocomplete]="autoOrt">
-          <mat-autocomplete autoActiveFirstOption #autoOrt="matAutocomplete" >
-            <mat-option *ngFor="let option of filteredDesignationOptions" [value]="option">
-              {{option}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-        <br>
-
-        <mat-form-field class="example-full-width">
-          <input
-            name="housenumber"
-            type="text"
-            placeholder="Hausnummer"
-            aria-label="Text"
-            matInput
-            formControlName="houseNumber"
-            [matAutocomplete]="autoHousenumber">
-          <mat-autocomplete autoActiveFirstOption #autoHousenumber="matAutocomplete" >
-            <mat-option *ngFor="let option of filteredHouseNumberOptions" [value]="option">
-              {{option}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
+      <div class="btn-row">
+        <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="service.formGroup.invalid">
+          <!-- type="submit" -->
+          Übernehmen
+        </button>
+        <button type="button" mat-raised-button color="warn" (click)="onCancel()">Abbrechen</button>
       </div>
     </div>
-
-    <div class="btn-row">
-      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="service.formGroup.invalid"> <!-- type="submit" -->
-        Übernehmen
-      </button>
-      <button type="button" mat-raised-button color="warn" (click)="onCancel()">Abbrechen</button>
-    </div>
-  </div>
-</form>
-
+  </form>
+</div>

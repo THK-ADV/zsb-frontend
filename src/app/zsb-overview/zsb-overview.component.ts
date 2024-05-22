@@ -18,17 +18,4 @@ export class ZsbOverviewComponent implements OnInit {
   ngOnInit(): void {
     this.schools = this.databaseService.getSchoolsAtomic()
   }
-
-  filterList() {
-  }
-
-  addSchule() {
-    // this.dialog.open(E)
-  }
-
-  editSchool(id: number) {
-  }
-
-  deleteSchool(id: number) {
-  }
 }

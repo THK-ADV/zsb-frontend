@@ -16,6 +16,7 @@ import {AbstractControl, ValidationErrors} from '@angular/forms'
 import {CooperationPartner} from '../cooperationPartner'
 import {KaoaSupervisor} from '../kaoaSupervisor'
 import {TalentScout} from '../talentScout'
+import {MatTableDataSource} from '@angular/material/table'
 
 @Component({
   selector: 'app-zsb-school-detail',
@@ -29,9 +30,15 @@ export class ZsbSchoolDetailComponent implements OnInit {
   schoolTypes: Observable<SchoolType[]>
   contactFunctions: ContactFunction[]
   cooperationPartners: Observable<CooperationPartner[]>
+  contactData: MatTableDataSource<Contact>
   kaoaSupervisors: Observable<KaoaSupervisor[]>
   talentScouts: Observable<TalentScout[]>
   addressId: string
+  displayedContactColumns: Array<string> = [
+    'contactName',
+    'contactFeature',
+    'contactActions'
+  ]
 
   addressUndefined = true
 
@@ -86,13 +93,14 @@ export class ZsbSchoolDetailComponent implements OnInit {
           const contactsIds = school.contacts_ids === undefined ? [] : school.contacts_ids
           if (contactsIds.length === 0) { // Wenn keine Kontakte vorhanden sind
             console.log('load form data without contacts')
-            this.service.loadFormData(school, this.address, []);
-            this.addressUndefined = false;
+            this.service.loadFormData(school, this.address, [])
+            this.addressUndefined = false
           } else {
             console.log('get address')
             forkJoin(contactsIds.map(id => this.dbService.getContactById(id))).subscribe(contacts => {
             console.log('loadformdata')
             this.service.loadFormData(school, this.address, contacts)
+            this.contactData = new MatTableDataSource(contacts)
             this.addressUndefined = false
           })
         }})
@@ -189,13 +197,13 @@ export class ZsbSchoolDetailComponent implements OnInit {
         }
       })
     }
-
     return desc
   }
 
   private createDialog(): MatDialogRef<ZsbContactSearchComponent, Contact> {
     const dialogConfig = new MatDialogConfig()
     dialogConfig.disableClose = true
+    dialogConfig.width = '30%'
     return this.dialog.open(ZsbContactSearchComponent, dialogConfig)
   }
 

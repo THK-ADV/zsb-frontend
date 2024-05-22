@@ -1,9 +1,9 @@
 <div class="standard-padding">
-  <h1>E-Mail versenden</h1>
   <form [formGroup]="formGroup" class="standard-form">
     <div class="controls-container">
+      <h1>E-Mail versenden</h1>
       <mat-form-field class="full-width">
-        <mat-chip-grid #chipGrid aria-label="Adressaten" placeholder="An:">
+        <mat-chip-grid style="padding-bottom: 5%" #chipGrid aria-label="Adressaten" placeholder="An:">
           <mat-chip-row *ngFor="let recipient of recipients"
                         (removed)="remove(recipient)">
             {{ recipient }}
