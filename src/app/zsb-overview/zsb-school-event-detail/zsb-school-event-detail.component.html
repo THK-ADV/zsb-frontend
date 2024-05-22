@@ -1,223 +1,300 @@
-<h1>{{school.name}}</h1>
-<h3 style="font-weight: bolder">Schulinfos</h3>
-<p><span style="font-weight: bold">Name: </span> {{ school.name }} </p>
-<p><span style="font-weight: bold">Schulform: </span> {{ school.type }} </p>
-<p><span style="font-weight: bold">Telefon: </span> {{ school.phonenumber }} </p>
-<p><span style="font-weight: bold">Email: </span> {{ school.email }} </p>
-<p><span style="font-weight: bold">Website: </span> <a [href]="school.website"
-                                                       target="_blank"> {{ school.website }} </a></p>
-<p><span style="font-weight: bold">Kommentar: </span> {{ school.comment }} </p>
-
-<h3 style="font-weight: bolder;">Schülerzahlen</h3>
-<p><span style="font-weight: bold">Schülerzahl EF/11: </span> {{ school.amount_students11 }} </p>
-<p><span style="font-weight: bold">Schülerzahl Q1/12: </span> {{ school.amount_students12 }} </p>
-<p><span style="font-weight: bold">Schülerzahl Q2/13: </span> {{ school.amount_students13 }} </p>
-
-<h3 style="font-weight: bolder">Kontakte</h3>
-<div>
-  <table class="contact-table">
-    <tr class="header-row">
-      <th>Name</th>
-      <th>Funktion</th>
-      <th></th>
-    </tr>
-    <ng-container *ngIf="contacts.length < 1">
+<div class="standard-padding">
+  <h1>{{ school.name }}</h1>
+  <div class="sec">
+    <h2>Schulinfos</h2>
+    <table class="info-table full-width">
       <tr>
-        <td [attr.colspan]="3">Keine Kontakte vorhanden.</td>
+        <td class="label">Name:</td>
+        <td class="value">{{ school.name }}</td>
       </tr>
-    </ng-container>
-    <tr *ngFor="let contact of contacts; let i = index" class="border_bottom">
-      <ng-container *ngIf="contact != null">
-        <td>
-          <ng-container *ngIf="contact.surname !== ''; else elseNoName">
-            {{contact.surname}}
-          </ng-container>
-          <ng-template #elseNoName>{{contact.email}}</ng-template>
-          <ng-container *ngIf="contact.firstname !== undefined && contact.firstname.length > 0">
-            , {{contact.firstname}}
-          </ng-container>
-        </td>
-        <td>
-          {{getContactFunctionDescById(contact.feature)}}
-        </td>
-        <td>
-      </ng-container>
-    </tr>
-  </table>
-</div>
-
-<h3 style="font-weight: bolder">Standort</h3>
-<p><span style="font-weight: bold">Straße und Hausnummer: </span> {{ address.street }} {{ address.houseNumber }} </p>
-<p><span style="font-weight: bold;">PLZ und Ort: </span> {{ address.city.postcode }} {{ address.city.designation }} </p>
-<p><span style="font-weight: bold;">Kreis: </span> {{ address.city.constituency }}</p>
-<p><span style="font-weight: bold;">Regierungsbezirk: </span> {{ address.city.governmentDistrict }}</p>
-
-<h3 style="font-weight: bolder">Kooperationen</h3>
-<p><span style="font-weight: bold;">Kooperationsvertrag: </span> <!-- TODO: einfügen --> </p>
-<p><span style="font-weight: bold;">Betreuende Hochschule KAoA/Talentscouting: </span> <!-- TODO: einfügen --> </p>
-<p><span style="font-weight: bold;">KAoA Betreuer*in: </span> <!-- TODO: einfügen --> </p>
-<p><span style="font-weight: bold;">Talentscout: </span> <!-- TODO: einfügen --> </p>
-
-<h2>Termine</h2>
-<div class="mat-elevation-z8 full-width-table">
-
-  <table mat-table
-         multiTemplateDataRows
-         matSort
-         [dataSource]="listData">
-
-    <!-- terminname Column -->
-    <ng-container matColumnDef="designation">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Bezeichnung</th>
-      <td mat-cell *matCellDef="let row">{{row.designation}}</td>
-    </ng-container>
-
-    <!-- terminart Column -->
-    <ng-container matColumnDef="category">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Kategorie</th>
-      <td mat-cell *matCellDef="let row">{{row.type}}</td>
-    </ng-container>
-
-    <!-- date Column -->
-    <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Datum</th>
-      <td mat-cell *matCellDef="let row">{{toReadableDate(row.date)}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="expand">
-      <th mat-header-cell *matHeaderCellDef aria-label="row actions"></th>
-      <td mat-cell *matCellDef="let element">
-        <button mat-icon-button aria-label="expand row"
-                (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
-          <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
-          <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="expandedDetail">
-      <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
-        <div class="element-detail"
-             [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-          <div>
-            <p>Bezeichnung: <span style="font-weight: bold"> {{ element.designation }} </span></p>
-            <p>Datum: <span style="font-weight: bold"> {{ toReadableDate(element.date) }} </span></p>
-            <p>Terminart: <span style="font-weight: bold"> {{ element.type }} </span></p>
-            <p>Verantwortliche*r Schule: <span style="font-weight: bold"> {{ element.contact_school }} </span></p>
-            <p>Verantwortliche*r Hochschule: <span style="font-weight: bold"> {{ element.contact_university }} </span></p>
-            <p>Sonstiges: <span style="font-weight: bold"> {{ element.other }} </span></p>
-            <p>Schule: <span style="font-weight: bold"> {{ element.school.name }} </span></p>
-            <p>Bewertung: <span style="font-weight: bold"> {{ element.rating }} </span></p>
-            <div *ngIf="element.type === 'AnSchuleTermin'">
-              <p>KAoA:
-                <span style="font-weight: bold" *ngIf="element.schoolCategory.includes('KAOA'); else noKAoA"> ja </span>
-                <ng-template #noKAoA><span style="font-weight: bold"> nein </span></ng-template>
-              </p>
-              <p style="text-indent:10px">Last Minute Information:
-                <span style="font-weight: bold" *ngIf="element.kAoACategory.includes('LASTMINUTEINFORMATION'); else noLastMinute"> ja </span>
-                <ng-template #noLastMinute><span style="font-weight: bold"> nein </span></ng-template>
-              </p>
-              <p style="text-indent:10px">Vortrag Allgemeine Studienorientierung:
-                <span style="font-weight: bold" *ngIf="element.kAoACategory.includes('GENERALORIENTATION'); else noGeneralOrientation"> ja </span>
-                <ng-template #noGeneralOrientation><span style="font-weight: bold"> nein </span></ng-template>
-              </p>
-              <p style="text-indent:20px" *ngIf="element.kAoACategory.includes('GENERALORIENTATION')">Durchläufe: <span style="font-weight: bold"> {{ element.kAoARuns }} </span></p>
-              <p style="text-indent:10px">Schuljahresendgespräch:
-                <span style="font-weight: bold" *ngIf="element.kAoACategory.includes('YEARENDING'); else noYearEnding"> ja </span>
-                <ng-template #noYearEnding><span style="font-weight: bold"> nein </span></ng-template>
-              </p>
-              <p style="text-indent:10px">Schuljahresplanungsgespräch:
-                <span style="font-weight: bold" *ngIf="element.kAoACategory.includes('YEARPLANNING'); else noYearPlanning"> ja </span>
-                <ng-template #noYearPlanning><span style="font-weight: bold"> nein </span></ng-template>
-              </p>
-              <p style="text-indent:10px">Sonstiges: <span style="font-weight: bold"> {{ element.kAoAOther }} </span></p>
-              <p>Talentscout:
-                <span style="font-weight: bold" *ngIf="element.schoolCategory.includes('TALENTSCOUT'); else noTalentscout"> ja </span>
-                <ng-template #noTalentscout><span style="font-weight: bold"> nein </span></ng-template>
-              </p>
-              <p style="text-indent:10px">Gespräch:
-                <span style="font-weight: bold" *ngIf="element.talentscoutCategory.includes('CONVERSATION'); else noConversation"> ja </span>
-                <ng-template #noConversation><span style="font-weight: bold"> nein </span></ng-template>
-              </p>
-              <p style="text-indent:10px">Scouting:
-                <span style="font-weight: bold" *ngIf="element.talentscoutCategory.includes('SCOUTING'); else noScouting"> ja </span>
-                <ng-template #noScouting><span style="font-weight: bold"> nein </span></ng-template>
-              </p>
-              <p style="text-indent:10px">Sonstiges: <span style="font-weight: bold"> {{ element.talentscoutOther }} </span></p>
-              <p>TH-Spezifisch:
-                <span style="font-weight: bold" *ngIf="element.schoolCategory.includes('THSPECIFIC'); else noThSpecific"> ja </span>
-                <ng-template #noThSpecific><span style="font-weight: bold"> nein </span></ng-template>
-              </p>
-              <p style="text-indent:10px">Einzeltermin:
-                <span style="font-weight: bold" *ngIf="element.thSpecificCategory.includes('SINGLEAPPT'); else noSingleAppt"> ja </span>
-                <ng-template #noSingleAppt><span style="font-weight: bold"> nein </span></ng-template>
-              <p style="text-indent:20px">Beratung:
-                <span style="font-weight: bold" *ngIf="element.thSpecificCategory.includes('CONSULTATIONSINGLE'); else noConsultationSingle"> ja </span>
-                <ng-template #noConsultationSingle><span style="font-weight: bold"> nein </span></ng-template>
-              <p style="text-indent:20px">Fachvortrag:
-                <span style="font-weight: bold" *ngIf="element.thSpecificCategory.includes('TALKSINGLE'); else noTalkSingle"> ja </span>
-                <ng-template #noTalkSingle><span style="font-weight: bold"> nein </span></ng-template>
-              <p style="text-indent:20px">Vortrag "Technology, Arts, Sciences":
-                <span style="font-weight: bold" *ngIf="element.thSpecificCategory.includes('THTALKSINGLE'); else noThTalkSingle"> ja </span>
-                <ng-template #noThTalkSingle><span style="font-weight: bold"> nein </span></ng-template>
-              <p style="text-indent:30px" *ngIf="element.thSpecificCategory.includes('THTALKSINGLE')">Durchläufe: <span style="font-weight: bold"> {{ element.thRunsSingle }} </span></p>
-              <p style="text-indent:20px">Informationsstand:
-                <span style="font-weight: bold" *ngIf="element.thSpecificCategory.includes('INFORMATIONSINGLE'); else noInformationSingle"> ja </span>
-                <ng-template #noInformationSingle><span style="font-weight: bold"> nein </span></ng-template>
-              <p style="text-indent:20px" *ngIf="element.thSpecificCategory.includes('OTHERSINGLE')">Sonstiges: <span style="font-weight: bold"> {{ element.thOtherSingle }} </span></p>
-
-              <p style="text-indent:10px">Schulmesse:
-                <span style="font-weight: bold" *ngIf="element.thSpecificCategory.includes('SCHOOLFAIR'); else noSchoolFair"> ja </span>
-                <ng-template #noSchoolFair><span style="font-weight: bold"> nein </span></ng-template>
-              <p style="text-indent:20px">Beratung:
-                <span style="font-weight: bold" *ngIf="element.thSpecificCategory.includes('CONSULTATIONFAIR'); else noConsultationFair"> ja </span>
-                <ng-template #noConsultationFair><span style="font-weight: bold"> nein </span></ng-template>
-              <p style="text-indent:20px">Fachvortrag:
-                <span style="font-weight: bold" *ngIf="element.thSpecificCategory.includes('TALKFAIR'); else noTalkFair"> ja </span>
-                <ng-template #noTalkFair><span style="font-weight: bold"> nein </span></ng-template>
-              <p style="text-indent:20px">Vortrag "Technology, Arts, Sciences":
-                <span style="font-weight: bold" *ngIf="element.thSpecificCategory.includes('THTALKFAIR'); else noThTalkFair"> ja </span>
-                <ng-template #noThTalkFair><span style="font-weight: bold"> nein </span></ng-template>
-              <p style="text-indent:30px" *ngIf="element.thSpecificCategory.includes('THTALKFAIR')">Durchläufe: <span style="font-weight: bold"> {{ element.thRunsFair }} </span></p>
-              <p style="text-indent:20px">Informationsstand:
-                <span style="font-weight: bold" *ngIf="element.thSpecificCategory.includes('INFORMATIONFAIR'); else noInformationFair"> ja </span>
-                <ng-template #noInformationFair><span style="font-weight: bold"> nein </span></ng-template>
-              <p style="text-indent:20px" *ngIf="element.thSpecificCategory.includes('OTHERFAIR')">Sonstiges: <span style="font-weight: bold"> {{ element.thOtherFair }} </span></p>
-            </div>
-            <div *ngIf="element.type === 'BeiUnsTermin'">
-              <p>Campustag(e):
-                <span style="font-weight: bold" *ngIf="element.internCategory.includes('CAMPUSDAY'); else noCampusDay"> ja </span>
-                <ng-template #noCampusDay><span style="font-weight: bold"> nein </span></ng-template>
-              </p>
-              <p>Schülerlabor:
-                <span style="font-weight: bold" *ngIf="element.internCategory.includes('LAB'); else noLab"> ja </span>
-                <ng-template #noLab><span style="font-weight: bold"> nein </span></ng-template>
-              </p>
-              <p *ngIf="element.internCategory.includes('OTHER')">Sonstiges: <span style="font-weight: bold"> {{ element.internOther }} </span></p>
-            </div>
-          </div>
+      <tr>
+        <td class="label">Schulform:</td>
+        <td class="value">{{ schoolType }}</td>
+      </tr>
+      <tr>
+        <td class="label">Telefon:</td>
+        <td class="value">{{ school.phonenumber }}</td>
+      </tr>
+      <tr>
+        <td class="label">Email:</td>
+        <td class="value">{{ school.email }}</td>
+      </tr>
+      <tr>
+        <td class="label">Website:</td>
+        <td class="value"><a [href]="school.website" target="_blank">{{ school.website }}</a></td>
+      </tr>
+      <tr>
+        <td class="label">Kommentar:</td>
+        <td class="value">{{ school.comment }}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="sec">
+    <h2>Schülerzahlen</h2>
+    <table class="info-table full-width">
+      <tr>
+        <td class="label">Schülerzahl EF/11:</td>
+        <td class="value">{{ school.amount_students11 }}</td>
+      </tr>
+      <tr>
+        <td class="label">Schülerzahl Q1/12:</td>
+        <td class="value">{{ school.amount_students12 }}</td>
+      </tr>
+      <tr>
+        <td class="label">Schülerzahl Q2/13:</td>
+        <td class="value">{{ school.amount_students13 }}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="sec">
+    <h2>Kontakte</h2>
+    <div class="full-width">
+      <table *ngIf="contactData.data.length > 0; else noContacts" mat-table [dataSource]="contactData"
+             class="mat-elevation-z8">
+        <ng-container matColumnDef="contactName">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let contact">
+            <ng-container *ngIf="contact.surname !== ''; else elseNoName">
+              {{ contact.surname }}
+            </ng-container>
+            <ng-template #elseNoName>{{ contact.email }}</ng-template>
+            <ng-container *ngIf="contact.firstname !== undefined && contact.firstname.length > 0">
+              , {{ contact.firstname }}
+            </ng-container>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="contactFeature">
+          <th mat-header-cell *matHeaderCellDef>Funktion</th>
+          <td mat-cell *matCellDef="let contact">
+            {{ getContactFunctionDescById(contact.feature) }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedContactColumns"></tr>
+        <tr mat-row *matRowDef="let contact; columns: displayedContactColumns;"></tr>
+      </table>
+      <ng-template #noContacts>
+        <div class="spacer">
+          <p>Keine Kontakte vorhanden</p>
         </div>
-      </td>
-    </ng-container>
+      </ng-template>
+    </div>
+  </div>
+  <div class="sec">
+    <h2>Standort</h2>
+    <table class="info-table full-width">
+      <tr>
+        <td class="label">Straße und Hausnummer:</td>
+        <td class="value">{{ address.street }} {{ address.houseNumber }}</td>
+      </tr>
+      <tr>
+        <td class="label">PLZ und Ort:</td>
+        <td class="value">{{ address.city.postcode }} {{ address.city.designation }}</td>
+      </tr>
+      <tr>
+        <td class="label">Kreis:</td>
+        <td class="value">{{ address.city.constituency }}</td>
+      </tr>
+      <tr>
+        <td class="label">Regierungsbezirk:</td>
+        <td class="value">{{ address.city.governmentDistrict }}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="sec">
+    <h2>Kooperationen</h2>
+    <table class="info-table full-width">
+      <tr>
+        <td class="label">Kooperationsvertrag:</td>
+        <td class="value">{{ cooperation.cooperationContract }}</td>
+      </tr>
+      <tr>
+        <td class="label">Betreuende Hochschule KAoA/Talentscouting:</td>
+        <td class="value">{{ cooperation.cooperationPartner }}</td>
+      </tr>
+      <tr>
+        <td class="label">KAoA Betreuer*in:</td>
+        <td class="value">{{ cooperation.kaoaSupervisor }}</td>
+      </tr>
+      <tr>
+        <td class="label">Talentscout:</td>
+        <td class="value">{{ cooperation.talentScout }}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="sec">
+    <h2>Termine</h2>
+    <div class="mat-elevation-z8 full-width-table">
+      <table *ngIf="listData.data.length > 0; else noEvents"
+             mat-table
+             multiTemplateDataRows
+             matSort
+             [dataSource]="listData">
+        <ng-container matColumnDef="designation">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Bezeichnung</th>
+          <td mat-cell *matCellDef="let row">{{ row.designation }}</td>
+        </ng-container>
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Kategorie</th>
+          <td mat-cell *matCellDef="let row">{{ row.type }}</td>
+        </ng-container>
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Datum</th>
+          <td mat-cell *matCellDef="let row">{{ toReadableDate(row.date) }}</td>
+        </ng-container>
+        <ng-container matColumnDef="expand">
+          <th mat-header-cell *matHeaderCellDef aria-label="row actions"></th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button aria-label="expand row"
+                    (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
+              <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
+              <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="expandedDetail">
+          <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+            <div class="element-detail"
+                 [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+              <div>
+                <table class="info-table full-width">
+                  <tr>
+                    <td class="label">Verantwortliche*r Schule:</td>
+                    <td class="value">{{ element.contact_school.name }}</td>
+                  </tr>
+                  <tr>
+                    <td class="label">Verantwortliche*r Hochschule:</td>
+                    <td class="value">{{ element.contact_university.name }}</td>
+                  </tr>
+                  <tr>
+                    <td class="label">Sonstiges:</td>
+                    <td class="value">{{ element.other }}</td>
+                  </tr>
+                  <tr>
+                    <td class="label">Bewertung:</td>
+                    <td class="value">{{ element.rating }}</td>
+                  </tr>
+                </table>
+                <h2>Details</h2>
+                <div class="event-details" *ngIf="element.type === 'AnSchuleTermin'">
+                  <p>KAoA:
+                    <span *ngIf="element.schoolCategory.includes('KAOA'); else noKAoA"> ja </span>
+                    <ng-template #noKAoA><span> nein </span></ng-template>
+                  </p>
+                  <p class="indent-1">Last Minute Information:
+                    <span *ngIf="element.kAoACategory.includes('LASTMINUTEINFORMATION'); else noLastMinute"> ja </span>
+                    <ng-template #noLastMinute><span> nein </span></ng-template>
+                  </p>
+                  <p class="indent-1">Vortrag Allgemeine Studienorientierung:
+                    <span *ngIf="element.kAoACategory.includes('GENERALORIENTATION'); else noGeneralOrientation"> ja </span>
+                    <ng-template #noGeneralOrientation><span> nein </span></ng-template>
+                  </p>
+                  <p class="indent-2" *ngIf="element.kAoACategory.includes('GENERALORIENTATION')">Durchläufe:
+                    <span> {{ element.kAoARuns }} </span></p>
+                  <p class="indent-1">Schuljahresendgespräch:
+                    <span *ngIf="element.kAoACategory.includes('YEARENDING'); else noYearEnding"> ja </span>
+                    <ng-template #noYearEnding><span> nein </span></ng-template>
+                  </p>
+                  <p class="indent-1">Schuljahresplanungsgespräch:
+                    <span *ngIf="element.kAoACategory.includes('YEARPLANNING'); else noYearPlanning"> ja </span>
+                    <ng-template #noYearPlanning><span> nein </span></ng-template>
+                  </p>
+                  <p class="indent-1">Sonstiges: <span> {{ element.kAoAOther }} </span></p>
+                  <p>Talentscout:
+                    <span *ngIf="element.schoolCategory.includes('TALENTSCOUT'); else noTalentscout"> ja </span>
+                    <ng-template #noTalentscout><span> nein </span></ng-template>
+                  </p>
+                  <p class="indent-1">Gespräch:
+                    <span *ngIf="element.talentscoutCategory.includes('CONVERSATION'); else noConversation"> ja </span>
+                    <ng-template #noConversation><span> nein </span></ng-template>
+                  </p>
+                  <p class="indent-1">Scouting:
+                    <span *ngIf="element.talentscoutCategory.includes('SCOUTING'); else noScouting"> ja </span>
+                    <ng-template #noScouting><span> nein </span></ng-template>
+                  </p>
+                  <p class="indent-1">Sonstiges: <span> {{ element.talentscoutOther }} </span></p>
+                  <p>TH-Spezifisch:
+                    <span *ngIf="element.schoolCategory.includes('THSPECIFIC'); else noThSpecific"> ja </span>
+                    <ng-template #noThSpecific><span> nein </span></ng-template>
+                  </p>
+                  <p class="indent-1">Einzeltermin:
+                    <span *ngIf="element.thSpecificCategory.includes('SINGLEAPPT'); else noSingleAppt"> ja </span>
+                    <ng-template #noSingleAppt><span> nein </span></ng-template>
+                  <p class="indent-2">Beratung:
+                    <span *ngIf="element.thSpecificCategory.includes('CONSULTATIONSINGLE'); else noConsultationSingle"> ja </span>
+                    <ng-template #noConsultationSingle><span> nein </span></ng-template>
+                  <p class="indent-2">Fachvortrag:
+                    <span *ngIf="element.thSpecificCategory.includes('TALKSINGLE'); else noTalkSingle"> ja </span>
+                    <ng-template #noTalkSingle><span> nein </span></ng-template>
+                  <p class="indent-2">Vortrag "Technology, Arts, Sciences":
+                    <span *ngIf="element.thSpecificCategory.includes('THTALKSINGLE'); else noThTalkSingle"> ja </span>
+                    <ng-template #noThTalkSingle><span> nein </span></ng-template>
+                  <p class="indent-3" *ngIf="element.thSpecificCategory.includes('THTALKSINGLE')">Durchläufe:
+                    <span> {{ element.thRunsSingle }} </span></p>
+                  <p class="indent-2">Informationsstand:
+                    <span *ngIf="element.thSpecificCategory.includes('INFORMATIONSINGLE'); else noInformationSingle"> ja </span>
+                    <ng-template #noInformationSingle><span> nein </span></ng-template>
+                  <p class="indent-2" *ngIf="element.thSpecificCategory.includes('OTHERSINGLE')">Sonstiges:
+                    <span> {{ element.thOtherSingle }} </span></p>
 
-    <ng-container matColumnDef="loading">
-      <mat-footer-cell *matFooterCellDef aria-colspan="6">Daten werden geladen...</mat-footer-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="noData">
-      <mat-footer-cell *matFooterCellDef aria-colspan="6">Es sind keine Daten vorhanden.</mat-footer-cell>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
-    <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;"
-        class="element-row"
-        [class.expanded-row]="expandedElement === element"
-        (click)="expandedElement = expandedElement === element ? null : element">
-    </tr>
-    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
-    <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':listData!=null}"></mat-footer-row>
-    <mat-footer-row *matFooterRowDef="['noData']"
-                    [ngClass]="{'hide':!(listData!=null && listData.data.length==0)}"></mat-footer-row>
-
-  </table>
+                  <p class="indent-1">Schulmesse:
+                    <span *ngIf="element.thSpecificCategory.includes('SCHOOLFAIR'); else noSchoolFair"> ja </span>
+                    <ng-template #noSchoolFair><span> nein </span></ng-template>
+                  <p class="indent-2">Beratung:
+                    <span *ngIf="element.thSpecificCategory.includes('CONSULTATIONFAIR'); else noConsultationFair"> ja </span>
+                    <ng-template #noConsultationFair><span> nein </span></ng-template>
+                  <p class="indent-2">Fachvortrag:
+                    <span *ngIf="element.thSpecificCategory.includes('TALKFAIR'); else noTalkFair"> ja </span>
+                    <ng-template #noTalkFair><span> nein </span></ng-template>
+                  <p class="indent-2">Vortrag "Technology, Arts, Sciences":
+                    <span *ngIf="element.thSpecificCategory.includes('THTALKFAIR'); else noThTalkFair"> ja </span>
+                    <ng-template #noThTalkFair><span> nein </span></ng-template>
+                  <p class="indent-3" *ngIf="element.thSpecificCategory.includes('THTALKFAIR')">Durchläufe:
+                    <span> {{ element.thRunsFair }} </span></p>
+                  <p class="indent-2">Informationsstand:
+                    <span *ngIf="element.thSpecificCategory.includes('INFORMATIONFAIR'); else noInformationFair"> ja </span>
+                    <ng-template #noInformationFair><span> nein </span></ng-template>
+                  <p class="indent-2" *ngIf="element.thSpecificCategory.includes('OTHERFAIR')">Sonstiges:
+                    <span> {{ element.thOtherFair }} </span></p>
+                </div>
+                <div *ngIf="element.type === 'BeiUnsTermin'">
+                  <p>Campustag(e):
+                    <span *ngIf="element.internCategory.includes('CAMPUSDAY'); else noCampusDay"> ja </span>
+                    <ng-template #noCampusDay><span> nein </span></ng-template>
+                  </p>
+                  <p>Schülerlabor:
+                    <span *ngIf="element.internCategory.includes('LAB'); else noLab"> ja </span>
+                    <ng-template #noLab><span> nein </span></ng-template>
+                  </p>
+                  <p *ngIf="element.internCategory.includes('OTHER')">Sonstiges:
+                    <span> {{ element.internOther }} </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="loading">
+          <mat-footer-cell *matFooterCellDef aria-colspan="6">Daten werden geladen...</mat-footer-cell>
+        </ng-container>
+        <ng-container matColumnDef="noData">
+          <mat-footer-cell *matFooterCellDef aria-colspan="6">Es sind keine Daten vorhanden.</mat-footer-cell>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+        <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;"
+            class="element-row"
+            [class.expanded-row]="expandedElement === element"
+            (click)="expandedElement = expandedElement === element ? null : element">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+        <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':listData!=null}"></mat-footer-row>
+        <mat-footer-row *matFooterRowDef="['noData']"
+                        [ngClass]="{'hide':!(listData!=null && listData.data.length==0)}"></mat-footer-row>
+      </table>
+      <ng-template #noEvents>
+        <div class="spacer">
+          <p>Keine Termine vorhanden</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
 </div>

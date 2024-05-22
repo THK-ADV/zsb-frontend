@@ -1,3 +1,60 @@
+.info-table {
+  margin-bottom: 3%;
+}
+
+.info-table > tr {
+  margin: 5% 5%;
+  padding: 1% 1%;
+}
+
+.info-table > tr > td {
+  margin: 5% 5%;
+  padding: 1% 1%;
+}
+
+.label {
+  font-size: medium;
+  margin: 2% 8px;
+  padding-right: 10px;
+  text-align: left;
+  font-weight: 400;
+}
+
+.value {
+  font-size: medium;
+  font-style: italic;
+  text-align: right;
+  font-weight: 200;
+}
+
+.event-details p {
+  margin: 0 0 2%;
+  font-size: medium;
+}
+
+.event-details .indent-1 {
+  text-indent: 4%;
+  font-size: medium;
+  color: #555555;
+}
+
+.event-details .indent-2 {
+  text-indent: 8%;
+  font-size: small;
+  color: #666666;
+}
+
+.event-details .indent-3 {
+  text-indent: 16%;
+  font-size: small;
+  color: #888888;
+}
+
+.event-details span {
+  display: inline-block;
+  font-style: italic;
+}
+
 .container {
   display: flex;
   flex-direction: column;

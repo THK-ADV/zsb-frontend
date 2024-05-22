@@ -13,6 +13,10 @@ import {DatabaseEvent} from '../../zsb-events/event'
 import {MatPaginator} from '@angular/material/paginator'
 import {MatSort} from '@angular/material/sort'
 import {animate, state, style, transition, trigger} from '@angular/animations'
+import {schoolTypeDescById} from '../../zsb-school/schoolType'
+import {cooperationPartnerDescById} from '../../zsb-school/cooperationPartner'
+import {kaoaSupervisorDescById} from '../../zsb-school/kaoaSupervisor'
+import {talentScoutDescById} from '../../zsb-school/talentScout'
 
 type EventFilterOption = 'Alle' | 'Name' | 'Kategorie' | 'Datum'
 
@@ -63,6 +67,7 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
   }
   schoolId: string
   address: Address
+  schoolType: string
   contacts: Contact[] = []
   contactFunctions: ContactFunction[]
   cooperation = {
@@ -79,6 +84,11 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
     'date'
   ]
   columnsToDisplayWithExpand = [...this.displayedColumns, 'expand']
+  contactData: MatTableDataSource<Contact>
+  displayedContactColumns: Array<string> = [
+    'contactName',
+    'contactFeature'
+  ]
   filterOptions: EventFilterOption[] = ['Alle', 'Name', 'Kategorie', 'Datum']
   selectedFilterOption: EventFilterOption = this.filterOptions[0]
   showFilterOptions = false
@@ -95,7 +105,20 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
             school.contacts_ids.forEach(id => {
               this.dbService.getContactById(id).subscribe(contact => {
                 this.contacts.push(contact)
+                this.contactData = new MatTableDataSource(this.contacts)
               })
+            })
+            this.dbService.getSchoolType().subscribe(schoolType => {
+              this.schoolType = schoolTypeDescById(school.type, schoolType)
+            })
+            this.dbService.getCooperationPartner().subscribe(partner => {
+              this.cooperation.cooperationPartner = cooperationPartnerDescById(school.cooperationpartner, partner)
+            })
+            this.dbService.getKaoaSupervisors().subscribe(kaoaSupervisor => {
+              this.cooperation.kaoaSupervisor = kaoaSupervisorDescById(school.kaoaSupervisor, kaoaSupervisor)
+            })
+            this.dbService.getTalentScouts().subscribe(talentScout => {
+              this.cooperation.talentScout = talentScoutDescById(school.talentscout, talentScout)
             })
             this.dbService.getAddressAtomicById(school.address_id).subscribe(address => {
               this.address = address
@@ -103,13 +126,19 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
             this.dbService.getEvents().subscribe(events => {
               const eventsAtSchool: DatabaseEvent[] = []
               events.forEach((event) => {
+                console.log('event')
+                console.log(event)
                 if (event.school_id === this.schoolId) {
                   eventsAtSchool.push(event)
                 }
               })
+              console.log('eventsAtSchool')
+              console.log(eventsAtSchool)
               this.listData = new MatTableDataSource(eventsAtSchool)
               this.listData.sort = this.sort
               this.listData.paginator = this.paginator
+              console.log('listData')
+              console.log(this.listData)
             })
           })
         }
@@ -125,14 +154,6 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
   }
 
   buildCooperationObject() {
-    let cooperationContract = 'nein'
-    /*let cooperationPartner = 'Keine'
-    let kaoaSupervisor = 'Keine'
-    let talentScout = 'Keine'*/
-
-    if (this.school.cooperationcontract) {
-      cooperationContract = 'ja'
-    }
     if (this.school.cooperationcontract) {
       this.cooperation.cooperationContract = 'ja'
     } else {
@@ -140,7 +161,6 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  // TODO: Anpassen
   getContactFunctionDescById(id: number) {
     let desc = 'Unbekannt'
 

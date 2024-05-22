@@ -45,26 +45,43 @@ snack-bar-container.notification simple-snack-bar {
 
 .controls-container {
   width: 100%;
-  padding: 0 5% 5%;
+  padding: 5%;
 }
 
 .flex-container {
   display: flex;
   width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
 }
 
-.left-column {
-  margin-right: 20px;
-  flex-grow: 1;
-}
-
-.right-column {
-  margin-left: 20px;
-  flex-grow: 1;
+.left-column, .right-column {
+  flex: 1;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 .btn-row {
   width: 100%;
+}
+
+.detail-form {
+  min-width: 512px;
+  padding: 5% 10%;
+}
+
+.detail-form mat-form-field {
+  width: 100%;
+}
+
+.detail-form mat-form-field textarea {
+  min-height: max-content;
+  height: 100px;
+  width: 100%;
+}
+
+.sec {
+  padding: 2% 0;
 }
 
 .mat-accent {
@@ -75,14 +92,9 @@ snack-bar-container.notification simple-snack-bar {
   --mat-option-selected-state-label-text-color: #f44336
 }
 
-html {
-  --mat-autocomplete-background-color: white
-}
-
 .mat-label {
   white-space: nowrap;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding: 5px 0;
 }
 
 input.mat-mdc-chip-input {

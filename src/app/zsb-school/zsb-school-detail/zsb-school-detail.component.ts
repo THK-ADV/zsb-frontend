@@ -16,6 +16,7 @@ import {AbstractControl, ValidationErrors} from '@angular/forms'
 import {CooperationPartner} from '../cooperationPartner'
 import {KaoaSupervisor} from '../kaoaSupervisor'
 import {TalentScout} from '../talentScout'
+import {MatTableDataSource} from '@angular/material/table'
 
 @Component({
   selector: 'app-zsb-school-detail',
@@ -29,9 +30,15 @@ export class ZsbSchoolDetailComponent implements OnInit {
   schoolTypes: Observable<SchoolType[]>
   contactFunctions: ContactFunction[]
   cooperationPartners: Observable<CooperationPartner[]>
+  contactData: MatTableDataSource<Contact>
   kaoaSupervisors: Observable<KaoaSupervisor[]>
   talentScouts: Observable<TalentScout[]>
   addressId: string
+  displayedContactColumns: Array<string> = [
+    'contactName',
+    'contactFeature',
+    'contactActions'
+  ]
 
   addressUndefined = true
 
@@ -93,6 +100,7 @@ export class ZsbSchoolDetailComponent implements OnInit {
             forkJoin(contactsIds.map(id => this.dbService.getContactById(id))).subscribe(contacts => {
             console.log('loadformdata')
             this.service.loadFormData(school, this.address, contacts)
+            this.contactData = new MatTableDataSource(contacts)
             this.addressUndefined = false
           })
         }})
@@ -189,7 +197,6 @@ export class ZsbSchoolDetailComponent implements OnInit {
         }
       })
     }
-
     return desc
   }
 

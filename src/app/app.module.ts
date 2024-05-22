@@ -7,7 +7,6 @@ import {MatToolbarModule} from '@angular/material/toolbar'
 import {MatSliderModule} from '@angular/material/slider'
 import {HttpClientModule} from '@angular/common/http'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
-import {ZsbSchoolComponent} from './zsb-school/zsb-school.component'
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 import {MatButtonModule} from '@angular/material/button'
 import {MatTableModule} from '@angular/material/table'
@@ -16,7 +15,6 @@ import {MatIconModule} from '@angular/material/icon'
 import {MatPaginatorModule} from '@angular/material/paginator'
 import {MatSortModule} from '@angular/material/sort'
 import {MatDialogModule} from '@angular/material/dialog'
-// import {ZsbSchoolListComponent} from './zsb-school/zsb-school-list/zsb-school-list.component'
 import {ZsbSchoolDetailComponent} from './zsb-school/zsb-school-detail/zsb-school-detail.component'
 import {MatFormFieldModule} from '@angular/material/form-field'
 import {MatSelectModule} from '@angular/material/select'
@@ -32,8 +30,6 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle'
 import {MatSlideToggleModule} from '@angular/material/slide-toggle'
 import {MatSidenavModule} from '@angular/material/sidenav'
 import {KeycloakAngularModule} from 'keycloak-angular'
-import {ZsbEventsComponent} from './zsb-events/zsb-events.component'
-import {ZsbEventsListComponent} from './zsb-events/zsb-events-list/zsb-events-list.component'
 import {DatePipe} from '@angular/common'
 import {ZsbEventsDetailComponent} from './zsb-events/zsb-events-detail/zsb-events-detail.component'
 import {MatDatepickerModule} from '@angular/material/datepicker'
@@ -47,7 +43,7 @@ import {ZsbSchoolEventDetailComponent} from './zsb-overview/zsb-school-event-det
 import {appRoutes} from './routes'
 import { ZsbOverviewListComponent } from './zsb-overview/zsb-overview-list/zsb-overview-list.component'
 import { ZsbOverviewComponent } from './zsb-overview/zsb-overview.component'
-import {MatExpansionModule} from '@angular/material/expansion';
+import {MatExpansionModule} from '@angular/material/expansion'
 import { ZsbFilterComponent } from './zsb-overview/zsb-overview-list/zsb-filter/zsb-filter.component'
 import {MatBadgeModule} from '@angular/material/badge'
 import {MatChipsModule} from '@angular/material/chips'
@@ -55,14 +51,10 @@ import {MatChipsModule} from '@angular/material/chips'
 @NgModule({
   declarations: [
     AppComponent,
-    ZsbSchoolComponent,
-    // ZsbSchoolListComponent,
     ZsbSchoolDetailComponent,
     ZsbAddressComponent,
     ZsbContactDetailComponent,
     ZsbContactSearchComponent,
-    ZsbEventsComponent,
-    ZsbEventsListComponent,
     ZsbEventsDetailComponent,
     ZsbLetterComponent,
     ZsbEmailComponent,

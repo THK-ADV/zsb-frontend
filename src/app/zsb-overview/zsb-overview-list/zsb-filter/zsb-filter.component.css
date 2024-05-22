@@ -1,9 +1,38 @@
-.form-group {
+.filter-layout {
+  padding: 0 5%;
+}
+
+.filter-layout mat-form-field {
+  width: 100%;
+}
+
+.single-line-select {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
-.two-column-form {
+.single-line-select mat-label {
+  white-space: nowrap;
+}
+
+.single-line-select mat-form-field {
+  flex: 1;
+}
+
+.single-line-select span {
+  margin: 0 2%;
+}
+
+.header-container {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1% 2% 0;
 }
 
+.footer-container {
+  padding: 0 2% 1%;
+}

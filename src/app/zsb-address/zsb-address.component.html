@@ -1,14 +1,10 @@
-<!--<p>zsb-address works!</p>-->
 <div class="standard-padding">
-  <h1>Adresse verwalten</h1>
-  <form [formGroup]="service.formGroup" class="standard-form">
-
+  <form [formGroup]="service.formGroup">
     <div class="controls-container">
+      <h1>Adresse verwalten</h1>
       <input type="hidden" formControlName="addressId">
-
       <div class="flex-container">
         <!-- left side -->
-        <!-- TODO: linke Spalte breiter machen -->
         <div class="left-column">
           <mat-form-field>
             <input

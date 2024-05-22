@@ -44,6 +44,7 @@ export class ZsbContactSearchComponent implements OnInit, OnDestroy {
     // disable/enable form depending on toggle
     this.subs.push(
       this.service.searchForm.get('enableEdit').valueChanges.subscribe(newVal => {
+        console.log('test')
         console.log(newVal)
         if (newVal) {
           this.service.clearSearch()

@@ -1,274 +1,234 @@
-<ng-container *ngIf="this.eventId != null; else newTermin">
-  <h1>Termin bearbeiten</h1>
-</ng-container>
-<ng-template #newTermin>
-  <h1>Termin hinzufügen</h1>
-</ng-template>
+<div class="detail-form">
+  <ng-container *ngIf="this.eventId != null; else newTermin">
+    <h1>Termin bearbeiten</h1>
+  </ng-container>
+  <ng-template #newTermin>
+    <h1>Termin hinzufügen</h1>
+  </ng-template>
 
-<form [formGroup]="service.formGroup" class="event-form">
-  <!-- uuid -->
-  <input type="hidden" formControlName="uuid">
-
-  <!-- designation -->
-  <mat-form-field>
-    <label>
-      <input formControlName="designation" matInput placeholder="Bezeichnung*">
-    </label>
-    <mat-error>Ihre Eingabe wird benötigt.</mat-error>
-  </mat-form-field>
-  <br>
-  <br>
-
-  <!-- date-->
-  <mat-form-field appearance="fill">
-    <mat-label>Datum</mat-label>
-    <input matInput [matDatepicker]="picker" formControlName="date" (click)="picker.open()" readonly>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
-  <br>
-  <br>
-
-  <!-- TODO: styling anpassen -->
-  <mat-form-field appearance="fill">
-    <mat-label>Terminart</mat-label>
-    <mat-select style="padding-top: 10px" (selectionChange)="onSelectionChange($event)" formControlName="category">
-      <mat-option value="atSchool">An Schule</mat-option>
-      <mat-option value="intern">Bei Uns</mat-option>
-      <mat-option value="atThird">An 3. Orten</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <br>
-  <br>
-
-  <div>
-    <h2>Allgemeine Informationen</h2>
-  </div>
-
-  <mat-form-field>
-    <mat-label>Schule</mat-label>
-    <input type="text"
-           placeholder="Schule"
-           aria-label="Schule"
-           matInput
-           formControlName="school"
-           [matAutocomplete]="auto">
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFnSchool">
-      <mat-option *ngFor="let it of filteredSchools | async" [value]="it">
-        {{displayFnSchool(it)}}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-  <br>
-
-  <!-- TODO: Format festlegen -->
-  <mat-form-field>
-    <mat-label>Halbjahr</mat-label>
-    <input type="text"
-           placeholder="Halbjahr"
-           aria-label="Halbjahr"
-           matInput
-           formControlName="semester">
-  </mat-form-field>
-  <br>
-
-  <!-- TODO: UI -->
-  <div>
-    <mat-label for="kontaktSchule">Verantwortliche*r Schule:</mat-label>
-    <mat-form-field id="kontaktSchule" appearance="fill">
-      <input
-        matInput
-        type="text"
-        id="contactSchool"
-        name="contactSchool"
-        [(ngModel)]="contactPersonSchool"
-        [ngModelOptions]="{standalone: true}"
-        [matAutocomplete]="autoContactSchool">
-      <mat-autocomplete
-        autoActiveFirstOption
-        #autoContactSchool="matAutocomplete"
-        (optionSelected)="onSchoolContactSelected($event)"
-      >
-        <mat-option *ngFor="let option of filteredSchoolContacts" [value]="option">
-          {{ option }}
+  <form [formGroup]="service.formGroup">
+    <input type="hidden" formControlName="uuid">
+    <mat-form-field>
+      <mat-label>Bezeichnung</mat-label>
+      <input formControlName="designation" matInput placeholder="Bezeichnung">
+      <mat-error>Ihre Eingabe wird benötigt.</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Datum</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="date" (click)="picker.open()" readonly>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <!-- TODO: styling anpassen -->
+    <mat-form-field appearance="fill">
+      <mat-label>Terminart</mat-label>
+      <mat-select class="standard-padding" (selectionChange)="onSelectionChange($event)" formControlName="category">
+        <mat-option value="atSchool">An Schule</mat-option>
+        <mat-option value="intern">Bei Uns</mat-option>
+        <mat-option value="atThird">An 3. Orten</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div>
+      <h2>Allgemeine Informationen</h2>
+    </div>
+    <mat-form-field>
+      <mat-label>Schule</mat-label>
+      <input type="text"
+             placeholder="Schule"
+             aria-label="Schule"
+             matInput
+             formControlName="school"
+             [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFnSchool">
+        <mat-option *ngFor="let it of filteredSchools | async" [value]="it">
+          {{ displayFnSchool(it) }}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-  </div>
-  <br>
-  <div>
-    <mat-label for="kontaktHochschule">Verantwortliche*r Hochschule:</mat-label>
-    <mat-form-field id="kontaktHochschule" appearance="fill">
-      <input
-        matInput
-        type="text"
-        id="contactUniversity"
-        name="contactUniversity"
-        [(ngModel)]="contactPersonUniversity"
-        [ngModelOptions]="{standalone: true}"
-        [matAutocomplete]="autoContactUniversity">
-      <mat-autocomplete
-        autoActiveFirstOption
-        #autoContactUniversity="matAutocomplete"
-        (optionSelected)="onUniversityContactSelected($event)"
-      >
-        <mat-option *ngFor="let option of filteredUniversityContacts" [value]="option">
-          {{ option }}
-        </mat-option>
-      </mat-autocomplete>
+    <!-- TODO: Format festlegen -->
+    <mat-form-field>
+      <mat-label>Halbjahr</mat-label>
+      <input type="text"
+             placeholder="Halbjahr"
+             aria-label="Halbjahr"
+             matInput
+             formControlName="semester">
     </mat-form-field>
-  </div>
-  <br>
-
-  <mat-form-field>
-    <label>
+    <!-- TODO: UI -->
+    <div>
+      <mat-form-field id="kontaktSchule" appearance="fill">
+        <mat-label>Verantwortliche*r Schule</mat-label>
+        <input
+          matInput
+          type="text"
+          id="contactSchool"
+          name="contactSchool"
+          aria-label="Verantwortliche*r Schule"
+          [(ngModel)]="contactPersonSchool"
+          [ngModelOptions]="{standalone: true}"
+          [matAutocomplete]="autoContactSchool">
+        <mat-autocomplete
+          autoActiveFirstOption
+          #autoContactSchool="matAutocomplete"
+          (optionSelected)="onSchoolContactSelected($event)"
+        >
+          <mat-option *ngFor="let option of filteredSchoolContacts" [value]="option">
+            {{ option }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field id="kontaktHochschule" appearance="fill">
+        <mat-label>Verantwortliche*r Hochschule</mat-label>
+        <input
+          matInput
+          type="text"
+          id="contactUniversity"
+          name="contactUniversity"
+          [(ngModel)]="contactPersonUniversity"
+          [ngModelOptions]="{standalone: true}"
+          [matAutocomplete]="autoContactUniversity">
+        <mat-autocomplete
+          autoActiveFirstOption
+          #autoContactUniversity="matAutocomplete"
+          (optionSelected)="onUniversityContactSelected($event)"
+        >
+          <mat-option *ngFor="let option of filteredUniversityContacts" [value]="option">
+            {{ option }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <mat-form-field>
+      <mat-label>Bewertung</mat-label>
       <input formControlName="rating" matInput placeholder="Bewertung">
-    </label>
-  </mat-form-field>
-  <br>
-
-  <div>
-    <h2>Spezifische Informationen</h2>
-  </div>
-
-  <!-- TODO: property automatisch checken / subproperty disablen wenn unchecked -->
-  <div *ngIf="typeSelection === 'atSchool'">
-    <div *ngFor="let property of atSchoolProperty.properties">
-      <mat-slide-toggle [formControlName]="property.formControlName">
-        {{ property.name }}
-      </mat-slide-toggle>
-      <br>
-      <br>
-      <div *ngIf="property.properties && property.properties.length > 0">
-        <div *ngFor="let subProperty of property.properties" style="margin-left: 20px;">
-          <ng-container [ngSwitch]="subProperty.type">
-            <mat-checkbox *ngSwitchCase="'checkbox'"
-                          [checked]="getCheckboxValue(subProperty.formControlName)"
-                          (change)="updateCheckboxValue(subProperty.formControlName)">
-              {{subProperty.name}}
-            </mat-checkbox>
-            <div *ngSwitchCase="'integer'">
-              <mat-form-field>
-                <mat-label> {{ subProperty.name }} </mat-label>
-                <input [formControlName]="subProperty.formControlName" matInput type="number"/>
-              </mat-form-field>
-            </div>
-            <div *ngSwitchCase="'text'">
-              <mat-form-field>
-                <mat-label> {{ subProperty.name }} </mat-label>
-                <textarea formControlName="other" matInput placeholder="{{subProperty.name}}"></textarea>
-              </mat-form-field>
-            </div>
-            <div *ngSwitchDefault>
-              Element für unbekannten Typ: {{ subProperty.type }}
-            </div>
-          </ng-container>
-          <br>
-          <br>
-          <div *ngIf="subProperty.properties && subProperty.properties.length > 0">
-            <div *ngFor="let subSubProperty of subProperty.properties" style="margin-left: 20px;">
-              <ng-container [ngSwitch]="subSubProperty.type">
-                <mat-checkbox *ngSwitchCase="'checkbox'"
-                              [checked]="getCheckboxValue(subSubProperty.formControlName)"
-                              (change)="updateCheckboxValue(subSubProperty.formControlName)">
-                  {{subSubProperty.name}}
-                </mat-checkbox>
-                <div *ngSwitchCase="'integer'">
-                  <mat-form-field>
-                    <mat-label> {{ subSubProperty.name }} </mat-label>
-                    <input [formControlName]="subSubProperty.formControlName" matInput type="number"/>
-                  </mat-form-field>
-                </div>
-                <div *ngSwitchCase="'text'">
-                  <mat-form-field>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Sonstiges</mat-label>
+      <textarea formControlName="other" matInput placeholder="Sonstiges"></textarea>
+    </mat-form-field>
+    <div *ngIf="typeSelection === 'atSchool' || typeSelection === 'intern'">
+      <h2>Spezifische Informationen</h2>
+    </div>
+    <!-- TODO: property automatisch checken / subproperty disablen wenn unchecked -->
+    <div *ngIf="typeSelection === 'atSchool'">
+      <div *ngFor="let property of atSchoolProperty.properties">
+        <mat-slide-toggle [formControlName]="property.formControlName">
+          {{ property.name }}
+        </mat-slide-toggle>
+        <div *ngIf="property.properties && property.properties.length > 0">
+          <div *ngFor="let subProperty of property.properties" style="margin-left: 10%;">
+            <ng-container [ngSwitch]="subProperty.type">
+              <mat-checkbox *ngSwitchCase="'checkbox'"
+                            [checked]="getCheckboxValue(subProperty.formControlName)"
+                            (change)="updateCheckboxValue(subProperty.formControlName)">
+                {{ subProperty.name }}
+              </mat-checkbox>
+              <div *ngSwitchCase="'integer'">
+                <mat-form-field>
+                  <mat-label> {{ subProperty.name }}</mat-label>
+                  <input [formControlName]="subProperty.formControlName" matInput type="number"/>
+                </mat-form-field>
+              </div>
+              <div *ngSwitchCase="'text'">
+                <mat-form-field>
+                  <mat-label> {{ subProperty.name }}</mat-label>
+                  <textarea formControlName="other" matInput placeholder="{{subProperty.name}}"></textarea>
+                </mat-form-field>
+              </div>
+              <div *ngSwitchDefault>
+                Element für unbekannten Typ: {{ subProperty.type }}
+              </div>
+            </ng-container>
+            <div *ngIf="subProperty.properties && subProperty.properties.length > 0">
+              <div *ngFor="let subSubProperty of subProperty.properties" style="margin-left: 10%;">
+                <ng-container [ngSwitch]="subSubProperty.type">
+                  <mat-checkbox *ngSwitchCase="'checkbox'"
+                                [checked]="getCheckboxValue(subSubProperty.formControlName)"
+                                (change)="updateCheckboxValue(subSubProperty.formControlName)">
+                    {{ subSubProperty.name }}
+                  </mat-checkbox>
+                  <div *ngSwitchCase="'integer'">
+                    <mat-form-field>
+                      <mat-label> {{ subSubProperty.name }}</mat-label>
+                      <input [formControlName]="subSubProperty.formControlName" matInput type="number"/>
+                    </mat-form-field>
+                  </div>
+                  <div *ngSwitchCase="'text'">
+                    <mat-form-field>
                     <textarea [formControlName]="subSubProperty.formControlName" matInput
                               placeholder="{{subSubProperty.name}}"></textarea>
-                  </mat-form-field>
-                </div>
-                <div *ngSwitchDefault>
-                  Element für unbekannten Typ: {{ subSubProperty.type }}
-                </div>
-              </ng-container>
-              <br>
-              <br>
+                    </mat-form-field>
+                  </div>
+                  <div *ngSwitchDefault>
+                    Element für unbekannten Typ: {{ subSubProperty.type }}
+                  </div>
+                </ng-container>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <br>
-    <br>
-  </div>
-
-  <div *ngIf="typeSelection === 'intern'">
-    <div *ngFor="let property of internProperty.properties">
-      <ng-container [ngSwitch]="property.type">
-        <mat-checkbox *ngSwitchCase="'checkbox'"
-                      [checked]="getCheckboxValue(property.formControlName)"
-                      (change)="updateCheckboxValue(property.formControlName)">
-          {{property.name}}
-        </mat-checkbox>
-        <div *ngSwitchCase="'integer'">
-          <mat-form-field>
-            <mat-label> {{ property.name }} </mat-label>
-            <input [formControlName]="property.formControlName" matInput type="number"/>
-          </mat-form-field>
-        </div>
-        <div *ngSwitchCase="'text'">
-          <mat-form-field>
-            <mat-label> {{ property.name }} </mat-label>
-            <textarea [formControlName]="property.formControlName" matInput placeholder="{{property.name}}"></textarea>
-          </mat-form-field>
-        </div>
-        <div *ngSwitchDefault>
-          Element für unbekannten Typ: {{ property.type }}
-        </div>
-      </ng-container>
-      <br>
-      <br>
-      <div *ngIf="property.properties && property.properties.length > 0">
-        <div *ngFor="let subProperty of property.properties" style="margin-left: 20px;">
-          <ng-container [ngSwitch]="subProperty.type">
-            <mat-checkbox *ngSwitchCase="'checkbox'"
-                          [checked]="getCheckboxValue(subProperty.formControlName)"
-                          (change)="updateCheckboxValue(subProperty.formControlName)">
-              {{subProperty.name}}
-            </mat-checkbox>
-            <div *ngSwitchCase="'integer'">
-              <mat-form-field>
-                <mat-label> {{ subProperty.name }} </mat-label>
-                <input [formControlName]="subProperty.formControlName" matInput type="number"/>
-              </mat-form-field>
-            </div>
-            <div *ngSwitchCase="'text'">
-              <mat-form-field>
+    <div *ngIf="typeSelection === 'intern'">
+      <div *ngFor="let property of internProperty.properties">
+        <ng-container [ngSwitch]="property.type">
+          <mat-checkbox *ngSwitchCase="'checkbox'"
+                        [checked]="getCheckboxValue(property.formControlName)"
+                        (change)="updateCheckboxValue(property.formControlName)">
+            {{ property.name }}
+          </mat-checkbox>
+          <div *ngSwitchCase="'integer'">
+            <mat-form-field>
+              <mat-label> {{ property.name }}</mat-label>
+              <input [formControlName]="property.formControlName" matInput type="number"/>
+            </mat-form-field>
+          </div>
+          <div *ngSwitchCase="'text'">
+            <mat-form-field>
+              <mat-label> {{ property.name }}</mat-label>
+              <textarea [formControlName]="property.formControlName" matInput
+                        placeholder="{{property.name}}"></textarea>
+            </mat-form-field>
+          </div>
+          <div *ngSwitchDefault>
+            Element für unbekannten Typ: {{ property.type }}
+          </div>
+        </ng-container>
+        <div *ngIf="property.properties && property.properties.length > 0">
+          <div *ngFor="let subProperty of property.properties" style="margin-left: 10%;">
+            <ng-container [ngSwitch]="subProperty.type">
+              <mat-checkbox *ngSwitchCase="'checkbox'"
+                            [checked]="getCheckboxValue(subProperty.formControlName)"
+                            (change)="updateCheckboxValue(subProperty.formControlName)">
+                {{ subProperty.name }}
+              </mat-checkbox>
+              <div *ngSwitchCase="'integer'">
+                <mat-form-field>
+                  <mat-label> {{ subProperty.name }}</mat-label>
+                  <input [formControlName]="subProperty.formControlName" matInput type="number"/>
+                </mat-form-field>
+              </div>
+              <div *ngSwitchCase="'text'">
+                <mat-form-field>
                     <textarea [formControlName]="subProperty.formControlName" matInput
                               placeholder="{{subProperty.name}}"></textarea>
-              </mat-form-field>
-            </div>
-            <div *ngSwitchDefault>
-              Element für unbekannten Typ: {{ subProperty.type }}
-            </div>
-          </ng-container>
-          <br>
-          <br>
+                </mat-form-field>
+              </div>
+              <div *ngSwitchDefault>
+                Element für unbekannten Typ: {{ subProperty.type }}
+              </div>
+            </ng-container>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- sonstiges -->
-  <mat-form-field>
-    <label>
-      <textarea formControlName="other" matInput placeholder="Sonstiges"></textarea>
-    </label>
-  </mat-form-field>
-  <br>
-
-  <div class="btn-row">
-    <button mat-raised-button color="primary" type="submit" (click)="onSubmit()"
-            [disabled]="service.formGroup.invalid">Speichern
-    </button>
-    <button mat-raised-button color="warn" (click)="onClear()">Zurücksetzen</button>
-  </div>
-</form>
+    <div class="btn-row">
+      <button mat-raised-button color="primary" type="submit" (click)="onSubmit()"
+              [disabled]="service.formGroup.invalid">Speichern
+      </button>
+      <button mat-raised-button color="warn" (click)="onClear()">Zurücksetzen</button>
+    </div>
+  </form>
+</div>
