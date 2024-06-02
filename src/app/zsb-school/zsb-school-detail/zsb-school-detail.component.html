@@ -16,9 +16,11 @@
     <mat-form-field>
       <mat-label>Schulform</mat-label>
       <mat-select formControlName="schooltype" placeholder="Schulform">
-        <mat-option *ngFor="let schulform of schoolTypes | async" [value]="schulform.id">
-          {{ schulform.desc }}
-        </mat-option>
+        <ng-container *ngFor="let schulform of schoolTypes | async">
+          <mat-option [value]="schulform.id">
+            {{ schulform.desc }} <br>
+          </mat-option>
+        </ng-container>
       </mat-select>
       <mat-error>Bitte wählen Sie die passende Schulform aus</mat-error>
     </mat-form-field>
@@ -63,7 +65,8 @@
     <div formArrayName="contacts" class="sec">
       <h2>Kontakte</h2>
       <div class="full-width">
-        <table *ngIf="contactData.data.length > 0; else noContacts" mat-table [dataSource]="contactData" class="mat-elevation-z8">
+        <table *ngIf="contactData.data.length > 0; else noContacts" mat-table [dataSource]="contactData"
+               class="mat-elevation-z8">
           <ng-container matColumnDef="contactName">
             <th mat-header-cell *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let contact">
@@ -71,7 +74,8 @@
                 {{ contact.surname }}
               </ng-container>
               <ng-template #elseNoName>{{ contact.email }}</ng-template>
-              <ng-container *ngIf="contact.firstname !== undefined && contact.firstname.length > 0">, {{ contact.firstname }}
+              <ng-container *ngIf="contact.firstname !== undefined && contact.firstname.length > 0">
+                , {{ contact.firstname }}
               </ng-container>
             </td>
           </ng-container>
@@ -88,7 +92,7 @@
                       matTooltip="Kontakt editieren">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="service.removeContact(contact)"
+              <button mat-icon-button color="warn" (click)="removeContact(contact)"
                       matTooltip="Kontakt entfernen">
                 <mat-icon>delete_outline</mat-icon>
               </button>
@@ -114,7 +118,7 @@
         <mat-label>Standort</mat-label>
         <input formControlName="address" matInput placeholder="Standort">
       </mat-form-field>
-      <button mat-stroked-button class="full-width" color="secondary" type="button"
+      <button mat-stroked-button class="full-width" color="accent" type="button"
               (click)="changeAddress()">Standort verwalten
       </button>
     </div>
@@ -126,28 +130,33 @@
       <mat-form-field>
         <mat-label>Betreuende Hochschule KAoA/Talentscouting</mat-label>
         <mat-select formControlName="cooperationPartner" placeholder="Betreuende Hochschule KAoA/Talentscouting">
-          <mat-option *ngFor="let cooperationpartner of cooperationPartners | async"
-                      [value]="cooperationpartner.id">
-            {{ cooperationpartner.desc }}
-          </mat-option>
+          <ng-container *ngFor="let cooperationpartner of cooperationPartners | async">
+            <mat-option [value]="cooperationpartner.id">
+              {{ cooperationpartner.desc }} <br>
+            </mat-option>
+          </ng-container>
         </mat-select>
         <mat-error>Bitte wählen Sie einen Kooperationpartner aus</mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>KAoA Betreuer*in</mat-label>
         <mat-select formControlName="kaoaSupervisor" placeholder="KAoA Betreuer*in">
-          <mat-option *ngFor="let kaoaSupervisor of kaoaSupervisors | async" [value]="kaoaSupervisor.id">
-            {{ kaoaSupervisor.desc }}
-          </mat-option>
+          <ng-container *ngFor="let kaoaSupervisor of kaoaSupervisors | async">
+            <mat-option [value]="kaoaSupervisor.id">
+              {{ kaoaSupervisor.desc }} <br>
+            </mat-option>
+          </ng-container>
         </mat-select>
         <mat-error>Bitte wählen Sie eine KAoA Betreuer*in aus</mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Talentscout</mat-label>
         <mat-select formControlName="talentScout" placeholder="Talentscout">
-          <mat-option *ngFor="let talentscout of talentScouts | async" [value]="talentscout.id">
-            {{ talentscout.desc }}
-          </mat-option>
+          <ng-container *ngFor="let talentscout of talentScouts | async">
+            <mat-option [value]="talentscout.id">
+              {{ talentscout.desc }} <br>
+            </mat-option>
+          </ng-container>
         </mat-select>
         <mat-error>Bitte wählen Sie einen Talentscout aus</mat-error>
       </mat-form-field>
