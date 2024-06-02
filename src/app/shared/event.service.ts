@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core'
 import {DatabaseService} from './database.service'
-import {DatabaseEvent, Event} from '../zsb-events/event'
-import {UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators} from '@angular/forms'
+import {DatabaseEvent} from '../zsb-events/event'
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {NotificationService} from './notification.service'
-import {mergeMap, tap} from 'rxjs/operators'
 import {Router} from '@angular/router'
 import {formatDate} from '@angular/common'
 import {Observable} from 'rxjs'
@@ -361,25 +360,24 @@ export class EventService {
       internOther: eventForm.internOtherText
     }
     if (isPost) {
-      this.dbService.createEvent(eventObject)
-        .pipe(
-          tap(
-            it => {
-              this.notificationService.success(':: Termin erfolgreich erstellt.')
-              this.router.navigate(['/', 'events'])
-            })
-        )
-        .subscribe()
+      this.dbService.createEvent(eventObject).subscribe(it => {
+        if (it.uuid !== undefined) {
+          this.notificationService.success(':: Termin erfolgreich erstellt.')
+          this.router.navigate(['/'])
+        } else {
+          this.notificationService.failure('-- Termin konnte nicht erstellt werden.')
+        }
+      })
     } else {
-      this.dbService.updateEvent(eventObject)
-        .pipe(
-          tap(
-            it => {
-              this.notificationService.success(':: Termin erfolgreich aktualisiert.')
-              this.router.navigate(['/', 'events'])
-            })
-        )
-        .subscribe()
+      const result = this.dbService.updateEvent(eventObject)
+      result.subscribe(it => {
+        if (it.uuid !== undefined) {
+          this.notificationService.success(':: Termin erfolgreich aktualisiert.')
+          this.router.navigate(['/'])
+        } else {
+          this.notificationService.failure('-- Termin konnte nicht aktualisiert werden.')
+        }
+      })
     }
   }
 }

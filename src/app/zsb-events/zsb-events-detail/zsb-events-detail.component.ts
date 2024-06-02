@@ -184,12 +184,10 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
     if (this.contactPersonUniversityId === '') {
       this.createUniversityContact()
     }
-    console.log('else')
     let isPost = false
     if (!this.eventId) {
       isPost = true
     }
-    console.log('test', this.contactPersonSchoolId)
     this.service.insertOrUpdateCurrentEvent(isPost, this.contactPersonSchoolId, this.contactPersonUniversityId)
   }
 
