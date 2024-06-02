@@ -104,6 +104,7 @@ export class ZsbSchoolDetailComponent implements OnInit {
             this.addressUndefined = false
           })
         }})
+              console.log('loadformdata')
       )
     })
   }
