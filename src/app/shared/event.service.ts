@@ -181,9 +181,9 @@ export class EventService {
       category,
       school: event.school,
       semester: event.schoolyear,
-      contactPersonSchoolId: event.contact_school_id,
+      contactPersonSchoolId: event.contact_school.id,
       contactPersonSchool,
-      contactPersonUniversityId: event.contact_university_id,
+      contactPersonUniversityId: event.contact_university.id,
       contactPersonUniversity,
       rating: event.rating,
       kaoa,
@@ -331,6 +331,14 @@ export class EventService {
     if (eventForm.internOther) {
       eventForm.internCategory.push('Sonstiges')
     }
+    const contactPersonSchool = {
+      id: null,
+      name: eventForm.contactPersonSchool
+    }
+    const contactPersonUniversity = {
+      id: null,
+      name: eventForm.contactPersonSchool
+    }
     const eventObject: DatabaseEvent = {
       type: discriminator,
       uuid: eventForm.uuid,
@@ -338,9 +346,9 @@ export class EventService {
       schoolyear: eventForm.semester,
       date: eventForm.date,
       contact_school_id: schoolContactId,
-      contact_school: eventForm.contactPersonSchool,
+      contact_school: contactPersonSchool,
       contact_university_id: universityContactId,
-      contact_university: eventForm.contactPersonUniversity,
+      contact_university: contactPersonUniversity,
       other: eventForm.other,
       school_id: eventForm.school.id,
       school: eventForm.school,
@@ -369,8 +377,8 @@ export class EventService {
         }
       })
     } else {
-      const result = this.dbService.updateEvent(eventObject)
-      result.subscribe(it => {
+      console.log(eventObject)
+      this.dbService.updateEvent(eventObject).subscribe(it => {
         if (it.uuid !== undefined) {
           this.notificationService.success(':: Termin erfolgreich aktualisiert.')
           this.router.navigate(['/'])

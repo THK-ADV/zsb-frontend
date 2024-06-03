@@ -146,6 +146,14 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
     this.typeSelection = event.value
   }
 
+  onContactPersonSchoolChange() {
+    this.contactPersonSchoolId = ''
+  }
+
+  onContactPersonUniversityChange() {
+    this.contactPersonUniversityId = ''
+  }
+
   ngOnDestroy(): void {
     this.subs.forEach(s => s.unsubscribe())
   }
@@ -172,7 +180,9 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
     this.service.dbService.getEventById(uuid).subscribe(event => {
       this.service.loadFormData(event)
       this.typeSelection = this.service.formGroup.get('category').value
+      this.contactPersonSchoolId = this.service.formGroup.get('contactPersonSchoolId').value
       this.contactPersonSchool = this.service.formGroup.get('contactPersonSchool').value
+      this.contactPersonUniversityId = this.service.formGroup.get('contactPersonUniversityId').value
       this.contactPersonUniversity = this.service.formGroup.get('contactPersonUniversity').value
     })
   }
@@ -184,11 +194,13 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
     if (this.contactPersonUniversityId === '') {
       this.createUniversityContact()
     }
-    let isPost = false
-    if (!this.eventId) {
-      isPost = true
+    else {
+      let isPost = false
+      if (!this.eventId) {
+        isPost = true
+      }
+      this.service.insertOrUpdateCurrentEvent(isPost, this.contactPersonSchoolId, this.contactPersonUniversityId)
     }
-    this.service.insertOrUpdateCurrentEvent(isPost, this.contactPersonSchoolId, this.contactPersonUniversityId)
   }
 
   onClear() {
