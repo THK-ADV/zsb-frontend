@@ -33,7 +33,6 @@ export class ZsbEmailComponent implements OnInit {
   }
 
   public addresseesIds: string[] = []
-  private schools: School[]
   public formGroup: UntypedFormGroup = new UntypedFormGroup({
     msg: new UntypedFormControl('', Validators.required),
     subject: new UntypedFormControl('', Validators.required)
@@ -58,52 +57,41 @@ export class ZsbEmailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // TODO
-    // funktionen direkt anzeigen
-    // anzeigen, an welche Schulen nicht versendet werden konnte
-    const observables = this.addresseesIds.map(id => this.dbService.getSchoolById(id))
-    forkJoin(observables).subscribe(
-      schools => {
-        this.schools = schools
-        console.log('Schulen:', this.schools)
-        this.dbService.createMailAddressees(schools).subscribe(
-          functions => {
-            this.availableRecipients = functions
-            console.log('Schulen mit Mail-Adressen:', this.availableRecipients)
-          },
-          error => {
-            console.error('Fehler beim Abrufen verfügbarer Funktionen:', error)
-          }
-        )
+    this.dbService.createMailAddressees(this.addresseesIds).subscribe(
+      functions => {
+        this.availableRecipients = functions
+        console.log('Schulen mit Mail-Adressen:', this.availableRecipients)
       },
       error => {
-        console.error('Fehler beim Abrufen von Schulen:', error)
+        console.error('Fehler beim Abrufen verfügbarer Funktionen:', error)
       }
     )
-  }
+}
 
-  onSubmit() {
-    const formValue = this.formGroup.value
-    const email = new Email(formValue.msg, this.recipients, this.schools, formValue.subject)
+onSubmit()
+{
+  const formValue = this.formGroup.value
+  const email = new Email(formValue.msg, this.recipients, this.addresseesIds, formValue.subject)
 
-    console.log('create email')
-    console.log(email)
+  console.log('create email')
+  console.log(email)
 
-    this.dbService.createEmail(email).subscribe(result => {
-      if (result && result.length > 0) {
-        let unsendableSchoolsNames = 'Konnte an folgende Schulen nicht versendet werden:\n'
-        result.forEach(schule => {
-          unsendableSchoolsNames += schule.name + '\n'
-        })
-        this.notificationService.failure(unsendableSchoolsNames)
-      } else {
-        this.notificationService.success('Sendevorgang erfolgreich')
-      }
-    })
-    this.dialogRef.close()
-  }
+  this.dbService.createEmail(email).subscribe(result => {
+    if (result && result.length > 0) {
+      let unsendableSchoolsNames = 'Konnte an folgende Schulen nicht versendet werden:\n'
+      result.forEach(schule => {
+        unsendableSchoolsNames += schule.name + '\n'
+      })
+      this.notificationService.failure(unsendableSchoolsNames)
+    } else {
+      this.notificationService.success('Sendevorgang erfolgreich')
+    }
+  })
+  this.dialogRef.close()
+}
 
-  onCancel() {
-    this.dialogRef.close()
-  }
+onCancel()
+{
+  this.dialogRef.close()
+}
 }

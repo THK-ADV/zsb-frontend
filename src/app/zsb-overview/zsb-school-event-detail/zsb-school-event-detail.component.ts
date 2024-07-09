@@ -5,7 +5,7 @@ import {Contact, ContactFunction} from '../../zsb-contact/contact'
 import {Address} from '../../zsb-address/address'
 import {MatTableDataSource} from '@angular/material/table'
 import {DatePipe} from '@angular/common'
-import {Subscription} from 'rxjs'
+import {forkJoin, Subscription, throwError} from 'rxjs'
 import {ActivatedRoute} from '@angular/router'
 import {DatabaseService} from '../../shared/database.service'
 import {AddressService} from '../../shared/address.service'
@@ -17,6 +17,8 @@ import {schoolTypeDescById} from '../../zsb-school/schoolType'
 import {cooperationPartnerDescById} from '../../zsb-school/cooperationPartner'
 import {kaoaSupervisorDescById} from '../../zsb-school/kaoaSupervisor'
 import {talentScoutDescById} from '../../zsb-school/talentScout'
+import {map, switchMap} from 'rxjs/operators'
+import {ContactSchool, ContactUniversity} from '../../zsb-events/eventContacts'
 
 type EventFilterOption = 'Alle' | 'Name' | 'Kategorie' | 'Datum'
 
@@ -66,7 +68,19 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
     contacts: []
   }
   schoolId: string
-  address: Address
+  address: Address = {
+    id: '',
+    street: '',
+    houseNumber: '',
+    city_id: '',
+    city: {
+      id: '',
+      postcode: 0,
+      designation: '',
+      constituency: '',
+      governmentDistrict: ''
+    }
+  }
   schoolType: string
   contacts: Contact[] = []
   contactFunctions: ContactFunction[]
@@ -76,7 +90,8 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
     kaoaSupervisor: '',
     talentScout: ''
   }
-  listData: MatTableDataSource<DatabaseEvent>
+  eventsAtSchool: DatabaseEvent[] = []
+  listData: MatTableDataSource<DatabaseEvent> = new MatTableDataSource<DatabaseEvent>()
   expandedElement: DatabaseEvent | null
   displayedColumns: Array<string> = [
     'designation',
@@ -84,7 +99,7 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
     'date'
   ]
   columnsToDisplayWithExpand = [...this.displayedColumns, 'expand']
-  contactData: MatTableDataSource<Contact>
+  contactData: MatTableDataSource<Contact> = new MatTableDataSource<Contact>()
   displayedContactColumns: Array<string> = [
     'contactName',
     'contactFeature'
@@ -97,54 +112,52 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subs.push(
-      this.route.paramMap.subscribe(params => {
-        this.schoolId = params.get('schoolId')
-        if (this.schoolId != null) {
-          this.dbService.getSchoolById(this.schoolId).subscribe(school => {
-            this.school = school
-            school.contacts_ids.forEach(id => {
-              this.dbService.getContactById(id).subscribe(contact => {
-                this.contacts.push(contact)
-                this.contactData = new MatTableDataSource(this.contacts)
-              })
-            })
-            this.dbService.getSchoolType().subscribe(schoolType => {
-              this.schoolType = schoolTypeDescById(school.type, schoolType)
-            })
-            this.dbService.getCooperationPartner().subscribe(partner => {
-              this.cooperation.cooperationPartner = cooperationPartnerDescById(school.cooperationpartner, partner)
-            })
-            this.dbService.getKaoaSupervisors().subscribe(kaoaSupervisor => {
-              this.cooperation.kaoaSupervisor = kaoaSupervisorDescById(school.kaoaSupervisor, kaoaSupervisor)
-            })
-            this.dbService.getTalentScouts().subscribe(talentScout => {
-              this.cooperation.talentScout = talentScoutDescById(school.talentscout, talentScout)
-            })
-            this.dbService.getAddressAtomicById(school.address_id).subscribe(address => {
-              this.address = address
-            })
-            this.dbService.getEvents().subscribe(events => {
-              const eventsAtSchool: DatabaseEvent[] = []
-              events.forEach((event) => {
-                console.log('event')
-                console.log(event)
-                if (event.school_id === this.schoolId) {
-                  eventsAtSchool.push(event)
-                }
-              })
-              console.log('eventsAtSchool')
-              console.log(eventsAtSchool)
-              this.listData = new MatTableDataSource(eventsAtSchool)
-              this.listData.sort = this.sort
-              this.listData.paginator = this.paginator
-              console.log('listData')
-              console.log(this.listData)
-            })
+      this.route.paramMap.pipe(
+        switchMap(params => {
+          this.schoolId = params.get('schoolId')
+          if (this.schoolId != null) {
+            return this.dbService.getSchoolById(this.schoolId)
+          } else {
+            return throwError('School ID not found')
+          }
+        }),
+        switchMap(school => {
+          this.school = school
+          const contactObservables = school.contacts_ids && school.contacts_ids.length > 0
+            ? school.contacts_ids.map(id => this.dbService.getContactById(id))
+            : []
+          return forkJoin({
+            schoolType: this.dbService.getSchoolType(),
+            cooperationPartner: this.dbService.getCooperationPartner(),
+            kaoaSupervisor: this.dbService.getKaoaSupervisors(),
+            talentScout: this.dbService.getTalentScouts(),
+            address: this.dbService.getAddressAtomicById(school.address_id),
+            events: this.dbService.getEvents().pipe(
+              map(events => events.filter(event => event.school_id === this.schoolId))
+            ),
+            contacts: forkJoin(contactObservables)
           })
+        })
+      ).subscribe({
+        next: (results: any) => {
+          this.schoolType = schoolTypeDescById(this.school.type, results.schoolType)
+          this.cooperation.cooperationPartner = cooperationPartnerDescById(this.school.cooperationpartner, results.cooperationPartner)
+          this.cooperation.kaoaSupervisor = kaoaSupervisorDescById(this.school.kaoaSupervisor, results.kaoaSupervisor)
+          this.cooperation.talentScout = talentScoutDescById(this.school.talentscout, results.talentScout)
+          this.address = results.address
+          this.eventsAtSchool = results.events
+          this.listData = new MatTableDataSource(this.eventsAtSchool)
+          this.listData.sort = this.sort
+          this.listData.paginator = this.paginator
+          this.contacts = results.contacts
+          this.contactData = new MatTableDataSource(this.contacts)
+          this.buildCooperationObject()
+        },
+        error: (error) => {
+          console.error('Error:', error)
         }
       })
     )
-    this.buildCooperationObject()
   }
 
   ngOnDestroy() {
@@ -154,26 +167,11 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
   }
 
   buildCooperationObject() {
-    if (this.school.cooperationcontract) {
-      this.cooperation.cooperationContract = 'ja'
-    } else {
-      this.cooperation.cooperationContract = 'nein'
-    }
+    this.cooperation.cooperationContract = this.school.cooperationcontract ? 'ja' : 'nein'
   }
 
   getContactFunctionDescById(id: number) {
-    let desc = 'Unbekannt'
-
-    if (this.contactFunctions !== undefined && this.contactFunctions !== null) {
-      this.contactFunctions.forEach(it => {
-        if (desc === 'Unbekannt') {
-          if (it.id === id) {
-            desc = it.desc
-          }
-        }
-      })
-    }
-    return desc
+    return this.contactFunctions?.find(it => it.id === id)?.desc || 'Unbekannt'
   }
 
   toReadableDate(isoDate: string): string {

@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core'
+import {Component, Inject, OnInit} from '@angular/core'
 import {DatabaseService} from '../../shared/database.service'
 import {Contact} from '../contact'
 import {ContactsService} from '../../shared/contacts.service'
-import {MatDialogRef} from '@angular/material/dialog'
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog'
 import {NotificationService} from '../../shared/notification.service'
 
 @Component({
@@ -14,12 +14,13 @@ export class ZsbContactDetailComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<ZsbContactDetailComponent, Contact>,
+    @Inject(MAT_DIALOG_DATA) public data: Contact,
     private notificationService: NotificationService,
     private dbService: DatabaseService,
     public service: ContactsService) {
   }
 
-  contact?: Contact = undefined
+  contact?: Contact = this.data
 
   ngOnInit(): void {
     this.service.contactForm.enable()

@@ -11,20 +11,20 @@ export class ContactsService {
 
   contactFunctions: Observable<ContactFunction[]>
   contactSalutationOptions: Observable<ContactSalutation[]>
+  contactForm: UntypedFormGroup
 
   constructor(private dbService: DatabaseService) {
     this.contactFunctions = this.dbService.getContactFunctions()
     this.contactSalutationOptions = this.dbService.getContactSalutationOptions()
+    this.contactForm = new UntypedFormGroup({
+      contact_id: new UntypedFormControl(null),
+      surname: new UntypedFormControl('', Validators.required),
+      firstname: new UntypedFormControl(''),
+      salutation: new UntypedFormControl(null, Validators.required),
+      email: new UntypedFormControl('', [Validators.required, Validators.email]),
+      feature: new UntypedFormControl(null, Validators.required)
+    })
   }
-
-  public contactForm: UntypedFormGroup = new UntypedFormGroup({
-    contact_id: new UntypedFormControl(null),
-    surname: new UntypedFormControl('', Validators.required),
-    firstname: new UntypedFormControl(''),
-    salutation: new UntypedFormControl(0, Validators.required),
-    email: new UntypedFormControl('', [Validators.required, Validators.email]),
-    feature: new UntypedFormControl('', Validators.required)
-  })
 
   public searchForm: UntypedFormGroup = new UntypedFormGroup({
     searchKey: new UntypedFormControl(''),
@@ -36,9 +36,9 @@ export class ContactsService {
       contact_id: null,
       surname: '',
       firstname: '',
-      salutation: 0,
+      salutation: null,
       email: '',
-      feature: ''
+      feature: null
     })
   }
 

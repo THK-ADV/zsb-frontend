@@ -1,12 +1,13 @@
-import {Component, OnInit} from '@angular/core'
+import {Component, Inject, OnInit} from '@angular/core'
 import {Observable} from 'rxjs'
 import {School} from '../zsb-school/school'
 import {City} from './city'
 import {Address} from './address'
 import {DatabaseService} from '../shared/database.service'
 import {AddressService} from '../shared/address.service'
-import {MatDialogRef} from '@angular/material/dialog'
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog'
 import {filterDuplicates, filterOptions} from '../shared/functions'
+import {Contact} from '../zsb-contact/contact'
 
 @Component({
   selector: 'app-zsb-address',
@@ -15,19 +16,20 @@ import {filterDuplicates, filterOptions} from '../shared/functions'
 })
 export class ZsbAddressComponent implements OnInit {
 
+  addressId?: string = undefined
+
   constructor(
     public service: AddressService,
     private dbService: DatabaseService,
+    @Inject(MAT_DIALOG_DATA) public data: { addressId?: string },
     public dialogRef: MatDialogRef<ZsbAddressComponent>) {
+    this.addressId = data.addressId
   }
-
-  schoolObservable: Observable<School>
   citiesObservable: Observable<City[]>
   cities: City[]
   addressesObservable: Observable<Address[]>
   addresses: Address[]
 
-  public addressId: string // filled via dialog
   private address: Address
 
   // options for all autocomplete inputs
@@ -59,28 +61,22 @@ export class ZsbAddressComponent implements OnInit {
     this.initAutocomplete()
 
     if (this.addressId === undefined) {
-      console.log('Address ID not given.')
       return
     }
-
-    // not a uuid --> load empty form
     if (this.addressId === null) {
       return
     }
-
     this.loadAddressById(this.addressId)
   }
 
   initAutocomplete() {
     this.addressesObservable.subscribe(adressen => {
-      // get all values and filter duplicates
       this.governmentDistrictOptions = filterDuplicates(adressen.map(it => it.city.governmentDistrict.trim()))
       this.constituencyOptions = filterDuplicates(adressen.map(it => it.city.constituency.trim()))
       this.postcodeOptions = filterDuplicates(adressen.map(it => it.city.postcode.toString().trim()))
       this.designationOptions = filterDuplicates(adressen.map(it => it.city.designation.trim()))
       this.streetOptions = filterDuplicates(adressen.map(it => it.street.trim()))
       this.houseNumberOptions = filterDuplicates(adressen.map(it => it.houseNumber.trim()))
-
       this.updateAutocomplete()
     })
   }
@@ -138,7 +134,6 @@ export class ZsbAddressComponent implements OnInit {
 
   private updateAutocomplete() {
     const controls = this.service.formGroup.controls
-
     this.filteredGovernmentDistrictOptions = filterOptions(controls.governmentDistrict, this.governmentDistrictOptions)
     this.filteredConstituencyOptions = filterOptions(controls.constituency, this.constituencyOptions)
     this.filteredPostcodeOptions = filterOptions(controls.postcode, this.postcodeOptions)
@@ -146,7 +141,6 @@ export class ZsbAddressComponent implements OnInit {
     this.filteredStreetOptions = filterOptions(controls.street, this.streetOptions)
     this.filteredHouseNumberOptions = filterOptions(controls.houseNumber, this.houseNumberOptions)
   }
-
 
   private loadAddressById(addressId: string) {
     this.dbService.getAddressAtomicById(addressId)
@@ -157,7 +151,6 @@ export class ZsbAddressComponent implements OnInit {
   }
 
   onCancel() {
-    console.log('cancel')
     this.dialogRef.close(new AddressResult(null, AddressStatus.CANCELLATION))
   }
 }

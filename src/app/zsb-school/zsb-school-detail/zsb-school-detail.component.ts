@@ -96,9 +96,7 @@ export class ZsbSchoolDetailComponent implements OnInit {
             this.service.loadFormData(school, this.address, [])
             this.addressUndefined = false
           } else {
-            console.log('get address')
             forkJoin(contactsIds.map(id => this.dbService.getContactById(id))).subscribe(contacts => {
-              console.log('loadformdata')
               this.contacts = contacts
               this.service.loadFormData(school, this.address, this.contacts)
               this.contactData = new MatTableDataSource(this.contacts)
@@ -138,7 +136,6 @@ export class ZsbSchoolDetailComponent implements OnInit {
 
   changeAddress() {
     if (this.addressId === undefined) this.addressId = null
-
     AddressService.openAddressDialog(this.dialog, this.addressId)
       .subscribe(addressResult => {
         if (addressResult === undefined) {
@@ -147,8 +144,6 @@ export class ZsbSchoolDetailComponent implements OnInit {
         }
 
         if (addressResult.status === AddressStatus.CANCELLATION) return
-
-        // address update
         this.address = addressResult.address
         this.notificationService.success('Adresse aktualisiert.')
         if (this.address !== undefined) {
@@ -172,12 +167,13 @@ export class ZsbSchoolDetailComponent implements OnInit {
     })
   }
 
-  showContactDetail(control: AbstractControl) {
+  showContactDetail(contact: Contact) {
     const dialogConfig = new MatDialogConfig()
     dialogConfig.disableClose = true
     dialogConfig.width = '30%'
+    dialogConfig.data = contact
     const dialogRef = this.dialog.open(ZsbContactDetailComponent, dialogConfig)
-    dialogRef.componentInstance.contact = control.value as Contact
+    dialogRef.componentInstance.contact = contact
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === undefined) {

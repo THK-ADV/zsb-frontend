@@ -6,6 +6,7 @@ import {DatabaseService} from '../../shared/database.service'
 import {ContactsService} from '../../shared/contacts.service'
 import {Subscription} from 'rxjs'
 import {filterOptions} from '../../shared/functions'
+import {log} from '@angular-devkit/build-angular/src/builders/ssr-dev-server'
 
 @Component({
   selector: 'app-zsb-contact-search',
@@ -28,11 +29,9 @@ export class ZsbContactSearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // init form
     this.service.initializeContactForm()
     this.service.contactForm.disable()
 
-    // get all contacts from db
     this.subs.push(
       this.dbService.getContacts().subscribe(contacts => {
         this.currentContacts = contacts
@@ -40,18 +39,17 @@ export class ZsbContactSearchComponent implements OnInit, OnDestroy {
       })
     )
 
-    // disable/enable form depending on toggle
     this.subs.push(
       this.service.searchForm.get('enableEdit').valueChanges.subscribe(newVal => {
         if (newVal) {
-          this.service.clearSearch()
           this.service.contactForm.enable()
           this.service.searchForm.get('searchKey').disable()
-          this.service.initializeContactForm()
         } else {
           this.service.contactForm.disable()
           this.service.searchForm.get('searchKey').enable()
         }
+        this.service.clearSearch()
+        this.service.initializeContactForm()
       })
     )
 

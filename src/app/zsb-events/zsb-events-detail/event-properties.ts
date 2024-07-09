@@ -2,6 +2,7 @@ export interface Property {
   name: string,
   formControlName: string,
   type: string,
+  showChildren?: boolean,
   properties?: Property[]
 }
 export const atSchoolProperty: Property = {
@@ -12,7 +13,8 @@ export const atSchoolProperty: Property = {
     {
       name: 'KAoA',
       formControlName: 'kaoa',
-      type: 'checkbox',
+      type: 'toggle',
+      showChildren: false,
       properties: [
         {
           name: 'Last Minute Information',
@@ -58,7 +60,8 @@ export const atSchoolProperty: Property = {
     {
       name: 'Talentscouting',
       formControlName: 'talentScouting',
-      type: 'checkbox',
+      type: 'toggle',
+      showChildren: false,
       properties: [
         {
           name: 'Gespräch',
@@ -87,7 +90,8 @@ export const atSchoolProperty: Property = {
     {
       name: 'TH-Spezifisch',
       formControlName: 'thSpecific',
-      type: 'checkbox',
+      type: 'toggle',
+      showChildren: false,
       properties: [
         {
           name: 'Einzeltermin',
