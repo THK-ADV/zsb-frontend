@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core'
 import {AbstractControl, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {School} from '../zsb-school/school'
 import {DatabaseService} from './database.service'
-import {forkJoin, Observable} from 'rxjs'
+import {Observable} from 'rxjs'
 import {Address} from '../zsb-address/address'
 import {City} from '../zsb-address/city'
 import {NotificationService} from './notification.service'
@@ -127,10 +127,13 @@ export class SchoolService {
     })
   }
 
-  removeContact(control: AbstractControl) {
+  removeContact(contact: Contact) {
     const contacts = this.contacts
-    const index = contacts.controls.indexOf(control)
-    contacts.removeAt(index)
+    const formControls = this.contacts.controls
+    const formControlIndex = formControls.findIndex(ctrl => ctrl.value.contact_id === contact.contact_id)
+    if (formControlIndex !== -1) {
+      this.contacts.removeAt(formControlIndex)
+    }
   }
 
   updateContact(updated: Contact) {

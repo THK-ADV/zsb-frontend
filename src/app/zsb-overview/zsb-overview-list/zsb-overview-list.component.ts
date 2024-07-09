@@ -178,7 +178,6 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
       this.service.deleteEvents(uuid).subscribe(it => {
         if (it !== undefined) {
           this.notificationService.success(':: Termin wurde erfolgreich entfernt.')
-          // remove event from table
           this.ngOnInit()
         } else {
           this.notificationService.failure('-- Termin konnte nicht entfernt werden.')

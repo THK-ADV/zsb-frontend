@@ -65,6 +65,7 @@
           name="contactSchool"
           aria-label="Verantwortliche*r Schule"
           [(ngModel)]="contactPersonSchool"
+          (ngModelChange)="onContactPersonSchoolChange()"
           [ngModelOptions]="{standalone: true}"
           [matAutocomplete]="autoContactSchool">
         <mat-autocomplete
@@ -87,6 +88,7 @@
           id="contactUniversity"
           name="contactUniversity"
           [(ngModel)]="contactPersonUniversity"
+          (ngModelChange)="onContactPersonUniversityChange()"
           [ngModelOptions]="{standalone: true}"
           [matAutocomplete]="autoContactUniversity">
         <mat-autocomplete
@@ -165,6 +167,32 @@
                     Element für unbekannten Typ: {{ subSubProperty.type }}
                   </div>
                 </ng-container>
+                <div *ngIf="subSubProperty.properties && subSubProperty.properties.length > 0">
+                  <div *ngFor="let subSubSubProperty of subSubProperty.properties" style="margin-left: 10%;">
+                    <ng-container [ngSwitch]="subSubSubProperty.type">
+                      <mat-checkbox *ngSwitchCase="'checkbox'"
+                                    [checked]="getCheckboxValue(subSubSubProperty.formControlName)"
+                                    (change)="updateCheckboxValue(subSubSubProperty.formControlName)">
+                        {{ subSubSubProperty.name }}
+                      </mat-checkbox>
+                      <div *ngSwitchCase="'integer'">
+                        <mat-form-field>
+                          <mat-label> {{ subSubSubProperty.name }}</mat-label>
+                          <input [formControlName]="subSubSubProperty.formControlName" matInput type="number"/>
+                        </mat-form-field>
+                      </div>
+                      <div *ngSwitchCase="'text'">
+                        <mat-form-field>
+                    <textarea [formControlName]="subSubSubProperty.formControlName" matInput
+                              placeholder="{{subSubSubProperty.name}}"></textarea>
+                        </mat-form-field>
+                      </div>
+                      <div *ngSwitchDefault>
+                        Element für unbekannten Typ: {{ subSubSubProperty.type }}
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

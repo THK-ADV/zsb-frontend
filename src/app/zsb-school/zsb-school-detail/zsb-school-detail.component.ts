@@ -17,6 +17,7 @@ import {CooperationPartner} from '../cooperationPartner'
 import {KaoaSupervisor} from '../kaoaSupervisor'
 import {TalentScout} from '../talentScout'
 import {MatTableDataSource} from '@angular/material/table'
+import {log} from '@angular-devkit/build-angular/src/builders/ssr-dev-server'
 
 @Component({
   selector: 'app-zsb-school-detail',
@@ -26,11 +27,12 @@ import {MatTableDataSource} from '@angular/material/table'
 export class ZsbSchoolDetailComponent implements OnInit {
   private address: Address
   schoolId: string
-  addressObservable: Observable<Address[]>
-  schoolTypes: Observable<SchoolType[]>
-  contactFunctions: ContactFunction[]
-  cooperationPartners: Observable<CooperationPartner[]>
+  contacts: Contact[] = []
+  addresses: Address[]
   contactData: MatTableDataSource<Contact>
+  contactFunctions: ContactFunction[]
+  schoolTypes: Observable<SchoolType[]>
+  cooperationPartners: Observable<CooperationPartner[]>
   kaoaSupervisors: Observable<KaoaSupervisor[]>
   talentScouts: Observable<TalentScout[]>
   addressId: string
@@ -55,13 +57,12 @@ export class ZsbSchoolDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.service.initializeFormGroup()
-    this.addressObservable = this.dbService.getAddresses()
     this.schoolTypes = this.dbService.getSchoolType()
     this.cooperationPartners = this.dbService.getCooperationPartner()
     this.kaoaSupervisors = this.dbService.getKaoaSupervisors()
     this.talentScouts = this.dbService.getTalentScouts()
-
+    this.contactData = new MatTableDataSource(this.contacts)
+    this.service.initializeFormGroup()
     this.subs.push(
       this.dbService.getContactFunctions().subscribe(functions =>
         this.contactFunctions = functions
@@ -84,7 +85,6 @@ export class ZsbSchoolDetailComponent implements OnInit {
   }
 
   private loadSchool(uuid: string) {
-    console.log('load school')
     this.service.dbService.getSchoolById(uuid).subscribe(school => {
       this.addressId = school.address_id
       this.subs.push(
@@ -98,12 +98,14 @@ export class ZsbSchoolDetailComponent implements OnInit {
           } else {
             console.log('get address')
             forkJoin(contactsIds.map(id => this.dbService.getContactById(id))).subscribe(contacts => {
-            console.log('loadformdata')
-            this.service.loadFormData(school, this.address, contacts)
-            this.contactData = new MatTableDataSource(contacts)
-            this.addressUndefined = false
-          })
-        }})
+              console.log('loadformdata')
+              this.contacts = contacts
+              this.service.loadFormData(school, this.address, this.contacts)
+              this.contactData = new MatTableDataSource(this.contacts)
+              this.addressUndefined = false
+            })
+          }
+        })
       )
     })
   }
@@ -211,12 +213,25 @@ export class ZsbSchoolDetailComponent implements OnInit {
     this.createDialog()
       .afterClosed()
       .subscribe(chosenContact => {
-        // do nothing, if nothing got added
         if (chosenContact === undefined) {
           return
         }
-
-        this.service.addContact(chosenContact)
+        this.updateContacts(chosenContact)
       })
+  }
+
+  private updateContacts(newContact: Contact) {
+    this.service.addContact(newContact)
+    this.contacts.push(newContact)
+    this.contactData.data = [...this.contacts]
+  }
+
+  removeContact(contact: Contact) {
+    const index = this.contacts.findIndex(c => c.contact_id === contact.contact_id)
+    if (index >= 0) {
+      this.contacts.splice(index, 1)
+      this.contactData.data = [...this.contacts]
+      this.service.removeContact(contact)
+    }
   }
 }

@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core'
 import {DatabaseService} from './database.service'
-import {DatabaseEvent, Event} from '../zsb-events/event'
-import {UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators} from '@angular/forms'
+import {DatabaseEvent} from '../zsb-events/event'
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {NotificationService} from './notification.service'
-import {mergeMap, tap} from 'rxjs/operators'
 import {Router} from '@angular/router'
 import {formatDate} from '@angular/common'
 import {Observable} from 'rxjs'
@@ -182,9 +181,9 @@ export class EventService {
       category,
       school: event.school,
       semester: event.schoolyear,
-      contactPersonSchoolId: event.contact_school_id,
+      contactPersonSchoolId: event.contact_school.id,
       contactPersonSchool,
-      contactPersonUniversityId: event.contact_university_id,
+      contactPersonUniversityId: event.contact_university.id,
       contactPersonUniversity,
       rating: event.rating,
       kaoa,
@@ -332,6 +331,14 @@ export class EventService {
     if (eventForm.internOther) {
       eventForm.internCategory.push('Sonstiges')
     }
+    const contactPersonSchool = {
+      id: null,
+      name: eventForm.contactPersonSchool
+    }
+    const contactPersonUniversity = {
+      id: null,
+      name: eventForm.contactPersonSchool
+    }
     const eventObject: DatabaseEvent = {
       type: discriminator,
       uuid: eventForm.uuid,
@@ -339,9 +346,9 @@ export class EventService {
       schoolyear: eventForm.semester,
       date: eventForm.date,
       contact_school_id: schoolContactId,
-      contact_school: eventForm.contactPersonSchool,
+      contact_school: contactPersonSchool,
       contact_university_id: universityContactId,
-      contact_university: eventForm.contactPersonUniversity,
+      contact_university: contactPersonUniversity,
       other: eventForm.other,
       school_id: eventForm.school.id,
       school: eventForm.school,
@@ -361,25 +368,24 @@ export class EventService {
       internOther: eventForm.internOtherText
     }
     if (isPost) {
-      this.dbService.createEvent(eventObject)
-        .pipe(
-          tap(
-            it => {
-              this.notificationService.success(':: Termin erfolgreich erstellt.')
-              this.router.navigate(['/', 'events'])
-            })
-        )
-        .subscribe()
+      this.dbService.createEvent(eventObject).subscribe(it => {
+        if (it.uuid !== undefined) {
+          this.notificationService.success(':: Termin erfolgreich erstellt.')
+          this.router.navigate(['/'])
+        } else {
+          this.notificationService.failure('-- Termin konnte nicht erstellt werden.')
+        }
+      })
     } else {
-      this.dbService.updateEvent(eventObject)
-        .pipe(
-          tap(
-            it => {
-              this.notificationService.success(':: Termin erfolgreich aktualisiert.')
-              this.router.navigate(['/', 'events'])
-            })
-        )
-        .subscribe()
+      console.log(eventObject)
+      this.dbService.updateEvent(eventObject).subscribe(it => {
+        if (it.uuid !== undefined) {
+          this.notificationService.success(':: Termin erfolgreich aktualisiert.')
+          this.router.navigate(['/'])
+        } else {
+          this.notificationService.failure('-- Termin konnte nicht aktualisiert werden.')
+        }
+      })
     }
   }
 }

@@ -4,9 +4,8 @@ import {MatDialogRef} from '@angular/material/dialog'
 import {NotificationService} from '../../shared/notification.service'
 import {DatabaseService} from '../../shared/database.service'
 import {ContactsService} from '../../shared/contacts.service'
-import {Observable, Subscription} from 'rxjs'
+import {Subscription} from 'rxjs'
 import {filterOptions} from '../../shared/functions'
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms'
 
 @Component({
   selector: 'app-zsb-contact-search',
@@ -44,8 +43,6 @@ export class ZsbContactSearchComponent implements OnInit, OnDestroy {
     // disable/enable form depending on toggle
     this.subs.push(
       this.service.searchForm.get('enableEdit').valueChanges.subscribe(newVal => {
-        console.log('test')
-        console.log(newVal)
         if (newVal) {
           this.service.clearSearch()
           this.service.contactForm.enable()
