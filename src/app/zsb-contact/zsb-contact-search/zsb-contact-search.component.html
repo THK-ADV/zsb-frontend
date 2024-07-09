@@ -23,11 +23,11 @@
       </mat-slide-toggle>
     </div>
   </form>
-  <br>
   <form [formGroup]="service.contactForm" class="standard-form">
     <div class="controls-container">
       <input type="hidden" formControlName="contact_id">
       <mat-form-field class="full-width">
+        <mat-label>Anrede</mat-label>
         <mat-select formControlName="salutation" placeholder="Anrede">
           <ng-container *ngFor="let salutation of service.contactSalutationOptions | async">
             <mat-option [value]="salutation.id">
@@ -39,29 +39,26 @@
       </mat-form-field>
       <br>
       <mat-form-field class="full-width">
-        <label>
-          <input matInput name="surname" type="text" placeholder="Name" formControlName="surname">
-        </label>
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Name" formControlName="surname">
         <mat-error>Ihre Eingabe wird benötigt.</mat-error>
       </mat-form-field>
       <br>
       <mat-form-field class="full-width">
-        <label>
-          <input matInput name="firstname" type="text" placeholder="Vorname" formControlName="firstname">
-        </label>
+        <mat-label>Vorname</mat-label>
+        <input matInput placeholder="Vorname" formControlName="firstname">
         <mat-error>Ihre Eingabe wird benötigt.</mat-error>
       </mat-form-field>
       <br>
       <mat-form-field class="full-width">
-        <label>
-          <input matInput name="email" type="text" placeholder="E-Mail" formControlName="email">
-        </label>
+        <mat-label>E-Mail</mat-label>
+        <input matInput placeholder="E-Mail" formControlName="email">
         <mat-error>Bitte prüfen Sie, ob es sich hierbei um eine valide E-Mail handelt.</mat-error>
       </mat-form-field>
       <br>
       <mat-form-field class="full-width">
-        <mat-select formControlName="feature" placeholder="Funktion*">
-          <mat-option value="-1">Keine</mat-option>
+        <mat-label>Funktion</mat-label>
+        <mat-select formControlName="feature" placeholder="Funktion">
           <ng-container *ngFor="let feature of service.contactFunctions | async">
             <mat-option [value]="feature.id">
               {{ feature.desc }} <br>

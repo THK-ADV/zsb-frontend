@@ -3,13 +3,13 @@ import {School} from '../../zsb-school/school'
 export class Email {
   private readonly msg: string
   private readonly addressees: string[]
-  private readonly schools: School[]
+  private readonly schoolIds: string[]
   private readonly subject: string
 
-  constructor(msg: string, addressees: string[], schools: School[], subject: string) {
+  constructor(msg: string, addressees: string[], schoolIds: string[], subject: string) {
     this.msg = msg
     this.addressees = addressees
-    this.schools = schools
+    this.schoolIds = schoolIds
     this.subject = subject
   }
 
@@ -21,12 +21,11 @@ export class Email {
     return this.addressees
   }
 
-  getSchools(): School[] {
-    return this.schools
+  getSchoolIds(): string[] {
+    return this.schoolIds
   }
 
   getSubject(): string {
     return this.subject
   }
-
 }

@@ -11,18 +11,19 @@ import {tap} from 'rxjs/operators'
 })
 export class AddressService {
 
-  constructor() {
-  }
+  formGroup: UntypedFormGroup
 
-  public formGroup: UntypedFormGroup = new UntypedFormGroup({
-    addressId: new UntypedFormControl(null),
-    governmentDistrict: new UntypedFormControl('', Validators.required), // regierungsbezirk
-    constituency: new UntypedFormControl('', Validators.required), // kreis
-    postcode: new UntypedFormControl('', Validators.required),
-    designation: new UntypedFormControl('', Validators.required), // designation
-    street: new UntypedFormControl('', Validators.required),
-    houseNumber: new UntypedFormControl('', Validators.required)
-  })
+  constructor() {
+    this.formGroup = new UntypedFormGroup({
+      addressId: new UntypedFormControl(null),
+      governmentDistrict: new UntypedFormControl('', Validators.required), // regierungsbezirk
+      constituency: new UntypedFormControl('', Validators.required), // kreis
+      postcode: new UntypedFormControl('', Validators.required),
+      designation: new UntypedFormControl('', Validators.required), // designation
+      street: new UntypedFormControl('', Validators.required),
+      houseNumber: new UntypedFormControl('', Validators.required)
+    })
+  }
 
   static getStandardDialogConfig(): MatDialogConfig {
     const config = new MatDialogConfig()
@@ -33,12 +34,12 @@ export class AddressService {
 
   static openAddressDialog(
     dialog: MatDialog,
-    uuid?: string,
+    addressId?: string,
     config: MatDialogConfig = this.getStandardDialogConfig()
   ): Observable<AddressResult> {
+    config.data = {addressId}
     const ref = dialog.open(ZsbAddressComponent, config)
     const s = ref.backdropClick().subscribe(() => ref.close(new AddressResult(null, AddressStatus.CANCELLATION)))
-    ref.componentInstance.addressId = uuid
     return ref.afterClosed().pipe(tap(() => s.unsubscribe()))
   }
 

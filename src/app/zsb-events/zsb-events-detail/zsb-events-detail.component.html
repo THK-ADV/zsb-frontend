@@ -22,7 +22,7 @@
     <!-- TODO: styling anpassen -->
     <mat-form-field appearance="fill">
       <mat-label>Terminart</mat-label>
-      <mat-select class="standard-padding" (selectionChange)="onSelectionChange($event)" formControlName="category">
+      <mat-select (selectionChange)="onSelectionChange($event)" formControlName="category">
         <mat-option value="atSchool">An Schule</mat-option>
         <mat-option value="intern">Bei Uns</mat-option>
         <mat-option value="atThird">An 3. Orten</mat-option>
@@ -45,14 +45,12 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-    <!-- TODO: Format festlegen -->
     <mat-form-field>
       <mat-label>Halbjahr</mat-label>
-      <input type="text"
-             placeholder="Halbjahr"
-             aria-label="Halbjahr"
-             matInput
-             formControlName="semester">
+      <mat-select formControlName="semester">
+        <mat-option value="HJ1">HJ 1</mat-option>
+        <mat-option value="HJ2">HJ 2</mat-option>
+      </mat-select>
     </mat-form-field>
     <!-- TODO: UI -->
     <div>
@@ -115,82 +113,84 @@
     </div>
     <!-- TODO: property automatisch checken / subproperty disablen wenn unchecked -->
     <div *ngIf="typeSelection === 'atSchool'">
-      <div *ngFor="let property of atSchoolProperty.properties">
-        <mat-slide-toggle [formControlName]="property.formControlName">
+      <div *ngFor="let property of atSchoolProperty.properties" style="padding-bottom: 4%">
+        <mat-slide-toggle [formControlName]="property.formControlName" (change)="toggleProperty(property)">
           {{ property.name }}
         </mat-slide-toggle>
-        <div *ngIf="property.properties && property.properties.length > 0">
-          <div *ngFor="let subProperty of property.properties" style="margin-left: 10%;">
-            <ng-container [ngSwitch]="subProperty.type">
-              <mat-checkbox *ngSwitchCase="'checkbox'"
-                            [checked]="getCheckboxValue(subProperty.formControlName)"
-                            (change)="updateCheckboxValue(subProperty.formControlName)">
-                {{ subProperty.name }}
-              </mat-checkbox>
-              <div *ngSwitchCase="'integer'">
-                <mat-form-field>
-                  <mat-label> {{ subProperty.name }}</mat-label>
-                  <input [formControlName]="subProperty.formControlName" matInput type="number"/>
-                </mat-form-field>
-              </div>
-              <div *ngSwitchCase="'text'">
-                <mat-form-field>
-                  <mat-label> {{ subProperty.name }}</mat-label>
-                  <textarea formControlName="other" matInput placeholder="{{subProperty.name}}"></textarea>
-                </mat-form-field>
-              </div>
-              <div *ngSwitchDefault>
-                Element für unbekannten Typ: {{ subProperty.type }}
-              </div>
-            </ng-container>
-            <div *ngIf="subProperty.properties && subProperty.properties.length > 0">
-              <div *ngFor="let subSubProperty of subProperty.properties" style="margin-left: 10%;">
-                <ng-container [ngSwitch]="subSubProperty.type">
-                  <mat-checkbox *ngSwitchCase="'checkbox'"
-                                [checked]="getCheckboxValue(subSubProperty.formControlName)"
-                                (change)="updateCheckboxValue(subSubProperty.formControlName)">
-                    {{ subSubProperty.name }}
-                  </mat-checkbox>
-                  <div *ngSwitchCase="'integer'">
-                    <mat-form-field>
-                      <mat-label> {{ subSubProperty.name }}</mat-label>
-                      <input [formControlName]="subSubProperty.formControlName" matInput type="number"/>
-                    </mat-form-field>
-                  </div>
-                  <div *ngSwitchCase="'text'">
-                    <mat-form-field>
+        <div *ngIf="property.showChildren">
+          <div *ngIf="property.properties && property.properties.length > 0">
+            <div *ngFor="let subProperty of property.properties" style="margin-left: 10%;">
+              <ng-container [ngSwitch]="subProperty.type">
+                <mat-checkbox *ngSwitchCase="'checkbox'"
+                              [checked]="getCheckboxValue(subProperty.formControlName)"
+                              (change)="updateCheckboxValue(subProperty.formControlName)">
+                  {{ subProperty.name }}
+                </mat-checkbox>
+                <div *ngSwitchCase="'integer'">
+                  <mat-form-field>
+                    <mat-label> {{ subProperty.name }}</mat-label>
+                    <input [formControlName]="subProperty.formControlName" matInput type="number"/>
+                  </mat-form-field>
+                </div>
+                <div *ngSwitchCase="'text'">
+                  <mat-form-field>
+                    <mat-label> {{ subProperty.name }}</mat-label>
+                    <textarea formControlName="other" matInput placeholder="{{subProperty.name}}"></textarea>
+                  </mat-form-field>
+                </div>
+                <div *ngSwitchDefault>
+                  Element für unbekannten Typ: {{ subProperty.type }}
+                </div>
+              </ng-container>
+              <div *ngIf="subProperty.properties && subProperty.properties.length > 0">
+                <div *ngFor="let subSubProperty of subProperty.properties" style="margin-left: 10%;">
+                  <ng-container [ngSwitch]="subSubProperty.type">
+                    <mat-checkbox *ngSwitchCase="'checkbox'"
+                                  [checked]="getCheckboxValue(subSubProperty.formControlName)"
+                                  (change)="updateCheckboxValue(subSubProperty.formControlName)">
+                      {{ subSubProperty.name }}
+                    </mat-checkbox>
+                    <div *ngSwitchCase="'integer'">
+                      <mat-form-field>
+                        <mat-label> {{ subSubProperty.name }}</mat-label>
+                        <input [formControlName]="subSubProperty.formControlName" matInput type="number"/>
+                      </mat-form-field>
+                    </div>
+                    <div *ngSwitchCase="'text'">
+                      <mat-form-field>
                     <textarea [formControlName]="subSubProperty.formControlName" matInput
                               placeholder="{{subSubProperty.name}}"></textarea>
-                    </mat-form-field>
-                  </div>
-                  <div *ngSwitchDefault>
-                    Element für unbekannten Typ: {{ subSubProperty.type }}
-                  </div>
-                </ng-container>
-                <div *ngIf="subSubProperty.properties && subSubProperty.properties.length > 0">
-                  <div *ngFor="let subSubSubProperty of subSubProperty.properties" style="margin-left: 10%;">
-                    <ng-container [ngSwitch]="subSubSubProperty.type">
-                      <mat-checkbox *ngSwitchCase="'checkbox'"
-                                    [checked]="getCheckboxValue(subSubSubProperty.formControlName)"
-                                    (change)="updateCheckboxValue(subSubSubProperty.formControlName)">
-                        {{ subSubSubProperty.name }}
-                      </mat-checkbox>
-                      <div *ngSwitchCase="'integer'">
-                        <mat-form-field>
-                          <mat-label> {{ subSubSubProperty.name }}</mat-label>
-                          <input [formControlName]="subSubSubProperty.formControlName" matInput type="number"/>
-                        </mat-form-field>
-                      </div>
-                      <div *ngSwitchCase="'text'">
-                        <mat-form-field>
+                      </mat-form-field>
+                    </div>
+                    <div *ngSwitchDefault>
+                      Element für unbekannten Typ: {{ subSubProperty.type }}
+                    </div>
+                  </ng-container>
+                  <div *ngIf="subSubProperty.properties && subSubProperty.properties.length > 0">
+                    <div *ngFor="let subSubSubProperty of subSubProperty.properties" style="margin-left: 10%;">
+                      <ng-container [ngSwitch]="subSubSubProperty.type">
+                        <mat-checkbox *ngSwitchCase="'checkbox'"
+                                      [checked]="getCheckboxValue(subSubSubProperty.formControlName)"
+                                      (change)="updateCheckboxValue(subSubSubProperty.formControlName)">
+                          {{ subSubSubProperty.name }}
+                        </mat-checkbox>
+                        <div *ngSwitchCase="'integer'">
+                          <mat-form-field>
+                            <mat-label> {{ subSubSubProperty.name }}</mat-label>
+                            <input [formControlName]="subSubSubProperty.formControlName" matInput type="number"/>
+                          </mat-form-field>
+                        </div>
+                        <div *ngSwitchCase="'text'">
+                          <mat-form-field>
                     <textarea [formControlName]="subSubSubProperty.formControlName" matInput
                               placeholder="{{subSubSubProperty.name}}"></textarea>
-                        </mat-form-field>
-                      </div>
-                      <div *ngSwitchDefault>
-                        Element für unbekannten Typ: {{ subSubSubProperty.type }}
-                      </div>
-                    </ng-container>
+                          </mat-form-field>
+                        </div>
+                        <div *ngSwitchDefault>
+                          Element für unbekannten Typ: {{ subSubSubProperty.type }}
+                        </div>
+                      </ng-container>
+                    </div>
                   </div>
                 </div>
               </div>

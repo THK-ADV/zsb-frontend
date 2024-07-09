@@ -127,8 +127,8 @@ export class EventService {
   }
 
   loadFormData(event: DatabaseEvent) {
-    const contactPersonSchool = event.contact_school.name
-    const contactPersonUniversity = event.contact_university.name
+    const contactPersonSchool = event.contact_school?.name ?? ''
+    const contactPersonUniversity = event.contact_university?.name ?? ''
     const kaoa = event.schoolCategory?.includes('KAOA') ?? false
     const talentScouting = event.schoolCategory?.includes('TALENTSCOUT') ?? false
     const thSpecific = event.schoolCategory?.includes('THSPECIFIC') ?? false
@@ -181,9 +181,9 @@ export class EventService {
       category,
       school: event.school,
       semester: event.schoolyear,
-      contactPersonSchoolId: event.contact_school.id,
+      contactPersonSchoolId: event.contact_school?.id ?? '',
       contactPersonSchool,
-      contactPersonUniversityId: event.contact_university.id,
+      contactPersonUniversityId: event.contact_university?.id ?? '',
       contactPersonUniversity,
       rating: event.rating,
       kaoa,
@@ -226,6 +226,7 @@ export class EventService {
 
   // TODO: an Backend anpassen, insert und update aufteilen
   insertOrUpdateCurrentEvent(isPost: boolean, schoolContactId: string, universityContactId: string) {
+    console.log('termin erstellen')
     const eventForm = this.formGroup.value
     let discriminator = ''
     switch (eventForm.category) {
@@ -331,13 +332,23 @@ export class EventService {
     if (eventForm.internOther) {
       eventForm.internCategory.push('Sonstiges')
     }
-    const contactPersonSchool = {
-      id: null,
-      name: eventForm.contactPersonSchool
+    let contactPersonSchool
+    let contactPersonUniversity
+    if (eventForm.contactPersonSchool !== null) {
+      contactPersonSchool = {
+        id: null,
+        name: eventForm.contactPersonSchool
+      }
+    } else {
+      contactPersonSchool = null
     }
-    const contactPersonUniversity = {
-      id: null,
-      name: eventForm.contactPersonSchool
+    if (eventForm.contactPersonUniversity !== null) {
+      contactPersonUniversity = {
+        id: null,
+        name: eventForm.contactPersonUniversity
+      }
+    } else {
+      contactPersonUniversity = null
     }
     const eventObject: DatabaseEvent = {
       type: discriminator,
@@ -368,6 +379,8 @@ export class EventService {
       internOther: eventForm.internOtherText
     }
     if (isPost) {
+      console.log('eventObject')
+      console.log(eventObject)
       this.dbService.createEvent(eventObject).subscribe(it => {
         if (it.uuid !== undefined) {
           this.notificationService.success(':: Termin erfolgreich erstellt.')

@@ -12,8 +12,14 @@
             </button>
           </mat-chip-row>
         </mat-chip-grid>
-        <input matInput placeholder="Adressaten hinzufügen" #recipientInput [formControl]="recipientCtrl"
-               [matChipInputFor]="chipGrid" #trigger="matAutocompleteTrigger" [matAutocomplete]="auto"/>
+        <input
+          matInput
+          placeholder="Adressaten hinzufügen"
+          #recipientInput
+          [formControl]="recipientCtrl"
+          [matChipInputFor]="chipGrid"
+          #trigger="matAutocompleteTrigger"
+          [matAutocomplete]="auto"/>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
           <mat-option *ngFor="let recipient of filteredRecipients | async" [value]="recipient">{{ recipient }}
           </mat-option>

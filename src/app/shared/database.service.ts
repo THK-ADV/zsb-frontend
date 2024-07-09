@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core'
-import {HttpClient, HttpHeaders} from '@angular/common/http'
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http'
 import {School} from '../zsb-school/school'
 import {Address} from '../zsb-address/address'
 import {catchError, retry} from 'rxjs/operators'
@@ -90,8 +90,8 @@ export class DatabaseService {
       )
   }
 
-  createMailAddressees(schools: School[]) {
-    return this.httpClient.post<string[]>(this.DB_URL + '/email/addressees', schools)
+  createMailAddressees(ids: string[]) {
+    return this.httpClient.post<string[]>(this.DB_URL + '/email/addressees', ids)
   }
 
   getSchools() {

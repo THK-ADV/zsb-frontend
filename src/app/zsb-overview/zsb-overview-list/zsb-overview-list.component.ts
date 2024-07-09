@@ -2,15 +2,14 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core'
 import {MatPaginator} from '@angular/material/paginator'
 import {MatSort} from '@angular/material/sort'
 import {MatTableDataSource} from '@angular/material/table'
-import {completeSchoolAsString, School} from '../../zsb-school/school'
-import {SchoolType, schoolTypeDescById} from '../../zsb-school/schoolType'
+import {School} from '../../zsb-school/school'
+import {SchoolType} from '../../zsb-school/schoolType'
 import {Subscription, zip} from 'rxjs'
 import {SelectionModel} from '@angular/cdk/collections'
 import {DatabaseService} from '../../shared/database.service'
 import {NotificationService} from '../../shared/notification.service'
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog'
 import {DatePipe} from '@angular/common'
-import {buildCustomFilter} from '../../shared/keywordsearch'
 import {ZsbLetterComponent} from '../../zsb-communication/zsb-letter/zsb-letter.component'
 import {ZsbEmailComponent} from '../../zsb-communication/zsb-email/zsb-email.component'
 import {MatRadioChange} from '@angular/material/radio'
@@ -88,6 +87,7 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
       this.service.getSchoolType(),
       this.service.getEvents()
     ).subscribe(([schools, schoolTypes, events]) => {
+      this.schoolWithEvents = []
       schools.forEach((school) => {
         const schoolEvents = events.filter((event) => {
           return (event.school_id === school.id)
@@ -113,7 +113,11 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
   }
 
   updateDetailData() {
-    this.detailData.data = this.expandedElement.events
+    if (this.expandedElement) {
+      this.detailData.data = this.expandedElement.events;
+    } else {
+      this.detailData.data = [];
+    }
   }
 
   onSearchClear() {
@@ -148,10 +152,6 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleFilterOptions() {
-    this.showFilterOptions = !this.showFilterOptions
-  }
-
   getSchoolTypeById(id: number) {
     if (id === undefined || this.schoolTypes === undefined) {
       return ''
@@ -164,8 +164,7 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
       this.service.deleteSchool(uuid).subscribe(it => {
         if (it !== undefined) {
           this.notificationService.success(':: Schule wurde erfolgreich entfernt.')
-          // remove schule from table
-          this.listData = new MatTableDataSource(this.schoolWithEvents)
+          this.ngOnInit()
         } else {
           this.notificationService.failure('-- Schule konnte nicht entfernt werden.')
         }
@@ -218,8 +217,10 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
       if (result) {
         if (result.schoolWithEvents) {
           this.listData = new MatTableDataSource(result.schoolWithEvents)
+          this.listData.paginator = this.paginator
         } else {
           this.listData = new MatTableDataSource(this.schoolWithEvents)
+          this.listData.paginator = this.paginator
         }
         this.activeFilterAmount = result.amount
         this.noFiltersActive = this.activeFilterAmount === 0

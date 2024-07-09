@@ -18,6 +18,7 @@
   padding-right: 10px;
   text-align: left;
   font-weight: 400;
+  white-space: nowrap;
 }
 
 .value {
@@ -25,6 +26,7 @@
   font-style: italic;
   text-align: right;
   font-weight: 200;
+  white-space: nowrap;
 }
 
 .event-details p {
@@ -95,7 +97,6 @@
 
 .element-detail {
   overflow: hidden;
-  display: flex;
 }
 
 .element-row td {
@@ -120,6 +121,27 @@ tr.detail-row {
 
 .mail-div > button {
   margin: 2px;
+}
+
+.spacer {
+  padding: 3%;
+  align-content: center;
+  width: 100%;
+}
+
+.spacer p {
+  font-weight: 400;
+  font-size: large;
+  text-align: center;
+}
+
+.no-data::after {
+  content: "Keine Angabe";
+  color: #c2c3c4;
+  font-weight: 100;
+  font-size: medium;
+  font-style: normal;
+  display: inline-block;
 }
 
 /*

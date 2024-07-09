@@ -88,6 +88,10 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
     )
   }
 
+  toggleProperty(property) {
+    property.showChildren = ! property.showChildren
+  }
+
   get filteredSchoolContacts(): string[] {
     const filteredContacts = this.schoolContacts.map(contact => contact.name).filter(option =>
       option.trim().toLowerCase().includes(this.contactPersonSchool.trim().toLowerCase())
@@ -120,25 +124,29 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  createSchoolContact() {
+  createSchoolContact(): Promise<void> {
     const contact: ContactSchool = {
       id: null,
       name: this.contactPersonSchool
     }
-    this.dbService.createSchoolContact(contact).subscribe((response) => {
-      this.contactPersonSchoolId = response.id
-      this.onSubmit()
+    return new Promise((resolve, reject) => {
+      this.dbService.createSchoolContact(contact).subscribe((response) => {
+        this.contactPersonSchoolId = response.id
+        resolve()
+      }, error => reject(error))
     })
   }
 
-  createUniversityContact() {
+  createUniversityContact(): Promise<void> {
     const contact: ContactUniversity = {
       id: null,
       name: this.contactPersonUniversity
     }
-    this.dbService.createUniversityContact(contact).subscribe((response) => {
-      this.contactPersonUniversityId = response.id
-      this.onSubmit()
+    return new Promise((resolve, reject) => {
+      this.dbService.createUniversityContact(contact).subscribe((response) => {
+        this.contactPersonUniversityId = response.id
+        resolve()
+      }, error => reject(error))
     })
   }
 
@@ -188,19 +196,21 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    if (this.contactPersonSchoolId === '') {
-      this.createSchoolContact()
+    let createSchoolContactPromise: Promise<void> = Promise.resolve()
+    let createUniversityContactPromise: Promise<void> = Promise.resolve()
+
+    if (this.contactPersonSchoolId === '' && this.contactPersonSchool !== '') {
+      createSchoolContactPromise = this.createSchoolContact()
     }
-    if (this.contactPersonUniversityId === '') {
-      this.createUniversityContact()
+
+    if (this.contactPersonUniversityId === '' && this.contactPersonUniversity !== '') {
+      createUniversityContactPromise = this.createUniversityContact()
     }
-    else {
-      let isPost = false
-      if (!this.eventId) {
-        isPost = true
-      }
+
+    Promise.all([createSchoolContactPromise, createUniversityContactPromise]).then(() => {
+      const isPost = !this.eventId
       this.service.insertOrUpdateCurrentEvent(isPost, this.contactPersonSchoolId, this.contactPersonUniversityId)
-    }
+    })
   }
 
   onClear() {
