@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser'
-import {NgModule} from '@angular/core'
+import {APP_INITIALIZER, NgModule} from '@angular/core'
 import {AppComponent} from './app.component'
 import {RouterModule} from '@angular/router'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
@@ -29,7 +29,7 @@ import {ZsbContactSearchComponent} from './zsb-contact/zsb-contact-search/zsb-co
 import {MatButtonToggleModule} from '@angular/material/button-toggle'
 import {MatSlideToggleModule} from '@angular/material/slide-toggle'
 import {MatSidenavModule} from '@angular/material/sidenav'
-import {KeycloakAngularModule} from 'keycloak-angular'
+import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular'
 import {DatePipe} from '@angular/common'
 import {ZsbEventsDetailComponent} from './zsb-events/zsb-events-detail/zsb-events-detail.component'
 import {MatDatepickerModule} from '@angular/material/datepicker'
@@ -47,6 +47,7 @@ import {MatExpansionModule} from '@angular/material/expansion'
 import { ZsbFilterComponent } from './zsb-overview/zsb-overview-list/zsb-filter/zsb-filter.component'
 import {MatBadgeModule} from '@angular/material/badge'
 import {MatChipsModule} from '@angular/material/chips'
+import {keycloakInitializer} from './authentication/keycloak.init'
 
 @NgModule({
   declarations: [
@@ -109,12 +110,12 @@ import {MatChipsModule} from '@angular/material/chips'
       provide: MAT_DATE_LOCALE,
       useValue: 'de-DE'
     },
-    // {
-    //   provide: APP_INITIALIZER,
-    //   useFactory: keycloakInitializer,
-    //   multi: true,
-    //   deps: [KeycloakService],
-    // }
+     {
+       provide: APP_INITIALIZER,
+       useFactory: keycloakInitializer,
+       multi: true,
+       deps: [KeycloakService],
+     }
   ],
   bootstrap: [AppComponent]
   // entryComponents: [ZsbSchoolEventDetailComponent]
