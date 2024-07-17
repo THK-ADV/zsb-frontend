@@ -60,7 +60,6 @@ export class ZsbEmailComponent implements OnInit {
     this.dbService.createMailAddressees(this.addresseesIds).subscribe(
       functions => {
         this.availableRecipients = functions
-        console.log('Schulen mit Mail-Adressen:', this.availableRecipients)
       },
       error => {
         console.error('Fehler beim Abrufen verfügbarer Funktionen:', error)
@@ -72,10 +71,6 @@ onSubmit()
 {
   const formValue = this.formGroup.value
   const email = new Email(formValue.msg, this.recipients, this.addresseesIds, formValue.subject)
-
-  console.log('create email')
-  console.log(email)
-
   this.dbService.createEmail(email).subscribe(result => {
     if (result && result.length > 0) {
       let unsendableSchoolsNames = 'Konnte an folgende Schulen nicht versendet werden:\n'

@@ -226,7 +226,6 @@ export class EventService {
 
   // TODO: an Backend anpassen, insert und update aufteilen
   insertOrUpdateCurrentEvent(isPost: boolean, schoolContactId: string, universityContactId: string) {
-    console.log('termin erstellen')
     const eventForm = this.formGroup.value
     let discriminator = ''
     switch (eventForm.category) {
@@ -379,8 +378,6 @@ export class EventService {
       internOther: eventForm.internOtherText
     }
     if (isPost) {
-      console.log('eventObject')
-      console.log(eventObject)
       this.dbService.createEvent(eventObject).subscribe(it => {
         if (it.uuid !== undefined) {
           this.notificationService.success(':: Termin erfolgreich erstellt.')
@@ -390,7 +387,6 @@ export class EventService {
         }
       })
     } else {
-      console.log(eventObject)
       this.dbService.updateEvent(eventObject).subscribe(it => {
         if (it.uuid !== undefined) {
           this.notificationService.success(':: Termin erfolgreich aktualisiert.')

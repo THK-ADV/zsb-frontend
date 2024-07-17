@@ -106,7 +106,6 @@ export class ZsbAddressComponent implements OnInit {
     }
 
     if (this.address !== undefined && ZsbAddressComponent.equalsWithoutId(this.address, newAddress)) {
-      console.log('Nothing changed here.')
       this.dialogRef.close(new AddressResult(this.address, AddressStatus.NO_CHANGES))
     } else {
       this.dbService.updateOrCreateCity(newCity).subscribe(city => {

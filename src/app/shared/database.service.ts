@@ -201,7 +201,6 @@ export class DatabaseService {
   }
 
   createSchoolContact(contact: ContactSchool) {
-    console.log('schoolContact', contact)
     return this.httpClient.post<ContactSchool>(this.DB_URL + '/schoolContacts', contact)
   }
 
@@ -210,7 +209,6 @@ export class DatabaseService {
   }
 
   createUniversityContact(contact: ContactUniversity) {
-    console.log('universityContact', contact)
     return this.httpClient.post<ContactUniversity>(this.DB_URL + '/universityContacts', contact)
   }
 

@@ -59,7 +59,6 @@ export class ZsbFilterComponent {
   ) {
     this.schoolWithEvents = data.schoolWithEvents
     this.allSchoolsWithEvents = [...data.schoolWithEvents]
-    console.log(this.schoolWithEvents)
   }
 
   ngOnInit(): void {
@@ -183,7 +182,6 @@ export class ZsbFilterComponent {
   onSchoolTypeSelected(event: MatAutocompleteSelectedEvent) {
     this.selectedType = event.option.value
     this.schoolType = this.selectedType.desc
-    console.log('type', this.selectedType)
   }
 
   resetFilters() {

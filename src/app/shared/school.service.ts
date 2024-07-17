@@ -79,8 +79,6 @@ export class SchoolService {
   }
 
   loadFormData(school: School, address: Address, contacts: Contact[]) {
-    // console.log('schulid loadformdata')
-    // console.log(school)
     this.contacts.clear()
     contacts.forEach(contact => this.addContact(contact))
     /*this.address.setValue('')
@@ -153,7 +151,6 @@ export class SchoolService {
   }
 
   updateSchoolWithoutNewAddress(schoolForm: any, notificationService: NotificationService) {
-    console.log('updateSchoolWithoutNewAddress')
     const schoolObject: School = {
       id: schoolForm.school_id,
       name: schoolForm.name,

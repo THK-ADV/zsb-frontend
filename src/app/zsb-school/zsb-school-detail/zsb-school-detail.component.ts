@@ -92,7 +92,6 @@ export class ZsbSchoolDetailComponent implements OnInit {
           this.address = address
           const contactsIds = school.contacts_ids === undefined ? [] : school.contacts_ids
           if (contactsIds.length === 0) { // Wenn keine Kontakte vorhanden sind
-            console.log('load form data without contacts')
             this.service.loadFormData(school, this.address, [])
             this.addressUndefined = false
           } else {
