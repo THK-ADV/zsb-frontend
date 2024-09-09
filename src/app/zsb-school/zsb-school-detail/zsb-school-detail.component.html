@@ -27,7 +27,6 @@
     <mat-form-field>
       <mat-label>Telefon</mat-label>
       <input formControlName="phoneNumber" matInput placeholder="Telefon">
-      <mat-error>Ihre Eingabe wird benötigt.</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>E-Mail</mat-label>
@@ -37,7 +36,6 @@
     <mat-form-field>
       <mat-label>Webseite</mat-label>
       <input formControlName="website" matInput placeholder="Webseite">
-      <mat-error>Ihre Eingabe wird benötigt.</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Kommentar</mat-label>
@@ -49,17 +47,14 @@
       <mat-form-field>
         <mat-label>Schülerzahl EF/11</mat-label>
         <input formControlName="amount_students11" matInput type="number" placeholder="Schülerzahl EF/11">
-        <mat-error>Schülerzahl muss zwischen 0 und 150 liegen</mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Schülerzahl Q1/12</mat-label>
         <input formControlName="amount_students12" matInput type="number" placeholder="Schülerzahl Q1/12">
-        <mat-error>Schülerzahl muss zwischen 0 und 150 liegen</mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Schülerzahl Q2/13</mat-label>
         <input formControlName="amount_students13" matInput type="number" placeholder="Schülerzahl Q2/13">
-        <mat-error>Schülerzahl muss zwischen 0 und 150 liegen</mat-error>
       </mat-form-field>
     </div>
     <div formArrayName="contacts" class="sec">
@@ -136,7 +131,6 @@
             </mat-option>
           </ng-container>
         </mat-select>
-        <mat-error>Bitte wählen Sie einen Kooperationpartner aus</mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>KAoA Betreuer*in</mat-label>
@@ -147,7 +141,6 @@
             </mat-option>
           </ng-container>
         </mat-select>
-        <mat-error>Bitte wählen Sie eine KAoA Betreuer*in aus</mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Talentscout</mat-label>
@@ -158,7 +151,6 @@
             </mat-option>
           </ng-container>
         </mat-select>
-        <mat-error>Bitte wählen Sie einen Talentscout aus</mat-error>
       </mat-form-field>
     </div>
     <div class="btn-row sec">

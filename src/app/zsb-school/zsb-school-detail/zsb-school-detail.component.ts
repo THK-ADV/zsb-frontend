@@ -17,7 +17,6 @@ import {CooperationPartner} from '../cooperationPartner'
 import {KaoaSupervisor} from '../kaoaSupervisor'
 import {TalentScout} from '../talentScout'
 import {MatTableDataSource} from '@angular/material/table'
-import {log} from '@angular-devkit/build-angular/src/builders/ssr-dev-server'
 
 @Component({
   selector: 'app-zsb-school-detail',
