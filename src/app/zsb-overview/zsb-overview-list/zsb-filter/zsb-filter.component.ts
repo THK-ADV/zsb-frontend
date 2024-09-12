@@ -67,9 +67,11 @@ export class ZsbFilterComponent {
     this.dbService.getAddressesAtomic().subscribe(addresses => {
       this.addresses = addresses
 
-      const governmentDistricts = filterDuplicates(addresses.map(it => it.city.governmentDistrict.trim()))
-      const constituencies = filterDuplicates(addresses.map(it => it.city.constituency.trim()))
-      const designations = filterDuplicates(addresses.map(it => it.city.designation.trim()))
+      const governmentDistricts =
+        filterDuplicates(addresses.map(it => it.city.governmentDistrict.trim()))
+          .sort((a, b) => a.localeCompare(b))
+      const constituencies = filterDuplicates(addresses.map(it => it.city.constituency.trim())).sort((a, b) => a.localeCompare(b))
+      const designations = filterDuplicates(addresses.map(it => it.city.designation.trim())).sort((a, b) => a.localeCompare(b))
 
       this.governmentDistricts = filterOptions(controls.governmentDistrict, governmentDistricts)
       this.constituencies = filterOptions(controls.constituency, constituencies)
@@ -78,31 +80,31 @@ export class ZsbFilterComponent {
 
     this.subs.push(
       this.dbService.getSchoolType().subscribe(types =>
-        this.schoolTypes = types
+        this.schoolTypes = types.sort((a, b) => a.desc.localeCompare(b.desc))
       )
     )
 
     this.subs.push(
       this.dbService.getSchoolsAtomic().subscribe(schools =>
-        this.schoolNames = schools.map(school => school.name)
+        this.schoolNames = schools.map(school => school.name).sort((a, b) => a.localeCompare(b))
       )
     )
 
     this.subs.push(
       this.dbService.getEvents().subscribe(events =>
-        this.eventNames = events.map(event => event.designation)
+        this.eventNames = events.map(event => event.designation).sort((a, b) => a.localeCompare(b))
       )
     )
 
     this.subs.push(
       this.dbService.getSchoolContacts().subscribe(contacts =>
-        this.schoolContacts = contacts.map(contact => contact.name)
+        this.schoolContacts = contacts.map(contact => contact.name).sort((a, b) => a.localeCompare(b))
       )
     )
 
     this.subs.push(
       this.dbService.getUniversityContacts().subscribe(contacts =>
-        this.universityContacts = contacts.map(contact => contact.name)
+        this.universityContacts = contacts.map(contact => contact.name).sort((a, b) => a.localeCompare(b))
       )
     )
 
