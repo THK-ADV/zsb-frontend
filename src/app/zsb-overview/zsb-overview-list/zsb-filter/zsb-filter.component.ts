@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core'
+import {Component, ElementRef, Inject, ViewChild} from '@angular/core'
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog'
 import {
   AmountStudentsFilter,
@@ -17,6 +17,7 @@ import {filterDuplicates, filterOptions} from '../../../shared/functions'
 import {Address} from '../../../zsb-address/address'
 import {AddressService} from '../../../shared/address.service'
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete'
+import {FormControl} from '@angular/forms'
 
 @Component({
   selector: 'app-zsb-filter',
@@ -35,7 +36,7 @@ export class ZsbFilterComponent {
   schoolWithEvents: SchoolWithEvents[]
   allSchoolsWithEvents: SchoolWithEvents[]
   schoolType = ''
-  selectedType: SchoolType
+  selectedTypes: SchoolType[] = []
   governmentDistrict = ''
   constituency = ''
   designation = ''
@@ -51,6 +52,9 @@ export class ZsbFilterComponent {
   contactPersonUniversity = ''
   universityContacts: string[] = []
   date: Date
+  schoolTypeCtrl = new FormControl()
+
+  @ViewChild('schoolTypeInput') schoolTypeInput: ElementRef<HTMLInputElement>
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               public dialogRef: MatDialogRef<ZsbFilterComponent>,
@@ -136,13 +140,7 @@ export class ZsbFilterComponent {
   }
 
   get filteredSchoolTypes(): SchoolType[] {
-    if (!this.schoolType) {
       return this.schoolTypes
-    }
-    const filteredList = this.schoolTypes.filter(option => {
-      return option.desc.trim().toLowerCase().includes(this.schoolType.trim().toLowerCase())
-    })
-    return filteredList
   }
 
   get filteredGovernmentDistricts(): string[] {
@@ -181,9 +179,18 @@ export class ZsbFilterComponent {
     )
   }
 
+  remove(option: SchoolType): void {
+    const index = this.selectedTypes.findIndex(type => type.id === option.id)
+    if (index >= 0) {
+      this.selectedTypes.splice(index, 1)
+      this.schoolTypeCtrl.setValue(null)
+    }
+  }
+
   onSchoolTypeSelected(event: MatAutocompleteSelectedEvent) {
-    this.selectedType = event.option.value
-    this.schoolType = this.selectedType.desc
+    this.selectedTypes.push(event.option.value)
+    this.schoolTypeInput.nativeElement.value = ''
+    this.schoolTypeCtrl.setValue(null)
   }
 
   resetFilters() {
@@ -199,14 +206,10 @@ export class ZsbFilterComponent {
     if (this.schoolName !== undefined && this.schoolName !== '') {
       filters.push(new SchoolNameFilter(this.schoolName))
     }
-    if (!this.selectedType && this.schoolType) {
-      const extractedType = this.schoolTypes.find(option =>
-        option.desc.toLowerCase().includes(this.schoolType.toLowerCase())
-      )
-      this.selectedType = extractedType
-    }
-    if (this.selectedType !== undefined) {
-      filters.push(new SchoolTypeFilter(this.selectedType.id))
+    if (this.selectedTypes && this.selectedTypes.length > 0) {
+      this.selectedTypes.forEach(selectedType => {
+        filters.push(new SchoolTypeFilter(this.selectedTypes.map(type => type.id)))
+      })
     }
     if (this.governmentDistrict !== undefined && this.governmentDistrict !== '') {
       filters.push(new GovernmentDistrictFilter(this.governmentDistrict))
