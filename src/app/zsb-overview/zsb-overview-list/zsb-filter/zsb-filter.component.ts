@@ -35,7 +35,6 @@ export class ZsbFilterComponent {
   designations: string[] = []
   schoolWithEvents: SchoolWithEvents[]
   allSchoolsWithEvents: SchoolWithEvents[]
-  schoolType = ''
   selectedTypes: SchoolType[] = []
   governmentDistrict = ''
   constituency = ''
@@ -111,26 +110,6 @@ export class ZsbFilterComponent {
         this.universityContacts = contacts.map(contact => contact.name).sort((a, b) => a.localeCompare(b))
       )
     )
-
-    // this.subs.push(
-    //   zip(
-    //     this.dbService.getSchoolsAtomic(),
-    //     this.dbService.getSchoolType(),
-    //     this.dbService.getEvents()
-    //   ).subscribe(([schools, schoolTypes, events]) => {
-    //       schools.forEach((school) => {
-    //         const schoolEvents = events.filter((event) => {
-    //           return (event.school_id === school.id)
-    //         })
-    //         const schoolWithEvent: SchoolWithEvents = {
-    //           school,
-    //           events: schoolEvents
-    //         }
-    //         this.allSchoolsWithEvents.push(schoolWithEvent)
-    //       })
-    //     }
-    //   )
-    // )
   }
 
   get filteredSchoolNames(): string[] {
