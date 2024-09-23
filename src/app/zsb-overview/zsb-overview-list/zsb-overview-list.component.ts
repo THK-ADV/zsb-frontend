@@ -102,8 +102,8 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
       this.detailData = new MatTableDataSource([])
       this.listData.sort = this.sort
       this.listData.paginator = this.paginator
-      this.buildCustomSorting()
       this.schoolTypes = schoolTypes
+      this.buildCustomSorting()
     })
     this.selectedSchoolsIds = []
   }
@@ -217,11 +217,12 @@ export class ZsbOverviewListComponent implements OnInit, OnDestroy {
       if (result) {
         if (result.schoolWithEvents) {
           this.listData = new MatTableDataSource(result.schoolWithEvents)
-          this.listData.paginator = this.paginator
         } else {
           this.listData = new MatTableDataSource(this.schoolWithEvents)
-          this.listData.paginator = this.paginator
         }
+        this.listData.sort = this.sort
+        this.listData.paginator = this.paginator
+        this.buildCustomSorting()
         this.activeFilterAmount = result.amount
         this.noFiltersActive = this.activeFilterAmount === 0
       }
