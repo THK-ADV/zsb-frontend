@@ -26,32 +26,20 @@ export class SchoolService {
       school_id: new UntypedFormControl(null),
       name: new UntypedFormControl('', Validators.required),
       schooltype: new UntypedFormControl('', Validators.required),
-      phoneNumber: new UntypedFormControl('', Validators.required),
+      phoneNumber: new UntypedFormControl(''),
       email: new UntypedFormControl('', Validators.required),
-      website: new UntypedFormControl('', Validators.required),
+      website: new UntypedFormControl(''),
       comment: new UntypedFormControl(''),
       address: new UntypedFormControl({value: '', disabled: true}, Validators.required),
       city: new UntypedFormControl(0),
       contacts: this.contacts,
       cooperationContract: new UntypedFormControl(false),
-      amount_students11: new UntypedFormControl('', [
-        Validators.required,
-        Validators.min(0),
-        Validators.max(150)
-      ]),
-      amount_students12: new UntypedFormControl('', [
-        Validators.required,
-        Validators.min(0),
-        Validators.max(150)
-      ]),
-      amount_students13: new UntypedFormControl('', [
-        Validators.required,
-        Validators.min(0),
-        Validators.max(150)
-      ]),
-      cooperationPartner: new UntypedFormControl('', Validators.required),
-      kaoaSupervisor: new UntypedFormControl('', Validators.required),
-      talentScout: new UntypedFormControl('', Validators.required),
+      amount_students11: new UntypedFormControl(''),
+      amount_students12: new UntypedFormControl(''),
+      amount_students13: new UntypedFormControl(''),
+      cooperationPartner: new UntypedFormControl(''),
+      kaoaSupervisor: new UntypedFormControl(''),
+      talentScout: new UntypedFormControl(''),
     })
   }
 
