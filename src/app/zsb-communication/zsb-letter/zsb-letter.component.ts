@@ -32,9 +32,6 @@ export class ZsbLetterComponent implements OnInit {
     this.dbService.getSchoolsAtomic().subscribe(schools => {
       this.resolveAddresses(schools)
     })
-
-    console.log('send stuff to schools with id:')
-    console.log(this.addresseesIds)
   }
 
   resolveAddresses(schools: School[]) {
@@ -48,10 +45,6 @@ export class ZsbLetterComponent implements OnInit {
   onSubmit() {
     const formValue = this.formGroup.value
     const letter = new Letter(formValue.msg, this.addressees, formValue.signature_id)
-
-    console.log('create letter')
-    console.log(letter)
-
     this.dbService.createLetter(letter).subscribe(result => {
       saveBlobAsFile(result, generateTitle(this.addresseesIds, 'serienbrief', '.zip', this.datePipe))
     })

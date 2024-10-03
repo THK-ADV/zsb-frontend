@@ -214,7 +214,6 @@ export class ZsbEventsDetailComponent implements OnInit, OnDestroy {
   }
 
   onClear() {
-    console.log('CLEAR')
     this.service.formGroup.reset()
     this.service.initializeFormGroup()
     this.service.formGroup.get('school').reset(undefined, {emitEvent: false})

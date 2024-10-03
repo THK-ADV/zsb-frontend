@@ -4,10 +4,9 @@ import {DatabaseService} from '../../shared/database.service'
 import {MatDialogRef} from '@angular/material/dialog'
 import {Email} from './email'
 import {NotificationService} from '../../shared/notification.service'
-import {forkJoin, Observable} from 'rxjs'
+import {Observable} from 'rxjs'
 import {map, startWith} from 'rxjs/operators'
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete'
-import {School} from '../../zsb-school/school'
 
 @Component({
   selector: 'app-zsb-email',
@@ -20,7 +19,7 @@ export class ZsbEmailComponent implements OnInit {
   availableRecipients: string[] = []
   recipients: string[] = []
 
-  @ViewChild('recipientInput') fruitInput: ElementRef<HTMLInputElement>
+  @ViewChild('recipientInput') recipientInput: ElementRef<HTMLInputElement>
 
   constructor(
     private dbService: DatabaseService,
@@ -47,7 +46,7 @@ export class ZsbEmailComponent implements OnInit {
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.recipients.push(event.option.viewValue)
-    this.fruitInput.nativeElement.value = ''
+    this.recipientInput.nativeElement.value = ''
     this.recipientCtrl.setValue(null)
   }
 
@@ -60,7 +59,6 @@ export class ZsbEmailComponent implements OnInit {
     this.dbService.createMailAddressees(this.addresseesIds).subscribe(
       functions => {
         this.availableRecipients = functions
-        console.log('Schulen mit Mail-Adressen:', this.availableRecipients)
       },
       error => {
         console.error('Fehler beim Abrufen verfügbarer Funktionen:', error)
@@ -72,10 +70,6 @@ onSubmit()
 {
   const formValue = this.formGroup.value
   const email = new Email(formValue.msg, this.recipients, this.addresseesIds, formValue.subject)
-
-  console.log('create email')
-  console.log(email)
-
   this.dbService.createEmail(email).subscribe(result => {
     if (result && result.length > 0) {
       let unsendableSchoolsNames = 'Konnte an folgende Schulen nicht versendet werden:\n'

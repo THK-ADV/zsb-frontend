@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core'
+import {Component, ElementRef, Inject, ViewChild} from '@angular/core'
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog'
 import {
   AmountStudentsFilter,
@@ -17,6 +17,7 @@ import {filterDuplicates, filterOptions} from '../../../shared/functions'
 import {Address} from '../../../zsb-address/address'
 import {AddressService} from '../../../shared/address.service'
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete'
+import {FormControl} from '@angular/forms'
 
 @Component({
   selector: 'app-zsb-filter',
@@ -34,8 +35,7 @@ export class ZsbFilterComponent {
   designations: string[] = []
   schoolWithEvents: SchoolWithEvents[]
   allSchoolsWithEvents: SchoolWithEvents[]
-  schoolType = ''
-  selectedType: SchoolType
+  selectedTypes: SchoolType[] = []
   governmentDistrict = ''
   constituency = ''
   designation = ''
@@ -51,6 +51,9 @@ export class ZsbFilterComponent {
   contactPersonUniversity = ''
   universityContacts: string[] = []
   date: Date
+  schoolTypeCtrl = new FormControl()
+
+  @ViewChild('schoolTypeInput') schoolTypeInput: ElementRef<HTMLInputElement>
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               public dialogRef: MatDialogRef<ZsbFilterComponent>,
@@ -59,7 +62,6 @@ export class ZsbFilterComponent {
   ) {
     this.schoolWithEvents = data.schoolWithEvents
     this.allSchoolsWithEvents = [...data.schoolWithEvents]
-    console.log(this.schoolWithEvents)
   }
 
   ngOnInit(): void {
@@ -68,9 +70,11 @@ export class ZsbFilterComponent {
     this.dbService.getAddressesAtomic().subscribe(addresses => {
       this.addresses = addresses
 
-      const governmentDistricts = filterDuplicates(addresses.map(it => it.city.governmentDistrict.trim()))
-      const constituencies = filterDuplicates(addresses.map(it => it.city.constituency.trim()))
-      const designations = filterDuplicates(addresses.map(it => it.city.designation.trim()))
+      const governmentDistricts =
+        filterDuplicates(addresses.map(it => it.city.governmentDistrict.trim()))
+          .sort((a, b) => a.localeCompare(b))
+      const constituencies = filterDuplicates(addresses.map(it => it.city.constituency.trim())).sort((a, b) => a.localeCompare(b))
+      const designations = filterDuplicates(addresses.map(it => it.city.designation.trim())).sort((a, b) => a.localeCompare(b))
 
       this.governmentDistricts = filterOptions(controls.governmentDistrict, governmentDistricts)
       this.constituencies = filterOptions(controls.constituency, constituencies)
@@ -79,53 +83,33 @@ export class ZsbFilterComponent {
 
     this.subs.push(
       this.dbService.getSchoolType().subscribe(types =>
-        this.schoolTypes = types
+        this.schoolTypes = types.sort((a, b) => a.desc.localeCompare(b.desc))
       )
     )
 
     this.subs.push(
       this.dbService.getSchoolsAtomic().subscribe(schools =>
-        this.schoolNames = schools.map(school => school.name)
+        this.schoolNames = schools.map(school => school.name).sort((a, b) => a.localeCompare(b))
       )
     )
 
     this.subs.push(
       this.dbService.getEvents().subscribe(events =>
-        this.eventNames = events.map(event => event.designation)
+        this.eventNames = events.map(event => event.designation).sort((a, b) => a.localeCompare(b))
       )
     )
 
     this.subs.push(
       this.dbService.getSchoolContacts().subscribe(contacts =>
-        this.schoolContacts = contacts.map(contact => contact.name)
+        this.schoolContacts = contacts.map(contact => contact.name).sort((a, b) => a.localeCompare(b))
       )
     )
 
     this.subs.push(
       this.dbService.getUniversityContacts().subscribe(contacts =>
-        this.universityContacts = contacts.map(contact => contact.name)
+        this.universityContacts = contacts.map(contact => contact.name).sort((a, b) => a.localeCompare(b))
       )
     )
-
-    // this.subs.push(
-    //   zip(
-    //     this.dbService.getSchoolsAtomic(),
-    //     this.dbService.getSchoolType(),
-    //     this.dbService.getEvents()
-    //   ).subscribe(([schools, schoolTypes, events]) => {
-    //       schools.forEach((school) => {
-    //         const schoolEvents = events.filter((event) => {
-    //           return (event.school_id === school.id)
-    //         })
-    //         const schoolWithEvent: SchoolWithEvents = {
-    //           school,
-    //           events: schoolEvents
-    //         }
-    //         this.allSchoolsWithEvents.push(schoolWithEvent)
-    //       })
-    //     }
-    //   )
-    // )
   }
 
   get filteredSchoolNames(): string[] {
@@ -135,13 +119,7 @@ export class ZsbFilterComponent {
   }
 
   get filteredSchoolTypes(): SchoolType[] {
-    if (!this.schoolType) {
       return this.schoolTypes
-    }
-    const filteredList = this.schoolTypes.filter(option => {
-      return option.desc.trim().toLowerCase().includes(this.schoolType.trim().toLowerCase())
-    })
-    return filteredList
   }
 
   get filteredGovernmentDistricts(): string[] {
@@ -180,10 +158,18 @@ export class ZsbFilterComponent {
     )
   }
 
+  remove(option: SchoolType): void {
+    const index = this.selectedTypes.findIndex(type => type.id === option.id)
+    if (index >= 0) {
+      this.selectedTypes.splice(index, 1)
+      this.schoolTypeCtrl.setValue(null)
+    }
+  }
+
   onSchoolTypeSelected(event: MatAutocompleteSelectedEvent) {
-    this.selectedType = event.option.value
-    this.schoolType = this.selectedType.desc
-    console.log('type', this.selectedType)
+    this.selectedTypes.push(event.option.value)
+    this.schoolTypeInput.nativeElement.value = ''
+    this.schoolTypeCtrl.setValue(null)
   }
 
   resetFilters() {
@@ -199,14 +185,10 @@ export class ZsbFilterComponent {
     if (this.schoolName !== undefined && this.schoolName !== '') {
       filters.push(new SchoolNameFilter(this.schoolName))
     }
-    if (!this.selectedType && this.schoolType) {
-      const extractedType = this.schoolTypes.find(option =>
-        option.desc.toLowerCase().includes(this.schoolType.toLowerCase())
-      )
-      this.selectedType = extractedType
-    }
-    if (this.selectedType !== undefined) {
-      filters.push(new SchoolTypeFilter(this.selectedType.id))
+    if (this.selectedTypes && this.selectedTypes.length > 0) {
+      this.selectedTypes.forEach(selectedType => {
+        filters.push(new SchoolTypeFilter(this.selectedTypes.map(type => type.id)))
+      })
     }
     if (this.governmentDistrict !== undefined && this.governmentDistrict !== '') {
       filters.push(new GovernmentDistrictFilter(this.governmentDistrict))

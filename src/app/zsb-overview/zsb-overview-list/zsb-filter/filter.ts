@@ -18,11 +18,10 @@ export class SchoolNameFilter implements Filter {
 export class SchoolTypeFilter implements Filter {
   private schoolType: number
 
-  constructor(schoolType: number) {
-    this.schoolType = schoolType
-  }
+  constructor(private schoolTypes: number[]) {}
+
   filter(data: SchoolWithEvents): boolean {
-    return data.school.type === this.schoolType
+    return this.schoolTypes.includes(data.school.type)
   }
 }
 

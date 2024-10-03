@@ -17,7 +17,6 @@ import {CooperationPartner} from '../cooperationPartner'
 import {KaoaSupervisor} from '../kaoaSupervisor'
 import {TalentScout} from '../talentScout'
 import {MatTableDataSource} from '@angular/material/table'
-import {log} from '@angular-devkit/build-angular/src/builders/ssr-dev-server'
 
 @Component({
   selector: 'app-zsb-school-detail',
@@ -92,7 +91,6 @@ export class ZsbSchoolDetailComponent implements OnInit {
           this.address = address
           const contactsIds = school.contacts_ids === undefined ? [] : school.contacts_ids
           if (contactsIds.length === 0) { // Wenn keine Kontakte vorhanden sind
-            console.log('load form data without contacts')
             this.service.loadFormData(school, this.address, [])
             this.addressUndefined = false
           } else {
