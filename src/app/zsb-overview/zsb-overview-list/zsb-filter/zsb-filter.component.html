@@ -23,16 +23,27 @@
         </mat-form-field>
         <mat-form-field id="schulform" appearance="fill">
           <mat-label>Schulform</mat-label>
+          <mat-chip-grid style="padding-bottom: 5%" #chipGrid>
+            <mat-chip-row *ngFor="let option of selectedTypes"
+                          (removed)="remove(option)">
+              {{ option.desc }}
+              <button matChipRemove [attr.aria-label]="'remove ' + option">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+          </mat-chip-grid>
           <input
             matInput
             type="text"
             name="schoolType"
-            [(ngModel)]="schoolType"
-            [matAutocomplete]="autoSchoolType">
+            [formControl]="schoolTypeCtrl"
+            [matAutocomplete]="autoSchoolType"
+            #schoolTypeInput
+            [matChipInputFor]="chipGrid"
+            #trigger="matAutocompleteTrigger"/>
           <mat-autocomplete autoActiveFirstOption #autoSchoolType="matAutocomplete"
                             (optionSelected)="onSchoolTypeSelected($event)">
-            <mat-option *ngFor="let option of filteredSchoolTypes" [value]="option">
-              {{ option.desc }}
+            <mat-option *ngFor="let option of filteredSchoolTypes" [value]="option">{{ option.desc }}
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
