@@ -144,20 +144,20 @@ export class SchoolService {
       name: schoolForm.name,
       type: schoolForm.schooltype,
       comment: schoolForm.comment,
-      amount_students11: schoolForm.amount_students11,
-      amount_students12: schoolForm.amount_students12,
-      amount_students13: schoolForm.amount_students13,
+      amount_students11: schoolForm.amount_students11 || 0,
+      amount_students12: schoolForm.amount_students12 || 0,
+      amount_students13: schoolForm.amount_students13 || 0,
       phonenumber: schoolForm.phoneNumber,
       email: schoolForm.email,
       website: schoolForm.website,
-      cooperationpartner: schoolForm.cooperationPartner,
-      kaoaSupervisor: schoolForm.kaoaSupervisor,
-      talentscout: schoolForm.talentScout,
+      cooperationpartner: schoolForm.cooperationPartner || 0,
+      kaoaSupervisor: schoolForm.kaoaSupervisor || 0,
+      talentscout: schoolForm.talentScout || 0,
       cooperationcontract: schoolForm.cooperationContract,
       address_id: schoolForm.address_id,
       address: schoolForm.address,
       contacts_ids: schoolForm.contacts.map(it => it.contact_id),
-      contacts: schoolForm.contacts
+      contacts: schoolForm.contacts,
     }
 
     if (schoolObject.id == null) {
