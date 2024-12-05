@@ -67,7 +67,6 @@ export class ZsbSchoolDetailComponent implements OnInit {
         this.contactFunctions = functions
       )
     )
-
     this.subs.push(
       this.route.paramMap.subscribe(params => {
         this.schoolId = params.get('schoolId')
@@ -76,7 +75,6 @@ export class ZsbSchoolDetailComponent implements OnInit {
         }
       })
     )
-
   }
 
   ngOnDestroy() {
