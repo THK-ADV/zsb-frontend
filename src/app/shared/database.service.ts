@@ -234,7 +234,7 @@ export class DatabaseService {
     )
   }
 
-  createEmail(email: Email) {
-    return this.httpClient.post<School[]>(this.DB_URL + '/email', email)
+  createEmail(formData: FormData) {
+    return this.httpClient.post<School[]>(this.DB_URL + '/email', formData)
   }
 }

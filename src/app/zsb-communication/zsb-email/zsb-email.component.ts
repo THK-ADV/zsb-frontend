@@ -2,7 +2,6 @@ import {Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core'
 import {FormControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms'
 import {DatabaseService} from '../../shared/database.service'
 import {MatDialogRef} from '@angular/material/dialog'
-import {Email} from './email'
 import {NotificationService} from '../../shared/notification.service'
 import {Observable} from 'rxjs'
 import {map, startWith} from 'rxjs/operators'
@@ -18,6 +17,8 @@ export class ZsbEmailComponent implements OnInit {
   filteredRecipients: Observable<string[]>
   availableRecipients: string[] = []
   recipients: string[] = []
+  fileName = 'Datei auswählen'
+  files: File[] = []
 
   @ViewChild('recipientInput') recipientInput: ElementRef<HTMLInputElement>
 
@@ -64,28 +65,50 @@ export class ZsbEmailComponent implements OnInit {
         console.error('Fehler beim Abrufen verfügbarer Funktionen:', error)
       }
     )
-}
+  }
 
-onSubmit()
-{
-  const formValue = this.formGroup.value
-  const email = new Email(formValue.msg, this.recipients, this.addresseesIds, formValue.subject)
-  this.dbService.createEmail(email).subscribe(result => {
-    if (result && result.length > 0) {
-      let unsendableSchoolsNames = 'Konnte an folgende Schulen nicht versendet werden:\n'
-      result.forEach(schule => {
-        unsendableSchoolsNames += schule.name + '\n'
-      })
-      this.notificationService.failure(unsendableSchoolsNames)
-    } else {
-      this.notificationService.success('Sendevorgang erfolgreich')
+  selectFile(event: any): void {
+    const files = event.target.files
+    if (files.length) {
+      this.files = files
+      this.fileName = Array.from(files).map((file: File) => file.name).join(', ')
     }
-  })
-  this.dialogRef.close()
-}
+  }
 
-onCancel()
-{
-  this.dialogRef.close()
-}
+  onSubmit() {
+    if (this.formGroup.invalid) {
+      this.notificationService.failure('Bitte alle Felder ausfüllen.')
+      return
+    }
+
+    const formData = new FormData()
+    const formValue = this.formGroup.value
+
+    formData.append('subject', formValue.subject)
+    formData.append('msg', formValue.msg)
+    formData.append('addressees', JSON.stringify(this.recipients))
+    formData.append('schoolIds', JSON.stringify(this.addresseesIds))
+    if (this.files.length) {
+      [...this.files].forEach((file: File) => {
+        formData.append('file', file, file.name)
+      })
+    }
+    this.dbService.createEmail(formData).subscribe(result => {
+      if (result && result.length > 0) {
+        let unsendableSchoolsNames = 'Konnte an folgende Schulen nicht versendet werden:\n'
+        result.forEach(schule => {
+          unsendableSchoolsNames += schule.name + '\n'
+        })
+        this.notificationService.failure(unsendableSchoolsNames)
+      } else {
+        this.notificationService.success('Sendevorgang erfolgreich')
+      }
+    })
+
+    this.dialogRef.close()
+  }
+
+  onCancel() {
+    this.dialogRef.close()
+  }
 }
