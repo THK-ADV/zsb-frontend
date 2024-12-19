@@ -31,6 +31,15 @@
       <mat-form-field class="full-width">
         <textarea formControlName="msg" matInput placeholder="Nachricht" class="full-width"></textarea>
       </mat-form-field>
+      <div class="custom-filled-field">
+        <div class="custom-input">
+          <input type="text" class="custom-text-input" placeholder="Anhänge" readonly [value]="fileName || 'Keine Datei ausgewählt'">
+          <button mat-icon-button color="primary" class="upload-btn" (click)="fileUpload.click()">
+            <mat-icon>attach_file</mat-icon>
+          </button>
+        </div>
+        <input class="file-input" type="file" multiple (change)="selectFile($event)" #fileUpload hidden />
+      </div>
       <div class="btn-row">
         <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="formGroup.invalid">
           E-Mail(s) senden
