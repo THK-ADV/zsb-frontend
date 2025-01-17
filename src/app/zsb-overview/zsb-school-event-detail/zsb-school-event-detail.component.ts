@@ -107,6 +107,11 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subs.push(
+      this.dbService.getContactFunctions().subscribe(functions =>
+        this.contactFunctions = functions
+      )
+    )
+    this.subs.push(
       this.route.paramMap.pipe(
         switchMap(params => {
           this.schoolId = params.get('schoolId')
