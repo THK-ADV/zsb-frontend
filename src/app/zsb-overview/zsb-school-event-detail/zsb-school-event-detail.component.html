@@ -13,7 +13,7 @@
       </tr>
       <tr>
         <td class="label">Telefon:</td>
-        <td class="value">{{ school.phonenumber }}</td>
+        <td class="value" [ngClass]="{'no-data': !school.phonenumber}">{{ school.phonenumber }}</td>
       </tr>
       <tr>
         <td class="label">Email:</td>
@@ -34,15 +34,15 @@
     <table class="info-table full-width">
       <tr>
         <td class="label">Schülerzahl EF/11:</td>
-        <td class="value">{{ school.amount_students11 }}</td>
+        <td class="value" [ngClass]="{'no-data': !school.amount_students11}">{{ school.amount_students11 }}</td>
       </tr>
       <tr>
         <td class="label">Schülerzahl Q1/12:</td>
-        <td class="value">{{ school.amount_students12 }}</td>
+        <td class="value" [ngClass]="{'no-data': !school.amount_students12}">{{ school.amount_students12 }}</td>
       </tr>
       <tr>
         <td class="label">Schülerzahl Q2/13:</td>
-        <td class="value">{{ school.amount_students13 }}</td>
+        <td class="value" [ngClass]="{'no-data': !school.amount_students13}">{{ school.amount_students13 }}</td>
       </tr>
     </table>
   </div>
@@ -105,19 +105,19 @@
     <table class="info-table full-width">
       <tr>
         <td class="label">Kooperationsvertrag:</td>
-        <td class="value">{{ cooperation.cooperationContract }}</td>
+        <td class="value" [ngClass]="{'no-data': !cooperation.cooperationContract}">{{ cooperation.cooperationContract }}</td>
       </tr>
       <tr>
         <td class="label">Betreuende Hochschule KAoA/Talentscouting:</td>
-        <td class="value">{{ cooperation.cooperationPartner }}</td>
+        <td class="value" [ngClass]="{'no-data': !cooperation.cooperationPartner}">{{ cooperation.cooperationPartner }}</td>
       </tr>
       <tr>
         <td class="label">KAoA Betreuer*in:</td>
-        <td class="value">{{ cooperation.kaoaSupervisor }}</td>
+        <td class="value" [ngClass]="{'no-data': !cooperation.kaoaSupervisor}">{{ cooperation.kaoaSupervisor }}</td>
       </tr>
       <tr>
         <td class="label">Talentscout:</td>
-        <td class="value">{{ cooperation.talentScout }}</td>
+        <td class="value" [ngClass]="{'no-data': !cooperation.talentScout}">{{ cooperation.talentScout }}</td>
       </tr>
     </table>
   </div>

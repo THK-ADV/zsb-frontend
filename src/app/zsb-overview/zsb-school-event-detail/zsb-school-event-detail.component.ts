@@ -18,7 +18,6 @@ import {cooperationPartnerDescById} from '../../zsb-school/cooperationPartner'
 import {kaoaSupervisorDescById} from '../../zsb-school/kaoaSupervisor'
 import {talentScoutDescById} from '../../zsb-school/talentScout'
 import {map, switchMap} from 'rxjs/operators'
-import {ContactSchool, ContactUniversity} from '../../zsb-events/eventContacts'
 
 type EventFilterOption = 'Alle' | 'Name' | 'Kategorie' | 'Datum'
 
@@ -104,13 +103,14 @@ export class ZsbSchoolEventDetailComponent implements OnInit, OnDestroy {
     'contactName',
     'contactFeature'
   ]
-  filterOptions: EventFilterOption[] = ['Alle', 'Name', 'Kategorie', 'Datum']
-  selectedFilterOption: EventFilterOption = this.filterOptions[0]
-  showFilterOptions = false
-
   private subs: Subscription[] = []
 
   ngOnInit(): void {
+    this.subs.push(
+      this.dbService.getContactFunctions().subscribe(functions =>
+        this.contactFunctions = functions
+      )
+    )
     this.subs.push(
       this.route.paramMap.pipe(
         switchMap(params => {
